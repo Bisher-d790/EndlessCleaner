@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -15,15 +16,42 @@ public:
 	// Sets default values for this character's properties
 	AEndlessCleanerCharacter();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Called before BeginPlay
+	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+		class UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+		class USpringArmComponent* CameraBoom;
+
+public:
+	void MoveRight();
+
+	void MoveLeft();
+
+	void MoveForward();
+
+	FORCEINLINE void SetIsMoving(bool Value) { this->bIsMoving = Value; };
+
+	void Respawn(FVector Position);
+
+private:
+	bool bIsMoving = false;
+
+	UPROPERTY(EditAnywhere, Category = Character)
+		float CharacterMaxSpeed;
+
+	UPROPERTY(EditAnywhere, Category = Character)
+		float SideMoveDistance;
 };
