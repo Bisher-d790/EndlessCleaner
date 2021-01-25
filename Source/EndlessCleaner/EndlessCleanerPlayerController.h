@@ -66,4 +66,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void StopRunning();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Events")
+		void Respawn();
 };

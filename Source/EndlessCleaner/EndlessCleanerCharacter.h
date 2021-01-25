@@ -26,9 +26,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Called before BeginPlay
-	virtual void PostInitializeComponents() override;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 		class UCameraComponent* CameraComponent;
 

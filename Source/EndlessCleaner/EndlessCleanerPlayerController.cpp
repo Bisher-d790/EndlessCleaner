@@ -81,7 +81,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			bLockMovement = false;
 		}
 	}
-	
+
 	// If cannot move, return
 	if (!bCanMove) return;
 
@@ -141,11 +141,17 @@ void AEndlessCleanerPlayerController::Jump()
 {
 	if (!bCanMove || bIsJumping || !PlayerRef) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Jump."));
+	//UE_LOG(LogTemp, Warning, TEXT("Jump."));
 
 	bIsJumping = true;
 
 	RemainingJumpTime = InitJumpTime;
 
 	PlayerRef->Jump();
+}
+
+void AEndlessCleanerPlayerController::Respawn()
+{
+	CurrentLane = 1; // Set to middle
+	bIsRunning = false;
 }

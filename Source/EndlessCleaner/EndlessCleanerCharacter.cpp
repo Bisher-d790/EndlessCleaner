@@ -41,10 +41,6 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AEndlessCleanerCharacter::PostInitializeComponents() {
-	Super::PostInitializeComponents();
 
 	// To make sure this is set before it is modified by the player controller
 	bIsMoving = false;
@@ -87,7 +83,7 @@ void AEndlessCleanerCharacter::MoveForward() {
 void AEndlessCleanerCharacter::MoveRight() {
 	if (!bIsMoving)	return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
+	//UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
 
 	FVector CurrentLocation = GetActorLocation();
 	CurrentLocation.Y += SideMoveDistance;
@@ -99,7 +95,7 @@ void AEndlessCleanerCharacter::MoveRight() {
 void AEndlessCleanerCharacter::MoveLeft() {
 	if (!bIsMoving)	return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
+	//UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
 
 	FVector CurrentLocation = GetActorLocation();
 	CurrentLocation.Y -= SideMoveDistance;
