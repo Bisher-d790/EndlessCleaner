@@ -85,6 +85,10 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 		{
 			Player->SetIsMoving(false);
 			GameState = EGameState::VE_GameOver;
+
+			FVector RespawnLocation = Player->GetActorLocation();
+			RespawnLocation.Z += 3000;
+			Player->SetActorLocation(RespawnLocation);
 		}
 	}
 }
