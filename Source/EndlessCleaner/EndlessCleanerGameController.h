@@ -25,6 +25,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
 		TSubclassOf<class APlatformModule> PlatformClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
+		float Probability = 50.f;
 };
 
 UCLASS()
@@ -44,6 +47,9 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	UPROPERTY(EditInstanceOnly, Category = "Settings")
+		AActor* DeathGround;
+
 	UPROPERTY(EditInstanceOnly, Category = "Settings")
 		TArray<AActor*> EnvironmentalActorsToMove;
 
@@ -85,6 +91,10 @@ private:
 	class AEndlessCleanerCharacter* Player;
 
 	void SpawnNewPlatform();
+
+	EPlatformGroundType GetPlatformTypeToSpawn(const EPlatformGroundType& PlatformType);
+
+	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformGroundType& PreviousType);
 
 	UFUNCTION()
 		void OnRespawn();

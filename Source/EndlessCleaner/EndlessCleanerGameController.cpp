@@ -77,6 +77,16 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 			SpawnNewPlatform();
 		}
 	}
+
+	// Set Game over condition when player hits the ground
+	if (DeathGround)
+	{
+		if (Player->GetActorLocation().Z <= DeathGround->GetActorLocation().Z)
+		{
+			Player->SetIsMoving(false);
+			GameState = EGameState::VE_GameOver;
+		}
+	}
 }
 
 // Initialize platforms and player
@@ -93,23 +103,34 @@ void AEndlessCleanerGameController::InitializeGame()
 		APlatformModule* SpawnedPlatform = nullptr;
 
 		// Set the initial platforms as a normal ground
-		// afterwards Find platform by type, using randomly generated numbers
-		int32 RandomIndex;
-		if (PlatformIndex <= NumberOfInitialPlatforms)
+		if (PlatformCount <= NumberOfInitialPlatforms)
 		{
-			RandomIndex = (int32)EPlatformGroundType::VE_Ground;
+			float RandomPlatformToSpawn = FMath::RandRange(0.f, 100.f);
+
+			EPlatformGroundType PlatformType = EPlatformGroundType::VE_Ground;
+
+			// Select normal ground
+			if (RandomPlatformToSpawn > 50.f)
+			{
+				PlatformType = EPlatformGroundType::VE_Ground;
+			}
+
+			TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(PlatformType);
+			SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 		}
 		else
 		{
-			RandomIndex = FMath::RandRange(0, PlatformTypesRandomCeil);
-		}
-
-		for (int i = 0; i < PlatformTable.Num(); i++)
-		{
-			if (RandomIndex == (int32)PlatformTable[i].PlatformGroundType)
+			// Next platforms, spawn according to probability
+			if (PreviousPlatform)
 			{
-				SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformTable[i].PlatformClass, SpawnPosition, FRotator::ZeroRotator);
-				break;
+				// Next type to spawn: Depending on previous platform spawned
+				EPlatformGroundType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
+				TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(NewType);
+
+				if (PlatformToSpawn)
+				{
+					SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
+				}
 			}
 		}
 
@@ -167,18 +188,8 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 	FVector SpawnPosition = PreviousPlatform->GetActorLocation();
 	SpawnPosition.X += PreviousPlatform->GetPlatformLength();
 
-	TSubclassOf<APlatformModule> PlatformToSpawn = nullptr;
-
-	// Find platform by type, using randomly generated numbers
-	int32 RandomIndex = FMath::RandRange(0, PlatformTypesRandomCeil);
-	for (int i = 0; i < PlatformTable.Num(); i++)
-	{
-		if (RandomIndex == (int32)PlatformTable[i].PlatformGroundType)
-		{
-			PlatformToSpawn = PlatformTable[i].PlatformClass;
-			break;
-		}
-	}
+	EPlatformGroundType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
+	TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(NewType);
 
 	// Spawn the selected Platform
 	if (PlatformToSpawn)
@@ -201,4 +212,88 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 
 		PlatformCount++;
 	}
+}
+
+EPlatformGroundType AEndlessCleanerGameController::GetPlatformTypeToSpawn(const EPlatformGroundType& PlatformType)
+{
+	EPlatformGroundType SelectedPlatform = EPlatformGroundType::VE_Ground;
+	TArray<FProbabilityTable> TempTable;
+
+	if (PlatformType == EPlatformGroundType::VE_Ground ||
+		PlatformType == EPlatformGroundType::VE_GroundGap)
+	{
+		for (int i = 0; i < PlatformTable.Num(); i++)
+		{
+			TempTable.Add(PlatformTable[i]);
+		}
+	}
+	else if (PlatformType == EPlatformGroundType::VE_CenterBridge ||
+		PlatformType == EPlatformGroundType::VE_LeftBridge ||
+		PlatformType == EPlatformGroundType::VE_RightBridge)
+	{
+		for (int i = 0; i < PlatformTable.Num(); i++)
+		{
+			if (PlatformTable[i].PlatformGroundType == EPlatformGroundType::VE_Ground ||
+				PlatformTable[i].PlatformGroundType == EPlatformGroundType::VE_GroundGap)
+			{
+				TempTable.Add(PlatformTable[i]);
+			}
+		}
+	}
+
+	if (TempTable.Num() == 0)
+	{
+		return EPlatformGroundType::VE_Ground;
+	}
+
+	// Loop through all probabilities
+	float Total = 0;
+	for (int i = 0; i < TempTable.Num(); i++)
+	{
+		Total += TempTable[i].Probability;
+	}
+
+	// Get a random point 
+	float RandomPoint = FMath::FRand() * Total;
+	int PlatformIndex = -1;
+
+	for (int i = 0; i < TempTable.Num(); i++)
+	{
+		if (RandomPoint < TempTable[i].Probability)
+		{
+			PlatformIndex = i;
+			break;
+		}
+		else
+		{
+			RandomPoint -= TempTable[i].Probability;
+		}
+	}
+
+	// If no index was found
+	if (PlatformIndex == -1)
+	{
+		PlatformIndex = TempTable.Num() - 1;
+	}
+
+	// Select the platform
+	if (PlatformIndex < TempTable.Num())
+	{
+		SelectedPlatform = TempTable[PlatformIndex].PlatformGroundType;
+	}
+
+	return SelectedPlatform;
+}
+
+TSubclassOf<class APlatformModule> AEndlessCleanerGameController::GetPlatformModuleByType(const EPlatformGroundType& PreviousPlatformType)
+{
+	for (int i = 0; i < PlatformTable.Num(); i++)
+	{
+		if (PreviousPlatformType == PlatformTable[i].PlatformGroundType)
+		{
+			return PlatformTable[i].PlatformClass;
+		}
+	}
+
+	return nullptr;
 }
