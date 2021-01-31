@@ -43,10 +43,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-protected:
+	void InitializeGame();
+
 	UPROPERTY(EditInstanceOnly, Category = "Settings")
 		AActor* DeathGround;
 
@@ -62,7 +64,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		int NumberOfInitialPlatforms;
 
-	void InitializeGame();
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		int PlayerLives;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float RespawnTimer;
@@ -78,7 +81,7 @@ private:
 
 	int PlatformCount;
 
-	int PlatformTypesRandomCeil = 4;
+	int PlatformTypesRandomCeil = 4;	// According to the number of Platform Ground Types
 
 	class APlatformModule* PreviousPlatform;
 

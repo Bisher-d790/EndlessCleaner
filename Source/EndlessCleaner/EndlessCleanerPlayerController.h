@@ -49,15 +49,27 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Movement)
 		float InitJumpTime;
 
+	UPROPERTY(BlueprintReadWrite, Category = "UI")
+		class UInGameUIWidget* InGameUIWidgetInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<class UUserWidget> InGameUIWidgetClass;
+
 private:
 
 	bool bIsRunning = false;
 
 	int CurrentLane;
 
+	float CurrentDistance;
+
 	bool bIsJumping;
 
 	float RemainingJumpTime;
+
+	int CoinsCollected;
+
+	int CurrentLives;
 
 public:
 
@@ -69,4 +81,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void Respawn();
+
+	void LoseLife(bool& isLastLive);
+
+	void SetInitialLives(int32 InitialLives);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Events")
+		void OnCollectCoin();
+
+	FORCEINLINE UInGameUIWidget* GetUI() { return InGameUIWidgetInstance; }
 };

@@ -5,6 +5,7 @@
 #include "EndlessCleanerPlayerController.h"
 #include "EndlessCleanerCharacter.h"
 #include "PlatformModule.h"
+#include "InGameUIWidget.h"
 
 // Sets default values
 AEndlessCleanerGameController::AEndlessCleanerGameController()
@@ -14,10 +15,9 @@ AEndlessCleanerGameController::AEndlessCleanerGameController()
 
 	// Set Variables values
 	NumberOfInitialPlatforms = 5;
-
 	VisiblePlatformNumber = 9;
-
 	RespawnTimer = 3.0f;
+	PlayerLives = 3.0f;
 }
 
 // Called when the game starts or when spawned
@@ -25,6 +25,7 @@ void AEndlessCleanerGameController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Set Initial Game State
 	GameState = EGameState::VE_PreparePlatforms;
 
 	PlayerController = Cast<AEndlessCleanerPlayerController>(GetWorld()->GetFirstPlayerController());
@@ -32,6 +33,8 @@ void AEndlessCleanerGameController::BeginPlay()
 	Player = Cast<AEndlessCleanerCharacter>(PlayerController->GetCharacter());
 
 	InitializeGame();
+
+	PlayerController->SetInitialLives(PlayerLives);
 
 	GameState = EGameState::VE_PrepareGame;
 
@@ -83,8 +86,25 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 	{
 		if (Player->GetActorLocation().Z <= DeathGround->GetActorLocation().Z)
 		{
-			Player->SetIsMoving(false);
-			GameState = EGameState::VE_GameOver;
+			PlayerController->StopRunning();
+
+			bool bIsLastLife = false;
+			PlayerController->LoseLife(bIsLastLife);
+
+			if (bIsLastLife)
+			{
+				GameState = EGameState::VE_GameOver;
+
+				if (PlayerController->GetUI())
+				{
+					PlayerController->GetUI()->OnGameOver();
+				}
+			}
+			else
+			{
+				GameState = EGameState::VE_RemovePlatforms;
+				GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer, false);
+			}
 		}
 	}
 }
@@ -172,13 +192,55 @@ void AEndlessCleanerGameController::InitializeGame()
 	}
 }
 
-void AEndlessCleanerGameController::OnRespawn() {
+void AEndlessCleanerGameController::OnRespawn()
+{
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
-	PlayerController->Respawn();
-	PlayerController->StartRunning();
+	if (GameState == EGameState::VE_PrepareGame)
+	{
+		if (PlayerController->GetUI())
+		{
+			PlayerController->GetUI()->OnStartGame();
 
-	GameState = EGameState::VE_Running;
+			GameState = EGameState::VE_Respawn;
+
+			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer / 3, false);
+		}
+	}
+
+	else if (GameState == EGameState::VE_RemovePlatforms)
+	{
+		// Remove platforms
+		APlatformModule* FirstIterate = FirstPlatform;
+
+		while (FirstIterate->GetNextPlatform())
+		{
+			APlatformModule* Temp = FirstIterate->GetNextPlatform();
+			FirstIterate->Destroy();
+			FirstIterate = Temp;
+		}
+
+		if (FirstIterate)
+		{
+			FirstIterate->Destroy();
+		}
+
+		FirstPlatform = nullptr;
+
+		// Initialize game
+		InitializeGame();
+
+		GameState = EGameState::VE_PrepareGame;
+
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer, false);
+	}
+
+	else if (GameState == EGameState::VE_Respawn)
+	{
+		PlayerController->Respawn();
+		PlayerController->StartRunning();
+		GameState = EGameState::VE_Running;
+	}
 }
 
 void AEndlessCleanerGameController::SpawnNewPlatform()

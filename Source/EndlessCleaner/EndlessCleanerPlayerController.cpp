@@ -3,6 +3,8 @@
 
 #include "EndlessCleanerPlayerController.h"
 #include "EndlessCleanerCharacter.h"
+#include "Blueprint/UserWidget.h"
+#include "InGameUIWidget.h"
 
 
 AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
@@ -16,6 +18,10 @@ void AEndlessCleanerPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Set variables values
+	CoinsCollected = 0;
+	CurrentDistance = 0;
+
 	// Stop movement
 	bCanMove = false;
 	bIsRunning = false;
@@ -27,8 +33,19 @@ void AEndlessCleanerPlayerController::BeginPlay()
 	// Set the Player reference
 	PlayerRef = Cast<AEndlessCleanerCharacter>(GetPawn());
 
-	// Start running in beginning
-	StartRunning();
+	if (InGameUIWidgetClass)
+	{
+		InGameUIWidgetInstance = CreateWidget<UInGameUIWidget>(this, InGameUIWidgetClass);
+	}
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->AddToViewport();
+
+		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
+		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+	}
 }
 
 void AEndlessCleanerPlayerController::SetupInputComponent()
@@ -47,23 +64,41 @@ void AEndlessCleanerPlayerController::StartRunning()
 	bIsRunning = true;
 	bLockMovement = false;
 
-	if (PlayerRef != nullptr)
-	{
-		PlayerRef->SetIsMoving(true);
-	}
+	PlayerRef->SetIsMoving(true);
 }
 
 void AEndlessCleanerPlayerController::StopRunning()
 {
 	// Stop movement
-	if (PlayerRef != nullptr)
-	{
-		PlayerRef->SetIsMoving(false);
-	}
+	PlayerRef->SetIsMoving(false);
 
 	bCanMove = false;
 	bIsRunning = false;
 	bLockMovement = true;
+}
+
+void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
+{
+	CurrentLives = InitialLives;
+}
+
+void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
+{
+	bIsLastLife = false;
+	if ((CurrentLives - 1) < 0)
+	{
+		CurrentLives = 0;
+		bIsLastLife = true;
+	}
+	else
+	{
+		CurrentLives -= 1;
+	}
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+	}
 }
 
 void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
@@ -85,8 +120,18 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 	// If cannot move, return
 	if (!bCanMove) return;
 
+	if (bIsRunning)
+	{
+		CurrentDistance += DeltaTime;
+
+		if (InGameUIWidgetInstance)
+		{
+			InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+		}
+	}
+
 	// Stop Jump animation after jump time finishes
-	if (bIsJumping && bCanMove)
+	if (bIsJumping)
 	{
 		RemainingJumpTime -= DeltaTime;
 
@@ -154,4 +199,23 @@ void AEndlessCleanerPlayerController::Respawn()
 {
 	CurrentLane = 1; // Set to middle
 	bIsRunning = false;
+	CurrentDistance = 0.0f;
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
+		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+	}
+
+	bIsRunning = false;
+}
+
+void AEndlessCleanerPlayerController::OnCollectCoin()
+{
+	CoinsCollected += 1;
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
+	}
 }
