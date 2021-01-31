@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InGameUIWidget.h"
+#include "UI/InGameUIWidget.h"
 #include "Components/TextBlock.h"
 
 void UInGameUIWidget::UpdateCoins(int32 Coins)

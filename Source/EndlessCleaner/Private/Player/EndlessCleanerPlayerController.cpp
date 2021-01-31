@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EndlessCleanerPlayerController.h"
-#include "EndlessCleanerCharacter.h"
+#include "Player/EndlessCleanerPlayerController.h"
+#include "Player/EndlessCleanerCharacter.h"
 #include "Blueprint/UserWidget.h"
-#include "InGameUIWidget.h"
+#include "UI/InGameUIWidget.h"
 
 
 AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()

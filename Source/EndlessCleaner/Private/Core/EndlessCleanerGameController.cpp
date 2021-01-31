@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EndlessCleanerGameController.h"
-#include "EndlessCleanerPlayerController.h"
-#include "EndlessCleanerCharacter.h"
-#include "PlatformModule.h"
-#include "InGameUIWidget.h"
+#include "Core/EndlessCleanerGameController.h"
+#include "Player/EndlessCleanerPlayerController.h"
+#include "Player/EndlessCleanerCharacter.h"
+#include "Platform/PlatformModule.h"
+#include "UI/InGameUIWidget.h"
 
 // Sets default values
 AEndlessCleanerGameController::AEndlessCleanerGameController()
