@@ -85,7 +85,7 @@ void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
 void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 {
 	bIsLastLife = false;
-	if ((CurrentLives - 1) < 0)
+	if ((CurrentLives - 1) <= 0)
 	{
 		CurrentLives = 0;
 		bIsLastLife = true;

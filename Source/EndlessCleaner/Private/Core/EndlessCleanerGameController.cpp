@@ -230,7 +230,7 @@ void AEndlessCleanerGameController::OnRespawn()
 		// Initialize game
 		InitializeGame();
 
-		GameState = EGameState::VE_PrepareGame;
+		GameState = EGameState::VE_Respawn;
 
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer, false);
 	}
