@@ -17,7 +17,8 @@ AEndlessCleanerGameController::AEndlessCleanerGameController()
 	NumberOfInitialPlatforms = 5;
 	VisiblePlatformNumber = 9;
 	RespawnTimer = 3.0f;
-	PlayerLives = 3.0f;
+	SpawnStartTimer = 2.0f;
+	PlayerLives = 3;
 }
 
 // Called when the game starts or when spawned
@@ -38,7 +39,7 @@ void AEndlessCleanerGameController::BeginPlay()
 
 	GameState = EGameState::VE_PrepareGame;
 
-	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer, false);
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, 0.1f, false);
 }
 
 // Called every frame
@@ -204,7 +205,7 @@ void AEndlessCleanerGameController::OnRespawn()
 
 			GameState = EGameState::VE_Respawn;
 
-			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, RespawnTimer / 3, false);
+			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameController::OnRespawn, SpawnStartTimer, false);
 		}
 	}
 

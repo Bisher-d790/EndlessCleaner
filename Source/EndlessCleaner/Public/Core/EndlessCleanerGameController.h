@@ -70,6 +70,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float RespawnTimer;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float SpawnStartTimer;
+
 	UPROPERTY(EditInstanceOnly, Category = "Settings")
 		AActor* PlatformsParentActor;
 
