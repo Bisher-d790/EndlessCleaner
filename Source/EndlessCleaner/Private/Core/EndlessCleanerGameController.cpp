@@ -4,7 +4,7 @@
 #include "Core/EndlessCleanerGameController.h"
 #include "Player/EndlessCleanerPlayerController.h"
 #include "Player/EndlessCleanerCharacter.h"
-#include "Platform/PlatformModule.h"
+#include "Gameplay/PlatformModule.h"
 #include "UI/InGameUIWidget.h"
 
 // Sets default values

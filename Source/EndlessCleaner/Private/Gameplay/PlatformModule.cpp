@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Platform/PlatformModule.h"
+#include "Gameplay/PlatformModule.h"
 
 // Sets default values
 APlatformModule::APlatformModule()
