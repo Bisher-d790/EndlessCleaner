@@ -38,6 +38,32 @@ protected:
 
 	APlatformModule* NextPlatform = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
+		float DistanceBetweenLanes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
+		float PickupStartLocationX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
+		float DistanceBetweenPickupsX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
+		int PickupsNumberPerSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
+		TSubclassOf<class APickup> PickupClass = nullptr;
+
+	TArray<class APickup*> SpawnedPickups;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
+		USceneComponent* Lane0; // Right Lane
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
+		USceneComponent* Lane1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
+		USceneComponent* Lane2; // Left Lane
+
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
 
@@ -52,4 +78,6 @@ public:
 	FORCEINLINE void SetPreviousPlatform(APlatformModule* Value) { PreviousPlatform = Value; };
 
 	void DestroyPlatform();
+
+	void SpawnPickups(int PlatformCount);
 };
