@@ -21,6 +21,7 @@ void AEndlessCleanerPlayerController::BeginPlay()
 	// Set variables values
 	CoinsCollected = 0;
 	CurrentDistance = 0;
+	TouchSwipeMinLength = 100.f;
 
 	// Stop movement
 	bCanMove = false;
@@ -44,59 +45,6 @@ void AEndlessCleanerPlayerController::BeginPlay()
 
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
 		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
-		InGameUIWidgetInstance->UpdateLives(CurrentLives);
-	}
-}
-
-void AEndlessCleanerPlayerController::SetupInputComponent()
-{
-	Super::SetupInputComponent();
-
-	InputComponent->BindAxis("MoveToSide", this, &AEndlessCleanerPlayerController::MoveToSide);
-
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AEndlessCleanerPlayerController::Jump);
-}
-
-void AEndlessCleanerPlayerController::StartRunning()
-{
-	// Start movement
-	bCanMove = true;
-	bIsRunning = true;
-	bLockMovement = false;
-
-	PlayerRef->SetIsMoving(true);
-}
-
-void AEndlessCleanerPlayerController::StopRunning()
-{
-	// Stop movement
-	PlayerRef->SetIsMoving(false);
-
-	bCanMove = false;
-	bIsRunning = false;
-	bLockMovement = true;
-}
-
-void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
-{
-	CurrentLives = InitialLives;
-}
-
-void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
-{
-	bIsLastLife = false;
-	if ((CurrentLives - 1) <= 0)
-	{
-		CurrentLives = 0;
-		bIsLastLife = true;
-	}
-	else
-	{
-		CurrentLives -= 1;
-	}
-
-	if (InGameUIWidgetInstance)
-	{
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 	}
 }
@@ -144,6 +92,124 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 				PlayerRef->StopJumping();
 			}
 		}
+	}
+}
+
+#pragma region Input Settings
+
+void AEndlessCleanerPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	InputComponent->BindAxis("MoveToSide", this, &AEndlessCleanerPlayerController::MoveToSide);
+
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AEndlessCleanerPlayerController::Jump);
+
+	// Touch Input Binding
+	InputComponent->BindTouch(IE_Pressed, this, &AEndlessCleanerPlayerController::OnTouchBegin);
+
+	InputComponent->BindTouch(IE_Released, this, &AEndlessCleanerPlayerController::OnTouchEnd);
+
+	OnSwipeHorizental.BindDynamic(this, &AEndlessCleanerPlayerController::MoveToSide);
+
+	// Bind Vertical Swipe, UP with Jump
+	OnSwipeVertical.BindLambda([this](float Value)
+	{
+		if (Value > 0) this->Jump();
+	});
+}
+
+void AEndlessCleanerPlayerController::OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position)
+{
+	// Disable multi-touch, no Touch Gestures requires multi-touching yet
+	if (TouchIndex != ETouchIndex::Touch1)	return;
+
+	TouchBeginPosition = Position;
+}
+
+void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIndex, const FVector Position)
+{
+	// Disable multi-touch, no Touch Gestures requires multi-touching yet
+	if (TouchIndex != ETouchIndex::Touch1)	return;
+
+	// if the drag is longer than a specific length
+	float TouchSwipeLength = FVector::Distance(Position, TouchBeginPosition);
+	if (TouchSwipeLength < TouchSwipeMinLength) return;
+
+	float XLength = FMath::Abs(Position.X - TouchBeginPosition.X);
+	float YLength = FMath::Abs(Position.Y - TouchBeginPosition.Y);
+
+	if (XLength > YLength) //Horizental Swipe
+	{
+		if (TouchBeginPosition.X > Position.X) // Swipe Left
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Swipe Left."));
+			OnSwipeHorizental.Execute(-1.0f);
+		}
+		else // Swipe Right
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Swipe Right."));
+			OnSwipeHorizental.Execute(1.0f);
+		}
+	}
+	else // Vertical Swipe
+	{
+		if (TouchBeginPosition.Y > Position.Y) // Swipe Up
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Swipe Up."));
+			OnSwipeVertical.Execute(1.0f);
+		}
+		else // Swipe Down
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Swipe Down."));
+			OnSwipeVertical.Execute(-1.0f);
+		}
+	}
+}
+
+#pragma endregion Input Settings
+
+void AEndlessCleanerPlayerController::StartRunning()
+{
+	// Start movement
+	bCanMove = true;
+	bIsRunning = true;
+	bLockMovement = false;
+
+	PlayerRef->SetIsMoving(true);
+}
+
+void AEndlessCleanerPlayerController::StopRunning()
+{
+	// Stop movement
+	PlayerRef->SetIsMoving(false);
+
+	bCanMove = false;
+	bIsRunning = false;
+	bLockMovement = true;
+}
+
+void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
+{
+	CurrentLives = InitialLives;
+}
+
+void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
+{
+	bIsLastLife = false;
+	if ((CurrentLives - 1) <= 0)
+	{
+		CurrentLives = 0;
+		bIsLastLife = true;
+	}
+	else
+	{
+		CurrentLives -= 1;
+	}
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 	}
 }
 

@@ -6,6 +6,12 @@
 #include "GameFramework/PlayerController.h"
 #include "EndlessCleanerPlayerController.generated.h"
 
+// Declare any touch gesture as an event here
+#pragma region Touch Gestures Events
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnSwipeHorizental, float, Value);
+DECLARE_DELEGATE_OneParam(FOnSwipeVertical, float);
+#pragma endregion Touch Gestures Events
+
 /**
  *
  */
@@ -33,6 +39,19 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 		void Jump();
+
+	void OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position);
+
+	void OnTouchEnd(const ETouchIndex::Type TouchIndex, const FVector Position);
+
+	FVector TouchBeginPosition = FVector::ZeroVector;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+		float TouchSwipeMinLength;
+
+	// Touch Events variable declaration
+	FOnSwipeHorizental OnSwipeHorizental;
+	FOnSwipeVertical OnSwipeVertical;
 
 	// Player Reference
 	class AEndlessCleanerCharacter* PlayerRef;
