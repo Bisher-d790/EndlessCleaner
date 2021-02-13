@@ -1,0 +1,7 @@
+Android Packaging:
+
+ . To make the APK less than 100 MB, we can store the game data into an .OBB file, to do that set these settings in the Android tab inside the project settings:
+	- bPackageDataInsideApk=True
+	- bDisableVerifyOBBOnStartUp=True
+	- InstallLocation=Auto
+	- bUseExternalFilesDir=True
