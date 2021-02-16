@@ -119,4 +119,13 @@ public:
 		void OnCollectCoin();
 
 	FORCEINLINE UInGameUIWidget* GetUI() { return InGameUIWidgetInstance; }
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		FORCEINLINE bool GetIsRunning() { return bIsRunning; }
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		FORCEINLINE bool GetIsJumping() { return bIsJumping; }
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		FORCEINLINE bool GetIsSliding() { return bIsSliding; }
 };

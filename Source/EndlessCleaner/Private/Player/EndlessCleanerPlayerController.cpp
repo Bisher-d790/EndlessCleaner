@@ -270,7 +270,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 
 void AEndlessCleanerPlayerController::Jump()
 {
-	if (!bCanMove || bIsJumping || !PlayerRef) return;
+	if (!bCanMove || bIsJumping || bIsSliding || !PlayerRef) return;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Jump."));
 
@@ -283,7 +283,7 @@ void AEndlessCleanerPlayerController::Jump()
 
 void AEndlessCleanerPlayerController::Slide()
 {
-	if (!bCanMove || bIsSliding || !PlayerRef) return;
+	if (!bCanMove || bIsSliding || bIsJumping || !PlayerRef) return;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Slide."));
 
