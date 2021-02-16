@@ -40,6 +40,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 		void Jump();
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+		void Slide();
+
 	void OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position);
 
 	void OnTouchEnd(const ETouchIndex::Type TouchIndex, const FVector Position);
@@ -66,7 +69,10 @@ protected:
 	bool bCanMove = false;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-		float InitJumpTime;
+		float JumpDuration;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float SlideDuration;
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI")
 		class UInGameUIWidget* InGameUIWidgetInstance;
@@ -82,9 +88,13 @@ private:
 
 	float CurrentDistance;
 
-	bool bIsJumping;
+	bool bIsJumping = false;
 
 	float RemainingJumpTime;
+
+	bool bIsSliding = false;
+
+	float RemainingSlideTime;
 
 	int CoinsCollected;
 

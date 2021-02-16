@@ -11,7 +11,8 @@ AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
 {
 	// Setup variable values
 	MaxLockMovementTime = 0.2f;
-	InitJumpTime = 1.2f;
+	JumpDuration = 0.85f;
+	SlideDuration = 1.f;
 }
 
 void AEndlessCleanerPlayerController::BeginPlay()
@@ -93,6 +94,22 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			}
 		}
 	}
+
+	// Stop Slide animation after slide time finishes
+	if (bIsSliding)
+	{
+		RemainingSlideTime -= DeltaTime;
+
+		if (RemainingSlideTime <= 0.0f)
+		{
+			bIsSliding = false;
+
+			if (PlayerRef != nullptr)
+			{
+				PlayerRef->UnCrouch();
+			}
+		}
+	}
 }
 
 #pragma region Input Settings
@@ -105,6 +122,8 @@ void AEndlessCleanerPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AEndlessCleanerPlayerController::Jump);
 
+	InputComponent->BindAction("Slide", IE_Pressed, this, &AEndlessCleanerPlayerController::Slide);
+
 	// Touch Input Binding
 	InputComponent->BindTouch(IE_Pressed, this, &AEndlessCleanerPlayerController::OnTouchBegin);
 
@@ -112,10 +131,11 @@ void AEndlessCleanerPlayerController::SetupInputComponent()
 
 	OnSwipeHorizental.BindDynamic(this, &AEndlessCleanerPlayerController::MoveToSide);
 
-	// Bind Vertical Swipe, UP with Jump
+	// Bind Vertical Swipe, UP with Jump and DOWN with Slide
 	OnSwipeVertical.BindLambda([this](float Value)
 	{
 		if (Value > 0) this->Jump();
+		else this->Slide();
 	});
 }
 
@@ -256,9 +276,22 @@ void AEndlessCleanerPlayerController::Jump()
 
 	bIsJumping = true;
 
-	RemainingJumpTime = InitJumpTime;
+	RemainingJumpTime = JumpDuration;
 
 	PlayerRef->Jump();
+}
+
+void AEndlessCleanerPlayerController::Slide()
+{
+	if (!bCanMove || bIsSliding || !PlayerRef) return;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Slide."));
+
+	bIsSliding = true;
+
+	RemainingSlideTime = SlideDuration;
+
+	PlayerRef->Crouch();
 }
 
 void AEndlessCleanerPlayerController::Respawn()
