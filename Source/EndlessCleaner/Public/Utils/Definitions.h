@@ -12,7 +12,8 @@ enum class EPlatformGroundType : uint8
 	VE_LeftBridge			UMETA(DisplayName = "LeftBridge"),		// Type for Left connection of ground
 	VE_RightBridge			UMETA(DisplayName = "RightBridge"),		// Type for Right connection of ground
 	VE_CenterBridge			UMETA(DisplayName = "CenterBridge"),	// Type for Center connection of ground
-	VE_GroundGap			UMETA(DisplayName = "GroundWithGap")	// Type for normal ground with gap
+	VE_GroundGap			UMETA(DisplayName = "GroundWithGap"),	// Type for normal ground with gap
+	VE_TopObstacle			UMETA(DisplayName = "TopObstacle"),		// Type for normal ground with top obstacle
 };
 
 // An Enumerate for game states

@@ -84,7 +84,7 @@ private:
 
 	int PlatformCount;
 
-	int PlatformTypesRandomCeil = 4;	// According to the number of Platform Ground Types
+	int PlatformTypesRandomCeil = 5;	// According to the number of Platform Ground Types, types_of_ground - 1
 
 	class APlatformModule* PreviousPlatform;
 
