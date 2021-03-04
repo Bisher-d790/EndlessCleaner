@@ -118,6 +118,7 @@ void APlatformModule::SpawnPickups(int PlatformCount)
 		for (int i = 0; i < PickupsNumberPerSpawn; i++)
 		{
 			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(PickupClass, SpawnPosition, FRotator::ZeroRotator);
+			SpawnedPickup->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
 			if (SpawnedPickup)
 			{
