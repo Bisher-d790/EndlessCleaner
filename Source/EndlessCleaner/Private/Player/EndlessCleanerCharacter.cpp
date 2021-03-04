@@ -23,7 +23,7 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-	
+
 	// Create Camera Boom
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -60,9 +60,7 @@ void AEndlessCleanerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsMoving) {
-		MoveForward();
-	}
+	MoveForward();
 }
 
 // Called to bind functionality to input
@@ -72,6 +70,8 @@ void AEndlessCleanerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 }
 
 void AEndlessCleanerCharacter::MoveForward() {
+	if (!bIsMoving)	return;
+
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
@@ -80,28 +80,23 @@ void AEndlessCleanerCharacter::MoveForward() {
 	AddMovementInput(Direction, 1.0f);
 }
 
-void AEndlessCleanerCharacter::MoveRight() {
+void AEndlessCleanerCharacter::MoveToSide(int Direction) {
 	if (!bIsMoving)	return;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
-
-	FVector CurrentLocation = GetActorLocation();
-	CurrentLocation.Y += SideMoveDistance;
-
-	//TODO: Need to change the way side movement works instead of just teleportation
-	SetActorLocation(CurrentLocation);
-}
-
-void AEndlessCleanerCharacter::MoveLeft() {
-	if (!bIsMoving)	return;
-
-	//UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
-
-	FVector CurrentLocation = GetActorLocation();
-	CurrentLocation.Y -= SideMoveDistance;
+	TargetLocation = GetActorLocation();
+	if (Direction > 0)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
+		TargetLocation.Y += SideMoveDistance;
+	}
+	else if (Direction < 0)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
+		TargetLocation.Y -= SideMoveDistance;
+	}
 
 	//TODO: Need to change the way side movement works instead of just teleportation
-	SetActorLocation(CurrentLocation);
+	SetActorLocation(TargetLocation);
 }
 
 void AEndlessCleanerCharacter::Respawn(FVector Position) {

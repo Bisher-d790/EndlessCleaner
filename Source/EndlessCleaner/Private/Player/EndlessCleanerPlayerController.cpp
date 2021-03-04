@@ -246,9 +246,9 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			CurrentLockMovementTime = 0.0f;
 
 			CurrentLane += 1;
-
-			PlayerRef->MoveRight();
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
+
+			PlayerRef->MoveToSide(Value);
 		}
 	}
 
@@ -260,10 +260,10 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			bLockMovement = true;
 			CurrentLockMovementTime = 0.0f;
 
-			PlayerRef->MoveLeft();
-
 			CurrentLane -= 1;
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
+
+			PlayerRef->MoveToSide(Value);
 		}
 	}
 }

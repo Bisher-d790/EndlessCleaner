@@ -33,9 +33,7 @@ protected:
 		class USpringArmComponent* CameraBoom;
 
 public:
-	void MoveRight();
-
-	void MoveLeft();
+	void MoveToSide(int Direction);
 
 	void MoveForward();
 
@@ -45,6 +43,8 @@ public:
 
 private:
 	bool bIsMoving = false;
+
+	FVector TargetLocation;
 
 	UPROPERTY(EditAnywhere, Category = Character)
 		float CharacterMaxSpeed;
