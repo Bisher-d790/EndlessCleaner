@@ -7,6 +7,17 @@
 #include "Gameplay/PlatformModule.h"
 #include "UI/InGameUIWidget.h"
 
+
+AEndlessCleanerGameController* AEndlessCleanerGameController::GetInstance()
+{
+	if (GEngine)
+	{
+		AEndlessCleanerGameController* Instance = Cast<AEndlessCleanerGameController>(GEngine->GameSingleton);
+		return Instance;
+	}
+	return nullptr;
+}
+
 // Sets default values
 AEndlessCleanerGameController::AEndlessCleanerGameController()
 {

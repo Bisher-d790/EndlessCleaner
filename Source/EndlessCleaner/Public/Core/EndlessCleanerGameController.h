@@ -42,6 +42,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+		static AEndlessCleanerGameController* GetInstance();
+
 protected:
 
 	// Called when the game starts or when spawned
