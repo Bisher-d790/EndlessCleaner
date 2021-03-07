@@ -13,6 +13,7 @@ AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
 	MaxLockMovementTime = 0.2f;
 	JumpDuration = 0.85f;
 	SlideDuration = 1.f;
+	MoveToSideDistance = 200.0f;
 }
 
 void AEndlessCleanerPlayerController::BeginPlay()
@@ -91,6 +92,47 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			if (PlayerRef != nullptr)
 			{
 				PlayerRef->StopJumping();
+			}
+		}
+	}
+	else
+	{
+		if (bIsMovingLeft)
+		{
+			//if (FMath::IsNearlyEqual(PlayerRef->GetActorLocation().Y, MoveToSideTarget.Y, 1))
+			FVector ActorLocation = PlayerRef->GetActorLocation();
+
+			if (ActorLocation.Y <= MoveToSideTarget.Y)
+			{
+				PlayerRef->StopMoveToSide();
+
+				// Fix occasional mislocation
+				if (CurrentLane == 1) ActorLocation.Y = 0;
+				else if (CurrentLane == 0) ActorLocation.Y = -MoveToSideDistance;
+				else if (CurrentLane == 2) ActorLocation.Y = MoveToSideDistance;
+				PlayerRef->SetActorLocation(ActorLocation);
+				//UE_LOG(LogTemp, Warning, TEXT("Location: %d, %d, %d"), ActorLocation.X, ActorLocation.Y, ActorLocation.Z);
+
+				bIsMovingLeft = false;
+			}
+		}
+		else if (bIsMovingRight)
+		{
+			//if (FMath::IsNearlyEqual(PlayerRef->GetActorLocation().Y, MoveToSideTarget.Y, 1))
+			FVector ActorLocation = PlayerRef->GetActorLocation();
+
+			if (ActorLocation.Y >= MoveToSideTarget.Y)
+			{
+				PlayerRef->StopMoveToSide();
+
+				// Fix occasional mislocation
+				if (CurrentLane == 1) ActorLocation.Y = 0;
+				else if (CurrentLane == 0) ActorLocation.Y = -MoveToSideDistance;
+				else if (CurrentLane == 2) ActorLocation.Y = MoveToSideDistance;
+				PlayerRef->SetActorLocation(ActorLocation);
+				//UE_LOG(LogTemp, Warning, TEXT("Location: %d, %d, %d"), ActorLocation.X, ActorLocation.Y, ActorLocation.Z);
+
+				bIsMovingRight = false;
 			}
 		}
 	}
@@ -235,7 +277,8 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 
 void AEndlessCleanerPlayerController::MoveToSide(float Value)
 {
-	if (!bCanMove || bLockMovement || !PlayerRef) return;
+	if (!bCanMove || bLockMovement || !PlayerRef
+		|| bIsMovingLeft || bIsMovingRight) return;
 
 	// Move Right
 	if (Value > 0.0f)
@@ -243,12 +286,16 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		if (CurrentLane + 1 < 3)
 		{
 			bLockMovement = true;
+			bIsMovingRight = true;
+
 			CurrentLockMovementTime = 0.0f;
 
 			CurrentLane += 1;
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
 
-			PlayerRef->MoveToSide(Value);
+			MoveToSideTarget = PlayerRef->GetActorLocation();
+			MoveToSideTarget.Y += MoveToSideDistance;
+			PlayerRef->MoveRight();
 		}
 	}
 
@@ -258,12 +305,16 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		if (CurrentLane - 1 >= 0)
 		{
 			bLockMovement = true;
+			bIsMovingLeft = true;
+
 			CurrentLockMovementTime = 0.0f;
 
 			CurrentLane -= 1;
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
 
-			PlayerRef->MoveToSide(Value);
+			MoveToSideTarget = PlayerRef->GetActorLocation();
+			MoveToSideTarget.Y -= MoveToSideDistance;
+			PlayerRef->MoveLeft();
 		}
 	}
 }
@@ -299,6 +350,7 @@ void AEndlessCleanerPlayerController::Respawn()
 	CurrentLane = 1; // Set to middle
 	bIsRunning = false;
 	CurrentDistance = 0.0f;
+	bIsMovingLeft = bIsMovingRight = false;
 
 	if (InGameUIWidgetInstance)
 	{

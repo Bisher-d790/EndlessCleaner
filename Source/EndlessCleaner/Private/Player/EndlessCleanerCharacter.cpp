@@ -13,7 +13,7 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 {
 	// Setup Initial variable values
 	CharacterMaxSpeed = 600.f;
-	SideMoveDistance = 150.f;
+	SideMoveRotation = 45.0f;
 
 	// Setup Capsule Size
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
@@ -72,7 +72,7 @@ void AEndlessCleanerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 void AEndlessCleanerCharacter::MoveForward() {
 	if (!bIsMoving)	return;
 
-	const FRotator Rotation = GetControlRotation();
+	const FRotator Rotation = GetActorRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
@@ -80,27 +80,33 @@ void AEndlessCleanerCharacter::MoveForward() {
 	AddMovementInput(Direction, 1.0f);
 }
 
-void AEndlessCleanerCharacter::MoveToSide(int Direction) {
+void AEndlessCleanerCharacter::MoveLeft() {
 	if (!bIsMoving)	return;
 
-	TargetLocation = GetActorLocation();
-	if (Direction > 0)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
-		TargetLocation.Y += SideMoveDistance;
-	}
-	else if (Direction < 0)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
-		TargetLocation.Y -= SideMoveDistance;
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
 
-	//TODO: Need to change the way side movement works instead of just teleportation
-	SetActorLocation(TargetLocation);
+	SetActorRelativeRotation(FRotator(0, -SideMoveRotation, 0));
+}
+
+void AEndlessCleanerCharacter::MoveRight() {
+	if (!bIsMoving)	return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
+
+	SetActorRelativeRotation(FRotator(0, SideMoveRotation, 0));
+}
+
+void AEndlessCleanerCharacter::StopMoveToSide() {
+	if (!bIsMoving)	return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Stop Move To Side."));
+
+	SetActorRelativeRotation(FRotator::ZeroRotator);
 }
 
 void AEndlessCleanerCharacter::Respawn(FVector Position) {
 	SetActorLocation(Position);
+	StopMoveToSide();
 
 	bIsMoving = false;
 }

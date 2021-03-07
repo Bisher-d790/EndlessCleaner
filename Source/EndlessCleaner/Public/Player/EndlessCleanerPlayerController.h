@@ -74,6 +74,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Movement)
 		float SlideDuration;
 
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float MoveToSideDistance;
+
 	UPROPERTY(BlueprintReadWrite, Category = "UI")
 		class UInGameUIWidget* InGameUIWidgetInstance;
 
@@ -99,6 +102,12 @@ private:
 	int CoinsCollected;
 
 	int CurrentLives;
+
+	bool bIsMovingLeft = false;
+
+	bool bIsMovingRight = false;
+
+	FVector MoveToSideTarget;
 
 public:
 
