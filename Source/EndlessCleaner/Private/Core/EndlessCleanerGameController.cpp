@@ -88,6 +88,8 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 				FirstPlatform = TempFirstPlatform;
 			}
 
+			PlayerController->SetCurrentPlatform(PlatformToCheck);
+
 			// Spawn new Platform
 			SpawnNewPlatform();
 		}

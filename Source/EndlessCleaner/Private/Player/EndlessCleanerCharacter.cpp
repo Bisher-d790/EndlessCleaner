@@ -14,6 +14,7 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 	// Setup Initial variable values
 	CharacterMaxSpeed = 600.f;
 	SideMoveRotation = 45.0f;
+	SideRotationDuration = 0.05f;
 
 	// Setup Capsule Size
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
@@ -61,6 +62,20 @@ void AEndlessCleanerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	MoveForward();
+
+	// Lerp rotation
+	if (bIsRotating)
+	{
+		RotationLerpTime += DeltaTime;
+		SetActorRelativeRotation(FMath::Lerp(FromRotation, TargetRotation, RotationLerpTime / SideRotationDuration));
+
+		if ((GetActorRotation() - TargetRotation).IsNearlyZero(10)) // 10 tolerance for rotation end check
+		{
+			SetActorRotation(TargetRotation);
+			RotationLerpTime = 0.0f;
+			bIsRotating = false;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -83,29 +98,30 @@ void AEndlessCleanerCharacter::MoveForward() {
 void AEndlessCleanerCharacter::MoveLeft() {
 	if (!bIsMoving)	return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
-
-	SetActorRelativeRotation(FRotator(0, -SideMoveRotation, 0));
+	//UE_LOG(LogTemp, Warning, TEXT("Move To Left."));
+	FromRotation = GetActorRotation();
+	TargetRotation = FRotator(0, -SideMoveRotation, 0);
+	bIsRotating = true;
 }
 
 void AEndlessCleanerCharacter::MoveRight() {
 	if (!bIsMoving)	return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
-
-	SetActorRelativeRotation(FRotator(0, SideMoveRotation, 0));
+	//UE_LOG(LogTemp, Warning, TEXT("Move To Right."));
+	FromRotation = GetActorRotation();
+	TargetRotation = FRotator(0, SideMoveRotation, 0);
+	bIsRotating = true;
 }
 
 void AEndlessCleanerCharacter::StopMoveToSide() {
-	if (!bIsMoving)	return;
+	//UE_LOG(LogTemp, Warning, TEXT("Stop Move To Side."));
 
-	UE_LOG(LogTemp, Warning, TEXT("Stop Move To Side."));
-
-	SetActorRelativeRotation(FRotator::ZeroRotator);
+	FromRotation = GetActorRotation();
+	TargetRotation = FRotator::ZeroRotator;
+	bIsRotating = true;
 }
 
-void AEndlessCleanerCharacter::Respawn(FVector Position) {
-	SetActorLocation(Position);
+void AEndlessCleanerCharacter::Respawn() {
 	StopMoveToSide();
 
 	bIsMoving = false;

@@ -69,13 +69,13 @@ protected:
 	bool bCanMove = false;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
+		float LocationCorrectionDuration;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
 		float JumpDuration;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 		float SlideDuration;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-		float MoveToSideDistance;
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI")
 		class UInGameUIWidget* InGameUIWidgetInstance;
@@ -107,7 +107,9 @@ private:
 
 	bool bIsMovingRight = false;
 
-	FVector MoveToSideTarget;
+	bool bCheckPosition = false;
+
+	class APlatformModule* CurrentPlatform;
 
 public:
 
@@ -123,6 +125,8 @@ public:
 	void LoseLife(bool& isLastLive);
 
 	void SetInitialLives(int32 InitialLives);
+
+	FORCEINLINE void SetCurrentPlatform(APlatformModule* Platform) { CurrentPlatform = Platform; };
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void OnCollectCoin();

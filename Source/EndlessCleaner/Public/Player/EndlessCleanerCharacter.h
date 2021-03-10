@@ -43,14 +43,25 @@ public:
 
 	FORCEINLINE void SetIsMoving(bool Value) { this->bIsMoving = Value; };
 
-	void Respawn(FVector Position);
+	void Respawn();
 
 private:
 	bool bIsMoving = false;
+
+	bool bIsRotating = false;
 
 	UPROPERTY(EditAnywhere, Category = Character)
 		float CharacterMaxSpeed;
 
 	UPROPERTY(EditAnywhere, Category = Character)
 		float SideMoveRotation;
+
+	UPROPERTY(EditAnywhere, Category = Character)
+		float SideRotationDuration;
+
+	FRotator TargetRotation;
+
+	FRotator FromRotation;
+
+	float RotationLerpTime = 0.0f;
 };

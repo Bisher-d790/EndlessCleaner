@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
 		float PlatformLength;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
+		float LaneWidth;
+
 	APlatformModule* PreviousPlatform = nullptr;
 
 	APlatformModule* NextPlatform = nullptr;
@@ -56,13 +59,13 @@ protected:
 	TArray<class APickup*> SpawnedPickups;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
-		USceneComponent* Lane0; // Right Lane
+		USceneComponent* Lane0; // Left Lane
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
 		USceneComponent* Lane1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
-		USceneComponent* Lane2; // Left Lane
+		USceneComponent* Lane2; // Right Lane
 
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
@@ -76,6 +79,10 @@ public:
 	FORCEINLINE APlatformModule* GetPreviousPlatform() { return PreviousPlatform; };
 
 	FORCEINLINE void SetPreviousPlatform(APlatformModule* Value) { PreviousPlatform = Value; };
+
+	FORCEINLINE float GetLaneWidth() { return LaneWidth; };
+
+	TArray<FVector> GetLanesArray();
 
 	void DestroyPlatform();
 

@@ -16,6 +16,7 @@ APlatformModule::APlatformModule()
 	PickupStartLocationX = -170.0f;
 	DistanceBetweenPickupsX = 230.0f;
 	PickupsNumberPerSpawn = 3;
+	LaneWidth = 30.0f;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
@@ -129,6 +130,17 @@ void APlatformModule::SpawnPickups(int PlatformCount)
 			}
 		}
 	}
+}
+
+TArray<FVector> APlatformModule::GetLanesArray()
+{
+	TArray<FVector> Lanes = TArray<FVector>();
+
+	Lanes.Add(Lane0->GetComponentLocation());
+	Lanes.Add(Lane1->GetComponentLocation());
+	Lanes.Add(Lane2->GetComponentLocation());
+
+	return Lanes;
 }
 
 // Called when the platform is destroyed
