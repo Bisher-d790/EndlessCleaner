@@ -6,17 +6,29 @@
 #include "Player/EndlessCleanerCharacter.h"
 #include "Gameplay/PlatformModule.h"
 #include "UI/InGameUIWidget.h"
+#include "Utils/SingletonManager.h"
 
 
+#pragma region Singleton
 AEndlessCleanerGameController* AEndlessCleanerGameController::GetInstance()
 {
 	if (GEngine)
 	{
-		AEndlessCleanerGameController* Instance = Cast<AEndlessCleanerGameController>(GEngine->GameSingleton);
-		return Instance;
+		USingletonManager* SingletonManager = Cast<USingletonManager>(GEngine->GameSingleton);
+		return SingletonManager->GetGameControllerInstance();
 	}
 	return nullptr;
 }
+
+void AEndlessCleanerGameController::SetInstance()
+{
+	if (GEngine)
+	{
+		USingletonManager* SingletonManager = Cast<USingletonManager>(GEngine->GameSingleton);
+		SingletonManager->SetGameControllerInstance(this);
+	}
+}
+#pragma endregion Singleton
 
 // Sets default values
 AEndlessCleanerGameController::AEndlessCleanerGameController()
@@ -36,6 +48,8 @@ AEndlessCleanerGameController::AEndlessCleanerGameController()
 void AEndlessCleanerGameController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetInstance();
 
 	// Set Initial Game State
 	GameState = EGameState::VE_PreparePlatforms;

@@ -42,8 +42,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+#pragma region Singleton
+public:
+	// Static Function to get the class instance reference
 	UFUNCTION(BlueprintCallable)
 		static AEndlessCleanerGameController* GetInstance();
+
+private:
+	// Function to be called on initializing an object to set the Singleton reference
+	void SetInstance();
+#pragma endregion Singleton
 
 protected:
 
