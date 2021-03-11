@@ -2,6 +2,7 @@
 
 
 #include "Utils/SingletonManager.h"
+#include "Core/EndlessCleanerGameController.h"
 
 USingletonManager* USingletonManager::GetInstance()
 {
