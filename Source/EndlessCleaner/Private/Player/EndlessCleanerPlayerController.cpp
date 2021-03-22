@@ -292,8 +292,7 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 
 void AEndlessCleanerPlayerController::MoveToSide(float Value)
 {
-	if (!bCanMove || bLockMovement || !PlayerRef
-		|| bIsMovingLeft || bIsMovingRight) return;
+	if (!bCanMove || bLockMovement || !PlayerRef) return;
 
 
 	// Move Left
@@ -333,7 +332,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 
 void AEndlessCleanerPlayerController::Jump()
 {
-	if (!bCanMove || bIsJumping || bIsSliding || !PlayerRef) return;
+	if (!bCanMove || bIsJumping || !PlayerRef) return;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Jump."));
 
@@ -341,18 +340,48 @@ void AEndlessCleanerPlayerController::Jump()
 
 	RemainingJumpTime = JumpDuration;
 
+	// if Sliding, stop sliding and continue to jump
+	if (bIsSliding)
+	{
+		RemainingSlideTime = 0.0f;
+		bIsSliding = false;
+		PlayerRef->UnCrouch();
+
+		// Jump in the next tick, to avoid stucking to the ground
+		// Run Jump() concurrently in the next tick
+		FTimerDelegate TimerCallback;
+		AEndlessCleanerCharacter* PlayerTemp = PlayerRef;
+		FTimerHandle Handle;
+
+		TimerCallback.BindLambda([PlayerTemp]
+		{
+			// callback;
+			PlayerTemp->Jump();
+		});
+
+		GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, GetWorld()->GetDeltaSeconds(), false);
+
+		return;
+	}
+
 	PlayerRef->Jump();
 }
 
 void AEndlessCleanerPlayerController::Slide()
 {
-	if (!bCanMove || bIsSliding || bIsJumping || !PlayerRef) return;
+	if (!bCanMove || bIsSliding || !PlayerRef) return;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Slide."));
 
 	bIsSliding = true;
 
 	RemainingSlideTime = SlideDuration;
+
+	// if Jumping, slide after finishing jump
+	if (bIsJumping)
+	{
+		RemainingSlideTime += RemainingJumpTime;
+	}
 
 	PlayerRef->Crouch();
 }
