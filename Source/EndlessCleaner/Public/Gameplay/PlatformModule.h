@@ -29,7 +29,7 @@ protected:
 		class USceneComponent* EndModulePoint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
-		EPlatformGroundType PlatformGroundType;
+		EPlatformType PlatformType;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
 		float PlatformLength;
@@ -70,7 +70,7 @@ protected:
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
 
-	FORCEINLINE EPlatformGroundType GetPlatformType() { return PlatformGroundType; };
+	FORCEINLINE EPlatformType GetPlatformType() { return PlatformType; };
 
 	FORCEINLINE APlatformModule* GetNextPlatform() { return NextPlatform; };
 

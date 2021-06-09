@@ -54,22 +54,22 @@ void APlatformModule::SpawnPickups(int PlatformCount)
 	int Lane = 1;
 	bool bSpawnPickup = false;
 
-	switch (PlatformGroundType)
+	switch (PlatformType)
 	{
-	case EPlatformGroundType::VE_Ground: // according to the next platform
+	case EPlatformType::VE_Ground: // according to the next platform
 		if (NextPlatform)
 		{
-			if (NextPlatform->GetPlatformType() == EPlatformGroundType::VE_CenterBridge)
+			if (NextPlatform->GetPlatformType() == EPlatformType::VE_CenterBridge)
 			{
 				bSpawnPickup = true;
 				Lane = 1;
 			}
-			else if (NextPlatform->GetPlatformType() == EPlatformGroundType::VE_LeftBridge)
+			else if (NextPlatform->GetPlatformType() == EPlatformType::VE_LeftBridge)
 			{
 				bSpawnPickup = true;
 				Lane = 2;
 			}
-			else if (NextPlatform->GetPlatformType() == EPlatformGroundType::VE_RightBridge)
+			else if (NextPlatform->GetPlatformType() == EPlatformType::VE_RightBridge)
 			{
 				bSpawnPickup = true;
 				Lane = 0;
@@ -82,23 +82,23 @@ void APlatformModule::SpawnPickups(int PlatformCount)
 		}
 		break;
 
-	case EPlatformGroundType::VE_CenterBridge:
+	case EPlatformType::VE_CenterBridge:
 		bSpawnPickup = true;
 		Lane = 1;
 		break;
 
 
-	case EPlatformGroundType::VE_LeftBridge:
+	case EPlatformType::VE_LeftBridge:
 		bSpawnPickup = true;
 		Lane = 2;
 		break;
 
-	case EPlatformGroundType::VE_RightBridge:
+	case EPlatformType::VE_RightBridge:
 		bSpawnPickup = true;
 		Lane = 0;
 		break;
 
-	case EPlatformGroundType::VE_GroundGap:
+	case EPlatformType::VE_GroundGap:
 		break;
 	}
 

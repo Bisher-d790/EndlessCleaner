@@ -155,12 +155,12 @@ void AEndlessCleanerGameController::InitializeGame()
 		{
 			float RandomPlatformToSpawn = FMath::RandRange(0.f, 100.f);
 
-			EPlatformGroundType PlatformType = EPlatformGroundType::VE_Ground;
+			EPlatformType PlatformType = EPlatformType::VE_Ground;
 
 			// Select normal ground
 			if (RandomPlatformToSpawn > 50.f)
 			{
-				PlatformType = EPlatformGroundType::VE_Ground;
+				PlatformType = EPlatformType::VE_Ground;
 			}
 
 			TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(PlatformType);
@@ -172,7 +172,7 @@ void AEndlessCleanerGameController::InitializeGame()
 			if (PreviousPlatform)
 			{
 				// Next type to spawn: Depending on previous platform spawned
-				EPlatformGroundType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
+				EPlatformType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
 				TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(NewType);
 
 				if (PlatformToSpawn)
@@ -280,7 +280,7 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 	FVector SpawnPosition = PreviousPlatform->GetActorLocation();
 	SpawnPosition.X += PreviousPlatform->GetPlatformLength();
 
-	EPlatformGroundType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
+	EPlatformType NewType = GetPlatformTypeToSpawn(PreviousPlatform->GetPlatformType());
 	TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformModuleByType(NewType);
 
 	// Spawn the selected Platform
@@ -308,27 +308,27 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 	}
 }
 
-EPlatformGroundType AEndlessCleanerGameController::GetPlatformTypeToSpawn(const EPlatformGroundType& PlatformType)
+EPlatformType AEndlessCleanerGameController::GetPlatformTypeToSpawn(const EPlatformType& PlatformType)
 {
-	EPlatformGroundType SelectedPlatform = EPlatformGroundType::VE_Ground;
+	EPlatformType SelectedPlatform = EPlatformType::VE_Ground;
 	TArray<FProbabilityTable> TempTable;
 
-	if (PlatformType == EPlatformGroundType::VE_Ground ||
-		PlatformType == EPlatformGroundType::VE_GroundGap)
+	if (PlatformType == EPlatformType::VE_Ground ||
+		PlatformType == EPlatformType::VE_GroundGap)
 	{
 		for (int i = 0; i < PlatformTable.Num(); i++)
 		{
 			TempTable.Add(PlatformTable[i]);
 		}
 	}
-	else if (PlatformType == EPlatformGroundType::VE_CenterBridge ||
-		PlatformType == EPlatformGroundType::VE_LeftBridge ||
-		PlatformType == EPlatformGroundType::VE_RightBridge)
+	else if (PlatformType == EPlatformType::VE_CenterBridge ||
+		PlatformType == EPlatformType::VE_LeftBridge ||
+		PlatformType == EPlatformType::VE_RightBridge)
 	{
 		for (int i = 0; i < PlatformTable.Num(); i++)
 		{
-			if (PlatformTable[i].PlatformGroundType == EPlatformGroundType::VE_Ground ||
-				PlatformTable[i].PlatformGroundType == EPlatformGroundType::VE_GroundGap)
+			if (PlatformTable[i].PlatformType == EPlatformType::VE_Ground ||
+				PlatformTable[i].PlatformType == EPlatformType::VE_GroundGap)
 			{
 				TempTable.Add(PlatformTable[i]);
 			}
@@ -337,7 +337,7 @@ EPlatformGroundType AEndlessCleanerGameController::GetPlatformTypeToSpawn(const 
 
 	if (TempTable.Num() == 0)
 	{
-		return EPlatformGroundType::VE_Ground;
+		return EPlatformType::VE_Ground;
 	}
 
 	// Loop through all probabilities
@@ -373,17 +373,17 @@ EPlatformGroundType AEndlessCleanerGameController::GetPlatformTypeToSpawn(const 
 	// Select the platform
 	if (PlatformIndex < TempTable.Num())
 	{
-		SelectedPlatform = TempTable[PlatformIndex].PlatformGroundType;
+		SelectedPlatform = TempTable[PlatformIndex].PlatformType;
 	}
 
 	return SelectedPlatform;
 }
 
-TSubclassOf<class APlatformModule> AEndlessCleanerGameController::GetPlatformModuleByType(const EPlatformGroundType& PreviousPlatformType)
+TSubclassOf<class APlatformModule> AEndlessCleanerGameController::GetPlatformModuleByType(const EPlatformType& PreviousPlatformType)
 {
 	for (int i = 0; i < PlatformTable.Num(); i++)
 	{
-		if (PreviousPlatformType == PlatformTable[i].PlatformGroundType)
+		if (PreviousPlatformType == PlatformTable[i].PlatformType)
 		{
 			return PlatformTable[i].PlatformClass;
 		}

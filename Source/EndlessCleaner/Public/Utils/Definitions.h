@@ -6,7 +6,7 @@
 
 // An Enumerate for the types of Ground Platforms used for the game
 UENUM(BlueprintType)
-enum class EPlatformGroundType : uint8
+enum class EPlatformType : uint8
 {
 	VE_Ground				UMETA(DisplayName = "Ground"),			// Type for normal ground
 	VE_LeftBridge			UMETA(DisplayName = "LeftBridge"),		// Type for Left connection of ground

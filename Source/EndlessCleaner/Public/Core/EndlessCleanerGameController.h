@@ -17,11 +17,11 @@ public:
 
 	FProbabilityTable()
 	{
-		PlatformGroundType = EPlatformGroundType::VE_Ground;
+		PlatformType = EPlatformType::VE_Ground;
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
-		EPlatformGroundType PlatformGroundType;
+		EPlatformType PlatformType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
 		TSubclassOf<class APlatformModule> PlatformClass;
@@ -109,9 +109,9 @@ private:
 
 	void SpawnNewPlatform();
 
-	EPlatformGroundType GetPlatformTypeToSpawn(const EPlatformGroundType& PlatformType);
+	EPlatformType GetPlatformTypeToSpawn(const EPlatformType& PlatformType);
 
-	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformGroundType& PreviousType);
+	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformType& PreviousType);
 
 	UFUNCTION()
 		void OnRespawn();
