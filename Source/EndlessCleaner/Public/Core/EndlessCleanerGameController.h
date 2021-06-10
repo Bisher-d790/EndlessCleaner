@@ -18,6 +18,7 @@ public:
 	FProbabilityTable()
 	{
 		PlatformType = EPlatformType::VE_Ground;
+		Probability = 50.f;
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
@@ -27,7 +28,7 @@ public:
 		TSubclassOf<class APlatformModule> PlatformClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Platform")
-		float Probability = 50.f;
+		float Probability;
 };
 
 UCLASS()

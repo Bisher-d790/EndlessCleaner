@@ -195,7 +195,11 @@ void AEndlessCleanerGameController::InitializeGame()
 				SpawnedPlatform->SetPreviousPlatform(PreviousPlatform);
 				PreviousPlatform->SetNextPlatform(SpawnedPlatform);
 
-				PreviousPlatform->SpawnPickups(PlatformCount);
+				// Dont spawn for the first few platform
+				if (PlatformCount >= NumberOfInitialPlatforms)
+				{
+					PreviousPlatform->SpawnPickups();
+				}
 			}
 		}
 
@@ -298,7 +302,11 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 			SpawnedPlatform->SetPreviousPlatform(PreviousPlatform);
 			PreviousPlatform->SetNextPlatform(SpawnedPlatform);
 
-			PreviousPlatform->SpawnPickups(PlatformCount);
+			// Dont spawn for the first few platform
+			if (PlatformCount >= NumberOfInitialPlatforms)
+			{
+				PreviousPlatform->SpawnPickups();
+			}
 		}
 
 		// Set the previous platform as the spawned platform

@@ -7,6 +7,45 @@
 #include "Utils/Definitions.h"
 #include "PlatformModule.generated.h"
 
+// A struct to store the lane values
+USTRUCT(BlueprintType)
+struct FLaneOptions
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	FLaneOptions()
+	{
+		PickupStartLocationX = -170.0f;
+		DistanceBetweenPickupsX = 230.0f;
+		PickupsNumberPerSpawn = 3;
+		LaneWidth = 30.0f;
+		PickupProbability = 50.f;
+	}
+
+	UPROPERTY(EditDefaultsOnly, Category = "Platform")
+		FVector LanePosition;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Platform")
+		float LaneWidth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+		float PickupProbability;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		float PickupStartLocationX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		float DistanceBetweenPickupsX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		int PickupsNumberPerSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		TSubclassOf<class APickup> PickupClass = nullptr;
+};
+
 UCLASS()
 class ENDLESSCLEANER_API APlatformModule : public AActor
 {
@@ -28,44 +67,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Platform")
 		class USceneComponent* EndModulePoint;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
+	UPROPERTY(EditDefaultsOnly, Category = "Platform")
 		EPlatformType PlatformType;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
-		float PlatformLength;
+	UPROPERTY(EditDefaultsOnly, Category = "Platform")
+		float DistanceBetweenLanes;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform Settings")
-		float LaneWidth;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Platform")
+		TArray<FLaneOptions> Lanes;
 
 	APlatformModule* PreviousPlatform = nullptr;
 
 	APlatformModule* NextPlatform = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
-		float DistanceBetweenLanes;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
-		float PickupStartLocationX;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
-		float DistanceBetweenPickupsX;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
-		int PickupsNumberPerSpawn;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Pickup Settings")
-		TSubclassOf<class APickup> PickupClass = nullptr;
-
 	TArray<class APickup*> SpawnedPickups;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
-		USceneComponent* Lane0; // Left Lane
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
-		USceneComponent* Lane1;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
-		USceneComponent* Lane2; // Right Lane
+	float PlatformLength;
 
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
@@ -80,11 +97,9 @@ public:
 
 	FORCEINLINE void SetPreviousPlatform(APlatformModule* Value) { PreviousPlatform = Value; };
 
-	FORCEINLINE float GetLaneWidth() { return LaneWidth; };
-
-	TArray<FVector> GetLanesArray();
+	FORCEINLINE TArray<FLaneOptions> GetLanesArray() { return Lanes; };
 
 	void DestroyPlatform();
 
-	void SpawnPickups(int PlatformCount);
+	void SpawnPickups();
 };

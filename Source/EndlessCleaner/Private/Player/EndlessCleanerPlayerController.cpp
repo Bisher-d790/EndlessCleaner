@@ -102,11 +102,11 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		{
 			FVector ActorLocation = PlayerRef->GetActorLocation();
 
-			TArray<FVector> Lanes = CurrentPlatform->GetLanesArray();
+			TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
 			for (int i = 0; i < Lanes.Num(); i++)
 			{
 				if (i == CurrentLane + 1) continue;
-				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].Y, CurrentPlatform->GetLaneWidth()))
+				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
 				{
 					PlayerRef->StopMoveToSide();
 
@@ -123,11 +123,11 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		{
 			FVector ActorLocation = PlayerRef->GetActorLocation();
 
-			TArray<FVector> Lanes = CurrentPlatform->GetLanesArray();
+			TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
 			for (int i = 0; i < Lanes.Num(); i++)
 			{
 				if (i == CurrentLane - 1) continue;
-				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].Y, CurrentPlatform->GetLaneWidth()))
+				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
 				{
 					PlayerRef->StopMoveToSide();
 
@@ -143,7 +143,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		else if (bCheckPosition)
 		{
 			FVector TargetLocation = PlayerRef->GetActorLocation();
-			FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane];
+			FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
 			if (!FMath::IsNearlyEqual(TargetLocation.Y, LaneLocation.Y))
 			{
 				TargetLocation.Y = LaneLocation.Y;
@@ -190,10 +190,10 @@ void AEndlessCleanerPlayerController::SetupInputComponent()
 
 	// Bind Vertical Swipe, UP with Jump and DOWN with Slide
 	OnSwipeVertical.BindLambda([this](float Value)
-	{
-		if (Value > 0) this->Jump();
-		else this->Slide();
-	});
+		{
+			if (Value > 0) this->Jump();
+			else this->Slide();
+		});
 }
 
 void AEndlessCleanerPlayerController::OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position)
@@ -354,10 +354,10 @@ void AEndlessCleanerPlayerController::Jump()
 		FTimerHandle Handle;
 
 		TimerCallback.BindLambda([PlayerTemp]
-		{
-			// callback;
-			PlayerTemp->Jump();
-		});
+			{
+				// callback;
+				PlayerTemp->Jump();
+			});
 
 		GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, GetWorld()->GetDeltaSeconds(), false);
 

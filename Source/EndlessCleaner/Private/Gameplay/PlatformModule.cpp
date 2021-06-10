@@ -11,12 +11,7 @@ APlatformModule::APlatformModule()
 	PrimaryActorTick.bCanEverTick = false;
 
 	// Setup initial variables
-	PlatformLength = 20.0f;
 	DistanceBetweenLanes = 150.0f;
-	PickupStartLocationX = -170.0f;
-	DistanceBetweenPickupsX = 230.0f;
-	PickupsNumberPerSpawn = 3;
-	LaneWidth = 30.0f;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
@@ -25,16 +20,6 @@ APlatformModule::APlatformModule()
 
 	EndModulePoint = CreateDefaultSubobject<USceneComponent>(TEXT("EndModulePoint"));
 	EndModulePoint->SetupAttachment(RootComponent);
-
-	// Setup Spawn Pickup Positions
-	Lane0 = CreateDefaultSubobject<USceneComponent>(TEXT("Lane0"));
-	Lane0->SetupAttachment(RootComponent);
-
-	Lane1 = CreateDefaultSubobject<USceneComponent>(TEXT("Lane1"));
-	Lane1->SetupAttachment(RootComponent);
-
-	Lane2 = CreateDefaultSubobject<USceneComponent>(TEXT("Lane2"));
-	Lane2->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -46,11 +31,8 @@ void APlatformModule::BeginPlay()
 }
 
 // Dont spawn for VE_GroundGap
-// Dont spawn for the first few platform
-void APlatformModule::SpawnPickups(int PlatformCount)
+void APlatformModule::SpawnPickups()
 {
-	if (!PickupClass || PlatformCount < 5) return;
-
 	int Lane = 1;
 	bool bSpawnPickup = false;
 
@@ -102,45 +84,24 @@ void APlatformModule::SpawnPickups(int PlatformCount)
 		break;
 	}
 
-	if (bSpawnPickup)
+	if (bSpawnPickup && Lanes[Lane].PickupClass)
 	{
-		FVector SpawnPosition = Lane0->GetComponentLocation();
-
-		if (Lane == 1)
-		{
-			SpawnPosition = Lane1->GetComponentLocation();
-		}
-		else if (Lane == 2)
-		{
-			SpawnPosition = Lane2->GetComponentLocation();
-		}
+		FVector SpawnPosition = GetActorLocation() + Lanes[Lane].LanePosition;
 
 		// Spawn pickups
-		for (int i = 0; i < PickupsNumberPerSpawn; i++)
+		for (int i = 0; i < Lanes[Lane].PickupsNumberPerSpawn; i++)
 		{
-			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(PickupClass, SpawnPosition, FRotator::ZeroRotator);
+			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(Lanes[Lane].PickupClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedPickup->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
 			if (SpawnedPickup)
-			{
-				SpawnedPickup->SetActorLocation(SpawnPosition);
-				SpawnedPickups.Add(SpawnedPickup);
 
-				SpawnPosition.X -= DistanceBetweenPickupsX;
-			}
+				SpawnedPickup->SetActorLocation(SpawnPosition);
+			SpawnedPickups.Add(SpawnedPickup);
+
+			SpawnPosition.X -= Lanes[Lane].DistanceBetweenPickupsX;
 		}
 	}
-}
-
-TArray<FVector> APlatformModule::GetLanesArray()
-{
-	TArray<FVector> Lanes = TArray<FVector>();
-
-	Lanes.Add(Lane0->GetComponentLocation());
-	Lanes.Add(Lane1->GetComponentLocation());
-	Lanes.Add(Lane2->GetComponentLocation());
-
-	return Lanes;
 }
 
 // Called when the platform is destroyed
