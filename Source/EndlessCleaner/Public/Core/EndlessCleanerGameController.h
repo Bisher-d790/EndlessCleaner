@@ -9,15 +9,15 @@
 
 // A struct to store the different platform types
 USTRUCT(BlueprintType)
-struct FProbabilityTable
+struct FPlatformOptions
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
 
-	FProbabilityTable()
+	FPlatformOptions()
 	{
-		PlatformType = EPlatformType::VE_Ground;
+		PlatformType = EPlatformType::VE_ThreeLanes_Ground;
 		Probability = 50.f;
 	}
 
@@ -68,7 +68,7 @@ protected:
 		TArray<AActor*> EnvironmentalActorsToMove;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-		TArray<FProbabilityTable> PlatformTable;
+		TArray<FPlatformOptions> PlatformTable;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		int VisiblePlatformNumber;
@@ -110,9 +110,9 @@ private:
 
 	void SpawnNewPlatform();
 
-	EPlatformType GetPlatformTypeToSpawn(const EPlatformType& PlatformType);
+	EPlatformType GetPlatformTypeToSpawn(const EPlatformType& PreviousPlatformType);
 
-	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformType& PreviousType);
+	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformType& PlatformType);
 
 	UFUNCTION()
 		void OnRespawn();

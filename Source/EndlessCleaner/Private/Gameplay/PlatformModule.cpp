@@ -38,49 +38,21 @@ void APlatformModule::SpawnPickups()
 
 	switch (PlatformType)
 	{
-	case EPlatformType::VE_Ground: // according to the next platform
+	case EPlatformType::VE_ThreeLanes_Ground: // according to the next platform
 		if (NextPlatform)
 		{
-			if (NextPlatform->GetPlatformType() == EPlatformType::VE_CenterBridge)
-			{
-				bSpawnPickup = true;
-				Lane = 1;
-			}
-			else if (NextPlatform->GetPlatformType() == EPlatformType::VE_LeftBridge)
-			{
-				bSpawnPickup = true;
-				Lane = 2;
-			}
-			else if (NextPlatform->GetPlatformType() == EPlatformType::VE_RightBridge)
-			{
-				bSpawnPickup = true;
-				Lane = 0;
-			}
-			else
-			{
-				bSpawnPickup = true;
-				Lane = FMath::RandRange(0, 2);
-			}
+			bSpawnPickup = true;
+			Lane = FMath::RandRange(0, 2);
 		}
 		break;
 
-	case EPlatformType::VE_CenterBridge:
+	case EPlatformType::VE_ThreeLanes_OneBridge:
+	case EPlatformType::VE_ThreeLanes_TwoBridges:
 		bSpawnPickup = true;
-		Lane = 1;
+		Lane = FMath::RandRange(0, 2);
 		break;
 
-
-	case EPlatformType::VE_LeftBridge:
-		bSpawnPickup = true;
-		Lane = 2;
-		break;
-
-	case EPlatformType::VE_RightBridge:
-		bSpawnPickup = true;
-		Lane = 0;
-		break;
-
-	case EPlatformType::VE_GroundGap:
+	case EPlatformType::VE_ThreeLanes_GroundGap:
 		break;
 	}
 

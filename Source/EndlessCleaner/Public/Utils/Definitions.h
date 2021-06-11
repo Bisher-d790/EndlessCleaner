@@ -8,12 +8,10 @@
 UENUM(BlueprintType)
 enum class EPlatformType : uint8
 {
-	VE_Ground				UMETA(DisplayName = "Ground"),			// Type for normal ground
-	VE_LeftBridge			UMETA(DisplayName = "LeftBridge"),		// Type for Left connection of ground
-	VE_RightBridge			UMETA(DisplayName = "RightBridge"),		// Type for Right connection of ground
-	VE_CenterBridge			UMETA(DisplayName = "CenterBridge"),	// Type for Center connection of ground
-	VE_GroundGap			UMETA(DisplayName = "GroundWithGap"),	// Type for normal ground with gap
-	VE_TopObstacle			UMETA(DisplayName = "TopObstacle"),		// Type for normal ground with top obstacle
+	VE_ThreeLanes_Ground		UMETA(DisplayName = "Ground"),			// Type for normal ground
+	VE_ThreeLanes_OneBridge		UMETA(DisplayName = "One Bridge"),		// Type for two connections of ground
+	VE_ThreeLanes_TwoBridges	UMETA(DisplayName = "Two Bridges"),		// Type for one connection of ground
+	VE_ThreeLanes_GroundGap		UMETA(DisplayName = "Ground With Gap"),	// Type for normal ground with gap
 };
 
 // An Enumerate for game states
