@@ -71,6 +71,9 @@ protected:
 		TArray<FPlatformOptions> PlatformTable;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		bool bUseNormalGroundBetweenBridges;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		int VisiblePlatformNumber;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
@@ -110,9 +113,7 @@ private:
 
 	void SpawnNewPlatform();
 
-	EPlatformType GetPlatformTypeToSpawn(const EPlatformType& PreviousPlatformType);
-
-	TSubclassOf<class APlatformModule> GetPlatformModuleByType(const EPlatformType& PlatformType);
+	TSubclassOf<class APlatformModule> GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters = {});
 
 	UFUNCTION()
 		void OnRespawn();
