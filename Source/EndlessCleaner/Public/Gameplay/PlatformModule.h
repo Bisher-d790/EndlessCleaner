@@ -70,9 +70,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Platform")
 		EPlatformType PlatformType;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform")
-		float DistanceBetweenLanes;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Platform")
 		TArray<FLaneOptions> Lanes;
 

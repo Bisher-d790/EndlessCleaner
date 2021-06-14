@@ -10,9 +10,6 @@ APlatformModule::APlatformModule()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	// Setup initial variables
-	DistanceBetweenLanes = 150.0f;
-
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
 	StartModulePoint = CreateDefaultSubobject<USceneComponent>(TEXT("StartModulePoint"));
