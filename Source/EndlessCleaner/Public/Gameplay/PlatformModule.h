@@ -30,12 +30,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Platform")
 		float LaneWidth;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform")
-		bool bIsGap;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Platform")
-		bool bHasObstacle;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
 		float PickupProbability;
 

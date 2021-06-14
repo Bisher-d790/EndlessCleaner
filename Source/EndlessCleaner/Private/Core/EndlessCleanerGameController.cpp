@@ -345,45 +345,45 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 
 TSubclassOf<class APlatformModule> AEndlessCleanerGameController::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
 {
-	TArray<FPlatformOptions> TempTable;
+	TArray<FPlatformOptions> ProbabilityTable;
 
 	for (int i = 0; i < PlatformTable.Num(); i++)
 	{
 		if (PlatformTypeFilters.Num() <= 0 ||
 			PlatformTypeFilters.Contains(PlatformTable[i].PlatformType))
-			TempTable.Add(PlatformTable[i]);
+			ProbabilityTable.Add(PlatformTable[i]);
 	}
 
 	// Loop through all probabilities
-	float Total = 0;
-	for (int i = 0; i < TempTable.Num(); i++)
+	float TotalProbabilities = 0;
+	for (int i = 0; i < ProbabilityTable.Num(); i++)
 	{
-		Total += TempTable[i].Probability;
+		TotalProbabilities += ProbabilityTable[i].Probability;
 	}
 
 	// Get a random point 
-	float RandomPoint = FMath::FRand() * Total;
+	float RandomPoint = FMath::FRand() * TotalProbabilities;
 	int PlatformIndex = -1;
 
-	for (int i = 0; i < TempTable.Num(); i++)
+	for (int i = 0; i < ProbabilityTable.Num(); i++)
 	{
-		if (RandomPoint < TempTable[i].Probability)
+		if (RandomPoint < ProbabilityTable[i].Probability)
 		{
 			PlatformIndex = i;
 			break;
 		}
 		else
 		{
-			RandomPoint -= TempTable[i].Probability;
+			RandomPoint -= ProbabilityTable[i].Probability;
 		}
 	}
 
 	// If no index was found
 	if (PlatformIndex == -1)
 	{
-		PlatformIndex = TempTable.Num() - 1;
+		PlatformIndex = ProbabilityTable.Num() - 1;
 	}
 
 	// Return the selected platform
-	return	TempTable[PlatformIndex].PlatformClass;
+	return	ProbabilityTable[PlatformIndex].PlatformClass;
 }

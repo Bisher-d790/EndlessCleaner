@@ -30,48 +30,58 @@ void APlatformModule::BeginPlay()
 	PlatformLength = FMath::Abs(StartModulePoint->GetComponentLocation().X - EndModulePoint->GetComponentLocation().X);
 }
 
-// Dont spawn for VE_GroundGap
 void APlatformModule::SpawnPickups()
 {
-	int Lane = 1;
+	TArray<FLaneOptions> ProbabilityTable = Lanes;
+	int LaneIndex = -1;
 	bool bSpawnPickup = false;
 
-	switch (PlatformType)
+	// Loop through all probabilities
+	float TotalProbabilities = 0;
+	for (int i = 0; i < ProbabilityTable.Num(); i++)
 	{
-	case EPlatformType::VE_ThreeLanes_Ground: // according to the next platform
-		if (NextPlatform)
-		{
-			bSpawnPickup = true;
-			Lane = FMath::RandRange(0, 2);
-		}
-		break;
-
-	case EPlatformType::VE_ThreeLanes_OneBridge:
-	case EPlatformType::VE_ThreeLanes_TwoBridges:
-		bSpawnPickup = true;
-		Lane = FMath::RandRange(0, 2);
-		break;
-
-	case EPlatformType::VE_ThreeLanes_GroundGap:
-		break;
+		TotalProbabilities += ProbabilityTable[i].PickupProbability;
 	}
 
-	if (bSpawnPickup && Lanes[Lane].PickupClass)
+	// Get a random point 
+	float RandomPoint = FMath::FRand() * TotalProbabilities;
+
+	for (int i = 0; i < ProbabilityTable.Num(); i++)
 	{
-		FVector SpawnPosition = GetActorLocation() + Lanes[Lane].LanePosition;
+		if (RandomPoint < ProbabilityTable[i].PickupProbability)
+		{
+			LaneIndex = i;
+			bSpawnPickup = true;
+			break;
+		}
+		else
+		{
+			RandomPoint -= ProbabilityTable[i].PickupProbability;
+		}
+	}
+
+	// If no index was found
+	if (LaneIndex == -1)
+	{
+		bSpawnPickup = false;
+	}
+
+	if (bSpawnPickup && Lanes[LaneIndex].PickupClass)
+	{
+		FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
+		SpawnPosition.X += Lanes[LaneIndex].PickupStartLocationX;
 
 		// Spawn pickups
-		for (int i = 0; i < Lanes[Lane].PickupsNumberPerSpawn; i++)
+		for (int i = 0; i < Lanes[LaneIndex].PickupsNumberPerSpawn; i++)
 		{
-			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(Lanes[Lane].PickupClass, SpawnPosition, FRotator::ZeroRotator);
+			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(Lanes[LaneIndex].PickupClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedPickup->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
-			if (SpawnedPickup)
+			SpawnedPickup->SetActorLocation(SpawnPosition);
 
-				SpawnedPickup->SetActorLocation(SpawnPosition);
 			SpawnedPickups.Add(SpawnedPickup);
 
-			SpawnPosition.X -= Lanes[Lane].DistanceBetweenPickupsX;
+			SpawnPosition.X -= Lanes[LaneIndex].DistanceBetweenPickupsX;
 		}
 	}
 }
