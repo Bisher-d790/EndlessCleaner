@@ -3,6 +3,7 @@
 
 #include "Gameplay/PlatformModule.h"
 #include "Gameplay/Pickup.h"
+#include "Gameplay/Obstacle.h"
 
 // Sets default values
 APlatformModule::APlatformModule()
@@ -25,6 +26,8 @@ void APlatformModule::BeginPlay()
 	Super::BeginPlay();
 
 	PlatformLength = FMath::Abs(StartModulePoint->GetComponentLocation().X - EndModulePoint->GetComponentLocation().X);
+
+	SpawnObstacles();
 }
 
 void APlatformModule::SpawnPickups()
@@ -83,6 +86,25 @@ void APlatformModule::SpawnPickups()
 	}
 }
 
+void APlatformModule::SpawnObstacles()
+{
+	for (int i = 0; i < Lanes.Num(); i++)
+	{
+		if (FMath::FRand() * 100 < Lanes[i].ObstacleProbability && Lanes[i].ObstacleClass)
+		{
+			FVector SpawnPosition = GetActorLocation() + Lanes[i].LanePosition;
+			SpawnPosition.X += Lanes[i].ObstacleLocationX;
+
+			AObstacle* SpawnedObstacle = GetWorld()->SpawnActor<AObstacle>(Lanes[i].ObstacleClass, SpawnPosition, FRotator::ZeroRotator);
+			SpawnedObstacle->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+
+			SpawnedObstacle->SetActorLocation(SpawnPosition);
+
+			SpawnedObstacles.Add(SpawnedObstacle);
+		}
+	}
+}
+
 // Called when the platform is destroyed
 void APlatformModule::DestroyPlatform()
 {
@@ -93,6 +115,11 @@ void APlatformModule::DestroyPlatform()
 	for (int i = SpawnedPickups.Num() - 1; i >= 0; i++)
 	{
 		SpawnedPickups[i]->Destroy();
+	}
+
+	for (int i = SpawnedObstacles.Num() - 1; i >= 0; i++)
+	{
+		SpawnedObstacles[i]->Destroy();
 	}
 
 	Destroy();

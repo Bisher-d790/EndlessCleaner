@@ -22,6 +22,8 @@ public:
 		PickupsNumberPerSpawn = 3;
 		LaneWidth = 30.0f;
 		PickupProbability = 50.f;
+		ObstacleProbability = 0.f;
+		ObstacleLocationX = 0.f;
 	}
 
 	UPROPERTY(EditDefaultsOnly, Category = "Platform")
@@ -44,6 +46,15 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
 		TSubclassOf<class APickup> PickupClass = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obstacle")
+		float ObstacleProbability;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obstacle")
+		float ObstacleLocationX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obstacle")
+		TSubclassOf<class AObstacle> ObstacleClass = nullptr;
 };
 
 UCLASS()
@@ -79,6 +90,8 @@ protected:
 
 	TArray<class APickup*> SpawnedPickups;
 
+	TArray<class AObstacle*> SpawnedObstacles;
+
 	float PlatformLength;
 
 public:
@@ -99,4 +112,6 @@ public:
 	void DestroyPlatform();
 
 	void SpawnPickups();
+
+	void SpawnObstacles();
 };
