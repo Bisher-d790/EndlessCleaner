@@ -26,8 +26,6 @@ void APlatformModule::BeginPlay()
 	Super::BeginPlay();
 
 	PlatformLength = FMath::Abs(StartModulePoint->GetComponentLocation().X - EndModulePoint->GetComponentLocation().X);
-
-	SpawnObstacles();
 }
 
 void APlatformModule::SpawnPickups()
@@ -69,7 +67,7 @@ void APlatformModule::SpawnPickups()
 	if (bSpawnPickup && Lanes[LaneIndex].PickupClass)
 	{
 		FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
-		SpawnPosition.X += Lanes[LaneIndex].PickupStartLocationX;
+		SpawnPosition += Lanes[LaneIndex].PickupStartPosition;
 
 		// Spawn pickups
 		for (int i = 0; i < Lanes[LaneIndex].PickupsNumberPerSpawn; i++)
@@ -81,7 +79,7 @@ void APlatformModule::SpawnPickups()
 
 			SpawnedPickups.Add(SpawnedPickup);
 
-			SpawnPosition.X -= Lanes[LaneIndex].DistanceBetweenPickupsX;
+			SpawnPosition -= Lanes[LaneIndex].DistanceBetweenPickups;
 		}
 	}
 }
@@ -93,7 +91,7 @@ void APlatformModule::SpawnObstacles()
 		if (FMath::FRand() * 100 < Lanes[i].ObstacleProbability && Lanes[i].ObstacleClass)
 		{
 			FVector SpawnPosition = GetActorLocation() + Lanes[i].LanePosition;
-			SpawnPosition.X += Lanes[i].ObstacleLocationX;
+			SpawnPosition += Lanes[i].ObstaclePosition;
 
 			AObstacle* SpawnedObstacle = GetWorld()->SpawnActor<AObstacle>(Lanes[i].ObstacleClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedObstacle->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
@@ -108,16 +106,18 @@ void APlatformModule::SpawnObstacles()
 // Called when the platform is destroyed
 void APlatformModule::DestroyPlatform()
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Destroying platform"));
+
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	PreviousPlatform = nullptr;
 	NextPlatform = nullptr;
 
-	for (int i = SpawnedPickups.Num() - 1; i >= 0; i++)
+	for (int i = 0; i < SpawnedPickups.Num(); i++)
 	{
 		SpawnedPickups[i]->Destroy();
 	}
 
-	for (int i = SpawnedObstacles.Num() - 1; i >= 0; i++)
+	for (int i = 0; i < SpawnedObstacles.Num(); i++)
 	{
 		SpawnedObstacles[i]->Destroy();
 	}

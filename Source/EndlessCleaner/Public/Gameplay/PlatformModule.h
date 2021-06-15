@@ -17,13 +17,13 @@ public:
 
 	FLaneOptions()
 	{
-		PickupStartLocationX = -170.0f;
-		DistanceBetweenPickupsX = 230.0f;
+		PickupStartPosition = FVector(300.f, 0.f, 0.f);
+		DistanceBetweenPickups = FVector(300.f, 0.f, 0.f);
 		PickupsNumberPerSpawn = 3;
-		LaneWidth = 30.0f;
+		LaneWidth = 50.0f;
 		PickupProbability = 50.f;
 		ObstacleProbability = 0.f;
-		ObstacleLocationX = 0.f;
+		ObstaclePosition = FVector(0.f, 0.f, 150.f);
 	}
 
 	UPROPERTY(EditDefaultsOnly, Category = "Platform")
@@ -36,10 +36,10 @@ public:
 		float PickupProbability;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
-		float PickupStartLocationX;
+		FVector PickupStartPosition;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
-		float DistanceBetweenPickupsX;
+		FVector DistanceBetweenPickups;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
 		int PickupsNumberPerSpawn;
@@ -51,7 +51,7 @@ public:
 		float ObstacleProbability;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obstacle")
-		float ObstacleLocationX;
+		FVector ObstaclePosition;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obstacle")
 		TSubclassOf<class AObstacle> ObstacleClass = nullptr;

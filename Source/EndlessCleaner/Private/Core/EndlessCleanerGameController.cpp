@@ -97,7 +97,7 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 			{
 				// Destroy first platform and set the next first platform
 				APlatformModule* TempFirstPlatform = FirstPlatform->GetNextPlatform();
-				FirstPlatform->Destroy();
+				FirstPlatform->DestroyPlatform();
 
 				FirstPlatform = TempFirstPlatform;
 			}
@@ -209,6 +209,7 @@ void AEndlessCleanerGameController::InitializeGame()
 				// Dont spawn for the first few platform
 				if (PlatformCount >= NumberOfInitialPlatforms)
 				{
+					PreviousPlatform->SpawnObstacles();
 					PreviousPlatform->SpawnPickups();
 				}
 			}
@@ -261,13 +262,13 @@ void AEndlessCleanerGameController::OnRespawn()
 		while (FirstIterate->GetNextPlatform())
 		{
 			APlatformModule* Temp = FirstIterate->GetNextPlatform();
-			FirstIterate->Destroy();
+			FirstIterate->DestroyPlatform();
 			FirstIterate = Temp;
 		}
 
 		if (FirstIterate)
 		{
-			FirstIterate->Destroy();
+			FirstIterate->DestroyPlatform();
 		}
 
 		FirstPlatform = nullptr;
@@ -332,6 +333,7 @@ void AEndlessCleanerGameController::SpawnNewPlatform()
 			// Dont spawn for the first few platform
 			if (PlatformCount >= NumberOfInitialPlatforms)
 			{
+				PreviousPlatform->SpawnObstacles();
 				PreviousPlatform->SpawnPickups();
 			}
 		}
