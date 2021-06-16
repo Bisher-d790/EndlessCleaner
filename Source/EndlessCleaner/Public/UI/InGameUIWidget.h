@@ -25,6 +25,9 @@ protected:
 		class UTextBlock* LivesCounter;
 
 	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* Timer;
+
+	UPROPERTY(meta = (BindWidget))
 		int32 DistanceMinimumFractionalDigits = 0;
 
 	UPROPERTY(meta = (BindWidget))
@@ -36,6 +39,8 @@ public:
 	void UpdateDistance(float Distance);
 
 	void UpdateLives(int32 Lives);
+
+	void UpdateTime(float Time);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Game Event")
 		void OnStartGame();

@@ -91,6 +91,8 @@ private:
 
 	float CurrentDistance;
 
+	float CurrentTime;
+
 	bool bIsJumping = false;
 
 	float RemainingJumpTime;

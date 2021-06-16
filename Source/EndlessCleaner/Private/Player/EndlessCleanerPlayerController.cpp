@@ -24,6 +24,7 @@ void AEndlessCleanerPlayerController::BeginPlay()
 	// Set variables values
 	CoinsCollected = 0;
 	CurrentDistance = 0;
+	CurrentTime = 0;
 	TouchSwipeMinLength = 100.f;
 
 	// Stop movement
@@ -49,6 +50,7 @@ void AEndlessCleanerPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
 		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+		InGameUIWidgetInstance->UpdateTime(CurrentTime);
 	}
 }
 
@@ -70,6 +72,16 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 	// If cannot move, return
 	if (!bCanMove) return;
+
+	if (bIsRunning)
+	{
+		CurrentTime += DeltaTime;
+
+		if (InGameUIWidgetInstance)
+		{
+			InGameUIWidgetInstance->UpdateTime(CurrentTime);
+		}
+	}
 
 	// Stop Jump animation after jump time finishes
 	if (bIsJumping)
@@ -381,6 +393,7 @@ void AEndlessCleanerPlayerController::Respawn()
 	CurrentLane = 1; // Set to middle
 	bIsRunning = false;
 	CurrentDistance = 0.0f;
+	CurrentTime = 0.0f;
 	bIsMovingLeft = bIsMovingRight = false;
 	PlayerRef->Respawn();
 
@@ -388,6 +401,7 @@ void AEndlessCleanerPlayerController::Respawn()
 	{
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
 		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+		InGameUIWidgetInstance->UpdateTime(CurrentTime);
 	}
 
 	bIsRunning = false;

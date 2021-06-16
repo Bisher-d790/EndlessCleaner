@@ -32,3 +32,18 @@ void UInGameUIWidget::UpdateLives(int32 Lives)
 
 	LivesCounter->SetText(FText::FromString(FString::FromInt(Lives)));
 }
+
+void UInGameUIWidget::UpdateTime(float Time)
+{
+	if (!Timer) return;
+
+	float Rounded = roundf(Time);
+
+	FNumberFormattingOptions NumberFormat;
+	NumberFormat.MinimumFractionalDigits = DistanceMinimumFractionalDigits;
+	NumberFormat.MaximumIntegralDigits = DistanceMaximumIntegralDigits;
+
+	FText NewTime = FText::AsNumber(Rounded, &NumberFormat);
+
+	Timer->SetText(NewTime);
+}
