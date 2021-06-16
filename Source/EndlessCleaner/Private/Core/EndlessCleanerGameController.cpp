@@ -41,7 +41,11 @@ AEndlessCleanerGameController::AEndlessCleanerGameController()
 	VisiblePlatformNumber = 9;
 	RespawnTimer = 3.0f;
 	SpawnStartTimer = 2.0f;
-	PlayerLives = 3;
+	InitialPlayerLives = 3;
+
+	LivesMultiplier = 1000;
+	CoinsMultiplier = 100;
+	SpeedMultiplier = 1000;
 }
 
 // Called when the game starts or when spawned
@@ -60,7 +64,7 @@ void AEndlessCleanerGameController::BeginPlay()
 
 	InitializeGame();
 
-	PlayerController->SetInitialLives(PlayerLives);
+	PlayerController->SetInitialLives(InitialPlayerLives);
 
 	GameState = EGameState::VE_PrepareGame;
 
@@ -126,8 +130,15 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 			{
 				GameState = EGameState::VE_GameOver;
 
+				// Score Calculate Score
+				float Score = 0;
+				Score += PlayerController->GetCurrentLives() * LivesMultiplier;
+				Score += PlayerController->GetCoinsCollected() * CoinsMultiplier;
+				Score += (PlayerController->GetCurrentDistance() / PlayerController->GetCurrentTime()) * SpeedMultiplier;
+
 				if (PlayerController->GetUI())
 				{
+					PlayerController->GetUI()->SetScore(Score);
 					PlayerController->GetUI()->OnGameOver();
 				}
 			}

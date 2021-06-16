@@ -80,7 +80,7 @@ protected:
 		int NumberOfInitialPlatforms;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-		int PlayerLives;
+		int InitialPlayerLives;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float RespawnTimer;
@@ -90,6 +90,15 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, Category = "Settings")
 		AActor* PlatformsParentActor;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
+		float LivesMultiplier;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
+		float CoinsMultiplier;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
+		float SpeedMultiplier;
 
 public:
 

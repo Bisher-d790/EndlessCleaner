@@ -137,6 +137,14 @@ public:
 
 	FORCEINLINE UInGameUIWidget* GetUI() { return InGameUIWidgetInstance; }
 
+	FORCEINLINE int GetCoinsCollected() { return CoinsCollected; }
+
+	FORCEINLINE int GetCurrentLives() { return CurrentLives; }
+
+	FORCEINLINE float GetCurrentDistance() { return CurrentDistance; }
+
+	FORCEINLINE float GetCurrentTime() { return CurrentTime; }
+
 	UFUNCTION(BlueprintCallable, Category = Movement)
 		FORCEINLINE bool GetIsRunning() { return bIsRunning; }
 

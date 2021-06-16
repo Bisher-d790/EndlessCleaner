@@ -28,6 +28,12 @@ protected:
 		class UTextBlock* Timer;
 
 	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* ScoreCount;
+
+	UPROPERTY(meta = (BindWidget))
+		class UButton* RestartGameButton;
+
+	UPROPERTY(meta = (BindWidget))
 		int32 DistanceMinimumFractionalDigits = 0;
 
 	UPROPERTY(meta = (BindWidget))
@@ -41,6 +47,11 @@ public:
 	void UpdateLives(int32 Lives);
 
 	void UpdateTime(float Time);
+
+	void SetScore(float Score);
+
+	UFUNCTION(BlueprintCallable, Category = "Buttons Functions")
+		void OnClickRestartGame();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Game Event")
 		void OnStartGame();

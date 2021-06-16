@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "EndlessCleanerGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ENDLESSCLEANER_API AEndlessCleanerGameModeBase : public AGameModeBase
+class ENDLESSCLEANER_API AEndlessCleanerGameModeBase : public AGameMode
 {
 	GENERATED_BODY()
 	

@@ -3,6 +3,10 @@
 
 #include "UI/InGameUIWidget.h"
 #include "Components/TextBlock.h"
+#include "UMG/Public/Components/Button.h"
+#include "Core/EndlessCleanerGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
+
 
 void UInGameUIWidget::UpdateCoins(int32 Coins)
 {
@@ -46,4 +50,25 @@ void UInGameUIWidget::UpdateTime(float Time)
 	FText NewTime = FText::AsNumber(Rounded, &NumberFormat);
 
 	Timer->SetText(NewTime);
+}
+
+
+void UInGameUIWidget::SetScore(float Score)
+{
+	if (!ScoreCount) return;
+
+	float Rounded = roundf(Score);
+
+	FNumberFormattingOptions NumberFormat;
+	NumberFormat.MinimumFractionalDigits = DistanceMinimumFractionalDigits;
+	NumberFormat.MaximumIntegralDigits = DistanceMaximumIntegralDigits;
+
+	FText NewScore = FText::AsNumber(Rounded, &NumberFormat);
+
+	ScoreCount->SetText(NewScore);
+}
+
+void UInGameUIWidget::OnClickRestartGame()
+{
+	Cast<AEndlessCleanerGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->RestartGame();
 }
