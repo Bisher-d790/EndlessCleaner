@@ -71,16 +71,6 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 	// If cannot move, return
 	if (!bCanMove) return;
 
-	if (bIsRunning)
-	{
-		CurrentDistance += DeltaTime;
-
-		if (InGameUIWidgetInstance)
-		{
-			InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
-		}
-	}
-
 	// Stop Jump animation after jump time finishes
 	if (bIsJumping)
 	{
@@ -410,5 +400,18 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 	if (InGameUIWidgetInstance)
 	{
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
+	}
+}
+
+void AEndlessCleanerPlayerController::AddToCurrentDistance(float Distance)
+{
+	if (bIsRunning)
+	{
+		CurrentDistance += Distance;
+
+		if (InGameUIWidgetInstance)
+		{
+			InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+		}
 	}
 }

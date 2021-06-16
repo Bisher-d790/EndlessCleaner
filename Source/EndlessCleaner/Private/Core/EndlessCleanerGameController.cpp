@@ -95,6 +95,9 @@ void AEndlessCleanerGameController::Tick(float DeltaTime)
 
 			if (FirstPlatform)
 			{
+				// Add the platform's length to walked distance, in meters
+				PlayerController->AddToCurrentDistance(FirstPlatform->GetPlatformLength() / 1000);
+
 				// Destroy first platform and set the next first platform
 				APlatformModule* TempFirstPlatform = FirstPlatform->GetNextPlatform();
 				FirstPlatform->DestroyPlatform();

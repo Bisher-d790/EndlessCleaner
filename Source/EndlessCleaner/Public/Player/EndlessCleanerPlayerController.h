@@ -126,6 +126,8 @@ public:
 
 	void SetInitialLives(int32 InitialLives);
 
+	void AddToCurrentDistance(float Distance);
+
 	FORCEINLINE void SetCurrentPlatform(APlatformModule* Platform) { CurrentPlatform = Platform; };
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
