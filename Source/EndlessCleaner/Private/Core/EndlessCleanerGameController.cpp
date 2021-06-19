@@ -238,7 +238,6 @@ void AEndlessCleanerGameController::InitializeGame()
 			PlatformToCheck = SpawnedPlatform;
 
 			FVector PlatformToCheckPosition = PlatformToCheck->GetActorLocation();
-			PlatformToCheckPosition.Z = 280.0f;
 			Player->SetActorLocation(PlatformToCheckPosition);
 		}
 
