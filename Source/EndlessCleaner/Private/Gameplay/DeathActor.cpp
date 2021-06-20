@@ -4,7 +4,7 @@
 #include "Gameplay/DeathActor.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Core/EndlessCleanerGameModeBase.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
 #include "Player/EndlessCleanerCharacter.h"
 
 // Sets default values
@@ -53,5 +53,5 @@ void ADeathActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	Cast<AEndlessCleanerGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
+	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
 }

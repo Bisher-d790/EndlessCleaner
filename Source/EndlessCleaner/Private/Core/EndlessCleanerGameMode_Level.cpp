@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Core/EndlessCleanerGameModeBase.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
 #include "Player/EndlessCleanerPlayerController.h"
 #include "Player/EndlessCleanerCharacter.h"
 #include "Gameplay/PlatformModule.h"
@@ -9,7 +9,7 @@
 
 
 // Sets default values
-AEndlessCleanerGameModeBase::AEndlessCleanerGameModeBase()
+AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,7 +26,7 @@ AEndlessCleanerGameModeBase::AEndlessCleanerGameModeBase()
 }
 
 // Called when the game starts or when spawned
-void AEndlessCleanerGameModeBase::BeginPlay()
+void AEndlessCleanerGameMode_Level::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -43,11 +43,11 @@ void AEndlessCleanerGameModeBase::BeginPlay()
 
 	GameState = EGameState::VE_PrepareGame;
 
-	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameModeBase::OnRespawn, 0.1f, false);
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, 0.1f, false);
 }
 
 // Called every frame
-void AEndlessCleanerGameModeBase::Tick(float DeltaTime)
+void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -81,7 +81,7 @@ void AEndlessCleanerGameModeBase::Tick(float DeltaTime)
 }
 
 // Initialize platforms and player
-void AEndlessCleanerGameModeBase::InitializeGame()
+void AEndlessCleanerGameMode_Level::InitializeGame()
 {
 	PreviousPlatform = nullptr;
 
@@ -182,7 +182,7 @@ void AEndlessCleanerGameModeBase::InitializeGame()
 	}
 }
 
-void AEndlessCleanerGameModeBase::OnRespawn()
+void AEndlessCleanerGameMode_Level::OnRespawn()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
@@ -194,7 +194,7 @@ void AEndlessCleanerGameModeBase::OnRespawn()
 
 			GameState = EGameState::VE_Respawn;
 
-			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameModeBase::OnRespawn, SpawnStartTimer, false);
+			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, SpawnStartTimer, false);
 		}
 	}
 
@@ -222,7 +222,7 @@ void AEndlessCleanerGameModeBase::OnRespawn()
 
 		GameState = EGameState::VE_Respawn;
 
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameModeBase::OnRespawn, RespawnTimer, false);
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 
 	else if (GameState == EGameState::VE_Respawn)
@@ -233,7 +233,7 @@ void AEndlessCleanerGameModeBase::OnRespawn()
 	}
 }
 
-void AEndlessCleanerGameModeBase::SpawnNewPlatform()
+void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 {
 	if (!PreviousPlatform) return;
 
@@ -289,7 +289,7 @@ void AEndlessCleanerGameModeBase::SpawnNewPlatform()
 	}
 }
 
-TSubclassOf<class APlatformModule> AEndlessCleanerGameModeBase::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
+TSubclassOf<class APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
 {
 	TArray<FPlatformOptions> ProbabilityTable;
 
@@ -334,7 +334,7 @@ TSubclassOf<class APlatformModule> AEndlessCleanerGameModeBase::GetPlatformToSpa
 	return	ProbabilityTable[PlatformIndex].PlatformClass;
 }
 
-void AEndlessCleanerGameModeBase::OnTriggerDeathActor()
+void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 {
 	if (GameState == EGameState::VE_GameOver)
 		return;
@@ -363,6 +363,6 @@ void AEndlessCleanerGameModeBase::OnTriggerDeathActor()
 	else
 	{
 		GameState = EGameState::VE_RemovePlatforms;
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameModeBase::OnRespawn, RespawnTimer, false);
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 }

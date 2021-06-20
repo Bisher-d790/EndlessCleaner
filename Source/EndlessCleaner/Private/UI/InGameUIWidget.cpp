@@ -4,7 +4,7 @@
 #include "UI/InGameUIWidget.h"
 #include "Components/TextBlock.h"
 #include "UMG/Public/Components/Button.h"
-#include "Core/EndlessCleanerGameModeBase.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -70,5 +70,5 @@ void UInGameUIWidget::SetScore(float Score)
 
 void UInGameUIWidget::OnClickRestartGame()
 {
-	Cast<AEndlessCleanerGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->RestartGame();
+	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->RestartGame();
 }

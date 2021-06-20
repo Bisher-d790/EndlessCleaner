@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "Utils/Definitions.h"
-#include "EndlessCleanerGameModeBase.generated.h"
+#include "EndlessCleanerGameMode_Level.generated.h"
 
 /**
  *
@@ -35,13 +35,13 @@ public:
 };
 
 UCLASS()
-class ENDLESSCLEANER_API AEndlessCleanerGameModeBase : public AGameMode
+class ENDLESSCLEANER_API AEndlessCleanerGameMode_Level : public AGameMode
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AEndlessCleanerGameModeBase();
+	AEndlessCleanerGameMode_Level();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
