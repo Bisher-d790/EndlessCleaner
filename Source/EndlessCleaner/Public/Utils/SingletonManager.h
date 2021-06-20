@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Core/EndlessCleanerGameController.h"
 #include "SingletonManager.generated.h"
 
 /**
@@ -32,17 +31,4 @@ private:
 			Instance->Destroy();
 		}
 	}
-
-#pragma region GameController Instance
-public:
-	FORCEINLINE class AEndlessCleanerGameController* GetGameControllerInstance() { return GameControllerInstance; };
-
-	void SetGameControllerInstance(class AEndlessCleanerGameController* Instance)
-	{
-		SetGenericSingletonInstance<class AEndlessCleanerGameController>(Instance, GameControllerInstance);
-	};
-
-private:
-	class AEndlessCleanerGameController* GameControllerInstance = nullptr;
-#pragma endregion GameController Instance
 };
