@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/InGameUIWidget.h"
 #include "Gameplay/PlatformModule.h"
+#include "Gameplay/PlatformsContainer.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
@@ -52,6 +55,8 @@ void AEndlessCleanerPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 		InGameUIWidgetInstance->UpdateTime(CurrentTime);
 	}
+
+	PlatformsContainer = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
 }
 
 void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
@@ -111,6 +116,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
 				{
 					PlayerRef->StopMoveToSide();
+					PlatformsContainer->StopRotation();
 
 					CurrentLane = i;
 					//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
@@ -132,6 +138,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
 				{
 					PlayerRef->StopMoveToSide();
+					PlatformsContainer->StopRotation();
 
 					CurrentLane = i;
 					//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
@@ -294,7 +301,7 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 
 void AEndlessCleanerPlayerController::MoveToSide(float Value)
 {
-	if (!bCanMove || bLockMovement || !PlayerRef) return;
+	if (!bCanMove || bLockMovement || !PlayerRef || !PlatformsContainer) return;
 
 
 	// Move Left
@@ -310,6 +317,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			CurrentLane -= 1;
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
 
+			PlatformsContainer->RotateRight(10);
 			PlayerRef->MoveLeft();
 		}
 	}
@@ -326,6 +334,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			CurrentLane += 1;
 			CurrentLane = FMath::Clamp(CurrentLane, 0, 2);
 
+			PlatformsContainer->RotateLeft(10);
 			PlayerRef->MoveRight();
 		}
 	}

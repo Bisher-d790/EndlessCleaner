@@ -6,6 +6,7 @@
 #include "Player/EndlessCleanerCharacter.h"
 #include "Gameplay/PlatformModule.h"
 #include "UI/InGameUIWidget.h"
+#include "Gameplay/PlatformsContainer.h"
 
 
 // Sets default values
@@ -87,7 +88,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 
 	PlatformCount = 0;
 
-	PlatformsParentActor = GetWorld()->SpawnActor(PlatformsParentClass);
+	PlatformsContainerActor = Cast<APlatformsContainer>(GetWorld()->SpawnActor(PlatformsContainerClass));
 
 	FVector SpawnPosition = FVector::ZeroVector;
 
@@ -141,7 +142,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		// Spawn the selected Platform
 		if (SpawnedPlatform)
 		{
-			SpawnedPlatform->AttachToActor(PlatformsParentActor, FAttachmentTransformRules::KeepWorldTransform);
+			SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 			SpawnedPlatform->SetActorLocation(SpawnPosition);
 			SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 
@@ -264,7 +265,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	{
 		APlatformModule* SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 
-		SpawnedPlatform->AttachToActor(PlatformsParentActor, FAttachmentTransformRules::KeepWorldTransform);
+		SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 		SpawnedPlatform->SetActorLocation(SpawnPosition);
 		SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 

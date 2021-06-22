@@ -75,7 +75,7 @@ protected:
 		float SpawnStartTimer;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-		TSubclassOf<AActor> PlatformsParentClass;
+		TSubclassOf<class APlatformsContainer> PlatformsContainerClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float CoinsMultiplier;
@@ -83,7 +83,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float SpeedMultiplier;
 
-	AActor* PlatformsParentActor;
+	class APlatformsContainer* PlatformsContainerActor;
 
 private:
 
@@ -114,6 +114,9 @@ public:
 
 	EGameState GameState = EGameState::VE_None;
 
-	UFUNCTION(BlueprintCallable, Category = "Death Collision")
+	UFUNCTION(BlueprintCallable, Category = "Death")
 		void OnTriggerDeathActor();
+
+	UFUNCTION(BlueprintCallable, Category = "Platforms")
+		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };
 };

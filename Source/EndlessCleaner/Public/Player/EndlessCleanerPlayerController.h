@@ -113,6 +113,8 @@ private:
 
 	class APlatformModule* CurrentPlatform;
 
+	class APlatformsContainer* PlatformsContainer;
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
