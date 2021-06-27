@@ -2,6 +2,7 @@
 
 
 #include "Gameplay/Platforms/PlatformModule.h"
+#include "Gameplay/Platforms/LaneComponent.h"
 #include "Gameplay/Pickup.h"
 #include "Gameplay/Obstacle.h"
 
@@ -18,6 +19,9 @@ APlatformModule::APlatformModule()
 
 	EndModulePoint = CreateDefaultSubobject<USceneComponent>(TEXT("EndModulePoint"));
 	EndModulePoint->SetupAttachment(RootComponent);
+
+	LanesParent = CreateDefaultSubobject<USceneComponent>(TEXT("LanesParent"));
+	LanesParent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

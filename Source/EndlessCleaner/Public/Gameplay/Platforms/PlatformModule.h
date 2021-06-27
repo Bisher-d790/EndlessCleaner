@@ -81,8 +81,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Platform")
 		EPlatformType PlatformType;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Platform")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Lanes")
+		class USceneComponent* LanesParent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Lanes")
 		TArray<FLaneOptions> Lanes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Lanes")
+		TSubclassOf<class ULaneComponent> LaneClass = nullptr;
 
 	APlatformModule* PreviousPlatform = nullptr;
 
