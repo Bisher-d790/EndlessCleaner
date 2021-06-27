@@ -5,8 +5,8 @@
 #include "Player/EndlessCleanerCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/InGameUIWidget.h"
-#include "Gameplay/PlatformModule.h"
-#include "Gameplay/PlatformsContainer.h"
+#include "Gameplay/Platforms/PlatformModule.h"
+#include "Gameplay/Platforms/PlatformsContainer.h"
 #include "Core/EndlessCleanerGameMode_Level.h"
 #include "Kismet/GameplayStatics.h"
 

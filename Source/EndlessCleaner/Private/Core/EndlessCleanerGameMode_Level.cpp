@@ -4,9 +4,9 @@
 #include "Core/EndlessCleanerGameMode_Level.h"
 #include "Player/EndlessCleanerPlayerController.h"
 #include "Player/EndlessCleanerCharacter.h"
-#include "Gameplay/PlatformModule.h"
+#include "Gameplay/Platforms/PlatformModule.h"
+#include "Gameplay/Platforms/PlatformsContainer.h"
 #include "UI/InGameUIWidget.h"
-#include "Gameplay/PlatformsContainer.h"
 
 
 // Sets default values

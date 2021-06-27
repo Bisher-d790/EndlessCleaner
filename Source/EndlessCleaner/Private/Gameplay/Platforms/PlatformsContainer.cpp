@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/PlatformsContainer.h"
+#include "Gameplay/Platforms/PlatformsContainer.h"
 #include "GameFramework/RotatingMovementComponent.h"
 
 // Sets default values

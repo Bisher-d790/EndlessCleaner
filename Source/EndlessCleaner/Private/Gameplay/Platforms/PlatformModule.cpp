@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/PlatformModule.h"
+#include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Pickup.h"
 #include "Gameplay/Obstacle.h"
 
