@@ -10,15 +10,11 @@ ULaneComponent::ULaneComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
-}
-
-
-// Called when the game starts
-void ULaneComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
+	PickupStartPosition = FVector(300.f, 0.f, 0.f);
+	DistanceBetweenPickups = FVector(300.f, 0.f, 0.f);
+	PickupsNumberPerSpawn = 3;
+	LaneWidth = 100.0f;
+	PickupProbability = 50.f;
+	ObstacleProbability = 0.f;
+	ObstaclePosition = FVector(0.f, 0.f, 150.f);
 }
