@@ -105,14 +105,15 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 	}
 	else
 	{
-		if (bIsMovingLeft)
+		if (bIsMovingLeft || bIsMovingRight)
 		{
 			FVector ActorLocation = PlayerRef->GetActorLocation();
 
 			TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
 			for (int i = 0; i < Lanes.Num(); i++)
 			{
-				if (i == CurrentLane + 1) continue;
+				if ((bIsMovingLeft && i == CurrentLane + 1) ||
+					(bIsMovingRight && i == CurrentLane - 1)) continue;
 				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
 				{
 					PlayerRef->StopMoveToSide();
@@ -123,27 +124,6 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 					bCheckPosition = true;
 					bIsMovingLeft = false;
-					break;
-				}
-			}
-		}
-		else if (bIsMovingRight)
-		{
-			FVector ActorLocation = PlayerRef->GetActorLocation();
-
-			TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
-			for (int i = 0; i < Lanes.Num(); i++)
-			{
-				if (i == CurrentLane - 1) continue;
-				else if (FMath::IsNearlyEqual(ActorLocation.Y, Lanes[i].LanePosition.Y, Lanes[i].LaneWidth))
-				{
-					PlayerRef->StopMoveToSide();
-					PlatformsContainer->StopRotation();
-
-					CurrentLane = i;
-					//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
-
-					bCheckPosition = true;
 					bIsMovingRight = false;
 					break;
 				}
