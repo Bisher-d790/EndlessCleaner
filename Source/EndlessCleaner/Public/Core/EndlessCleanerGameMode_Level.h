@@ -20,7 +20,7 @@ public:
 
 	FPlatformOptions()
 	{
-		PlatformType = EPlatformType::VE_ThreeLanes_Ground;
+		PlatformType = EPlatformType::VE_Ground;
 		Probability = 50.f;
 	}
 

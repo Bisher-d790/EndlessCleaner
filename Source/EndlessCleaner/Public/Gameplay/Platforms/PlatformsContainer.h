@@ -15,13 +15,25 @@ public:
 	// Sets default values for this actor's properties
 	APlatformsContainer();
 
-public:
-	void RotateLeft(float RotationRate);
+protected:
+	bool bIsRotating = false;
 
-	void RotateRight(float RotationRate);
+	FRotator RotationBeforeLastMovement = FRotator();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+		float RotationSpeed;
+
+public:
+	void RotateLeft();
+
+	void RotateRight();
 
 	void StopRotation();
 
+	float GetCurrentMovementRotationInDegrees();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 		class URotatingMovementComponent* RotatingMovementComponent;
+
+	FORCEINLINE bool GetIsRotating() { return bIsRotating; };
 };

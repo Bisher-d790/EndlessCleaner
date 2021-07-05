@@ -20,16 +20,24 @@ public:
 		PickupStartPosition = FVector(300.f, 0.f, 0.f);
 		DistanceBetweenPickups = FVector(300.f, 0.f, 0.f);
 		PickupsNumberPerSpawn = 3;
-		LaneWidth = 100.0f;
+		LaneAngle = 0.0f;
+		LaneWidthAngle = 20.0f;
+		LaneWidth = 20.0f;
 		PickupProbability = 50.f;
 		ObstacleProbability = 0.f;
 		ObstaclePosition = FVector(0.f, 0.f, 150.f);
 	}
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform")
+	UPROPERTY(EditDefaultsOnly, Category = "Lane")
 		FVector LanePosition;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Platform")
+	UPROPERTY(EditDefaultsOnly, Category = "Lane")
+		float LaneAngle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Lane")
+		float LaneWidthAngle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Lane")
 		float LaneWidth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")

@@ -101,7 +101,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		{
 			TArray<EPlatformType> TypesFilter =
 			{
-				EPlatformType::VE_ThreeLanes_Ground
+				EPlatformType::VE_Ground
 			};
 
 			TSubclassOf<APlatformModule> PlatformToSpawn = GetPlatformToSpawn(TypesFilter);
@@ -116,8 +116,8 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 
 				// Next type to spawn: Depending on previous platform spawned
 				if (!bUseNormalGroundBetweenBridges ||
-					PreviousPlatform->GetPlatformType() == EPlatformType::VE_ThreeLanes_Ground ||
-					PreviousPlatform->GetPlatformType() == EPlatformType::VE_ThreeLanes_GroundGap)
+					PreviousPlatform->GetPlatformType() == EPlatformType::VE_Ground ||
+					PreviousPlatform->GetPlatformType() == EPlatformType::VE_GroundGap)
 				{
 					PlatformToSpawn = GetPlatformToSpawn();
 				}
@@ -125,8 +125,8 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 				{
 					TArray<EPlatformType> TypesFilter =
 					{
-						EPlatformType::VE_ThreeLanes_Ground,
-						EPlatformType::VE_ThreeLanes_GroundGap
+						EPlatformType::VE_Ground,
+						EPlatformType::VE_GroundGap
 					};
 
 					PlatformToSpawn = GetPlatformToSpawn(TypesFilter);
@@ -244,8 +244,8 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	// Next type to spawn: Depending on previous platform spawned
 	TSubclassOf<APlatformModule> PlatformToSpawn;
 	if (!bUseNormalGroundBetweenBridges ||
-		PreviousPlatform->GetPlatformType() == EPlatformType::VE_ThreeLanes_Ground ||
-		PreviousPlatform->GetPlatformType() == EPlatformType::VE_ThreeLanes_GroundGap)
+		PreviousPlatform->GetPlatformType() == EPlatformType::VE_Ground ||
+		PreviousPlatform->GetPlatformType() == EPlatformType::VE_GroundGap)
 	{
 		PlatformToSpawn = GetPlatformToSpawn();
 	}
@@ -253,8 +253,8 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	{
 		TArray<EPlatformType> TypesFilter =
 		{
-			EPlatformType::VE_ThreeLanes_Ground,
-			EPlatformType::VE_ThreeLanes_GroundGap
+			EPlatformType::VE_Ground,
+			EPlatformType::VE_GroundGap
 		};
 
 		PlatformToSpawn = GetPlatformToSpawn(TypesFilter);

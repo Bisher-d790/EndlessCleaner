@@ -8,10 +8,10 @@
 UENUM(BlueprintType)
 enum class EPlatformType : uint8
 {
-	VE_ThreeLanes_Ground		UMETA(DisplayName = "3Lanes|Ground"),			// Type for normal ground
-	VE_ThreeLanes_OneBridge		UMETA(DisplayName = "3Lanes|One Bridge"),		// Type for two connections of ground
-	VE_ThreeLanes_TwoBridges	UMETA(DisplayName = "3Lanes|Two Bridges"),		// Type for one connection of ground
-	VE_ThreeLanes_GroundGap		UMETA(DisplayName = "3Lanes|Ground With Gap"),	// Type for normal ground with gap
+	VE_Ground		UMETA(DisplayName = "Ground"),			// Type for normal ground
+	VE_OneBridge	UMETA(DisplayName = "One Bridge"),		// Type for two connections of ground
+	VE_TwoBridges	UMETA(DisplayName = "Two Bridges"),		// Type for one connection of ground
+	VE_GroundGap	UMETA(DisplayName = "Ground With Gap"),	// Type for normal ground with gap
 };
 
 // An Enumerate for game states
