@@ -145,13 +145,13 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 			if (!FMath::IsNearlyEqual(TargetLocation.Y, PlayerRef->GetActorLocation().Y, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y);
+				//UE_LOG(LogTemp, Warning, TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y);
 
 				PlayerRef->SetActorLocation(FMath::Lerp(PlayerRef->GetActorLocation(), TargetLocation, LocationCorrectionDuration));
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Stop Check Position"));
+				//UE_LOG(LogTemp, Warning, TEXT("Stop Check Position"));
 
 				bCheckPosition = false;
 			}
