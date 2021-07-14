@@ -144,6 +144,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		{
 			SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 			SpawnedPlatform->SetActorLocation(SpawnPosition);
+			SpawnedPlatform->SetActorRotation(PlatformsContainerActor->GetActorRotation());
 			SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 
 			// Set Previous and Next Platforms
@@ -267,6 +268,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 
 		SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 		SpawnedPlatform->SetActorLocation(SpawnPosition);
+		SpawnedPlatform->SetActorRotation(PlatformsContainerActor->GetActorRotation());
 		SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 
 		// Set Previous and Next Platforms
