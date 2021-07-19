@@ -103,58 +103,82 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			}
 		}
 	}
-	else
+
+	if (bIsMovingLeft || bIsMovingRight)
 	{
-		if (bIsMovingLeft || bIsMovingRight)
+		FVector ActorLocation = PlayerRef->GetActorLocation();
+
+		TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
+		for (int LaneIndex = 0; LaneIndex < Lanes.Num(); LaneIndex++)
 		{
-			FVector ActorLocation = PlayerRef->GetActorLocation();
-
-			TArray<FLaneOptions> Lanes = CurrentPlatform->GetLanesArray();
-			for (int i = 0; i < Lanes.Num(); i++)
+			int PreviousLane = -1;
+			if (bIsMovingLeft)
 			{
-				if ((bIsMovingLeft && i == CurrentLane + 1) ||
-					(bIsMovingRight && i == CurrentLane - 1)) continue;
-				else
+				PreviousLane = CurrentLane + 1 >= Lanes.Num() ? 0 : CurrentLane + 1;
+			}
+			else
+			{
+				PreviousLane = CurrentLane - 1 < 0 ? Lanes.Num() - 1 : CurrentLane - 1;
+			}
+
+			if (LaneIndex == PreviousLane) continue;
+			else
+			{
+				FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
+
+				//UE_LOG(LogTemp, Warning, TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle);
+				//UE_LOG(LogTemp, Warning, TEXT("CurrentLane: %d"), CurrentLane);
+
+				if (FMath::IsNearlyEqual(PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle, Lane.LaneWidthAngle))
 				{
-					FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
-
-					//UE_LOG(LogTemp, Warning, TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle);
-					//UE_LOG(LogTemp, Warning, TEXT("CurrentLane: %d"), CurrentLane);
-
-					if (FMath::IsNearlyEqual(PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle, Lane.LaneWidthAngle))
+					// If not jumping, don't stop moving to side
+					if (!bIsJumping)
 					{
 						PlayerRef->StopMoveToSide();
 						PlatformsContainer->StopRotation();
 
-						CurrentLane = i;
-						//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
+						FRotator Rotation = (FRotator(0.f, 0.f, Lane.LaneAngle)).GetNormalized();
+						PlatformsContainer->SetActorRotation(Rotation);
 
 						bCheckPosition = true;
 						bIsMovingLeft = false;
 						bIsMovingRight = false;
 						break;
 					}
+
+					// set the new current lane
+					if (bIsMovingLeft)
+					{
+						CurrentLane = CurrentLane - 1 < 0 ? Lanes.Num() - 1 : CurrentLane - 1;
+					}
+					else
+					{
+						CurrentLane = CurrentLane + 1 >= Lanes.Num() ? 0 : CurrentLane + 1;
+					}
+					//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
 				}
 			}
 		}
-		else if (bCheckPosition)
+	}
+	else if (bCheckPosition)
+	{
+		FVector TargetLocation = PlayerRef->GetActorLocation();
+		FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
+		TargetLocation.Y = 0;
+
+		if (!FMath::IsNearlyEqual(TargetLocation.Y, PlayerRef->GetActorLocation().Y, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
 		{
-			FVector TargetLocation = PlayerRef->GetActorLocation();
-			FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
-			TargetLocation.Y = 0;
+			//UE_LOG(LogTemp, Warning, TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y);
 
-			if (!FMath::IsNearlyEqual(TargetLocation.Y, PlayerRef->GetActorLocation().Y, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y);
+			PlayerRef->SetActorLocation(FMath::Lerp(PlayerRef->GetActorLocation(), TargetLocation, LocationCorrectionDuration));
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Stop Check Position"));
 
-				PlayerRef->SetActorLocation(FMath::Lerp(PlayerRef->GetActorLocation(), TargetLocation, LocationCorrectionDuration));
-			}
-			else
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("Stop Check Position"));
+			FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
-				bCheckPosition = false;
-			}
+			bCheckPosition = false;
 		}
 	}
 
@@ -300,18 +324,21 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 {
 	if (!bCanMove || bLockMovement || !PlayerRef || !PlatformsContainer || !CurrentPlatform) return;
 
-	if (Value == 0) return;
+	if (FMath::IsNearlyZero(Value)) return;
 
 	int LanesCount = CurrentPlatform->GetLanesArray().Num();
 
 	bLockMovement = true;
 	CurrentLockMovementTime = 0.0f;
 
+	//UE_LOG(LogTemp, Warning, TEXT("LanesCount: %d"), LanesCount);
+	//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %d"), CurrentLane);
+
 	// Move Left
 	if (Value < 0.0f)
 	{
 		if (CurrentLane - 1 >= 0)
-			CurrentLane -= 1;
+			CurrentLane--;
 		else
 			CurrentLane = LanesCount - 1;
 
@@ -320,10 +347,10 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		PlayerRef->MoveLeft();
 	}
 	// Move Right
-	else if (Value > 0.0f)
+	else
 	{
 		if (CurrentLane + 1 < LanesCount)
-			CurrentLane += 1;
+			CurrentLane++;
 		else
 			CurrentLane = 0;
 
@@ -332,7 +359,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		PlayerRef->MoveRight();
 	}
 
-	CurrentLane = FMath::Clamp(CurrentLane, 0, LanesCount - 1);
+	//UE_LOG(LogTemp, Warning, TEXT("Next Lane: %d"), CurrentLane);
 }
 
 void AEndlessCleanerPlayerController::Jump()
