@@ -88,7 +88,8 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 
 	PlatformCount = 0;
 
-	PlatformsContainerActor = Cast<APlatformsContainer>(GetWorld()->SpawnActor(PlatformsContainerClass));
+	if (!PlatformsContainerActor)
+		PlatformsContainerActor = Cast<APlatformsContainer>(GetWorld()->SpawnActor(PlatformsContainerClass));
 
 	FVector SpawnPosition = FVector::ZeroVector;
 
