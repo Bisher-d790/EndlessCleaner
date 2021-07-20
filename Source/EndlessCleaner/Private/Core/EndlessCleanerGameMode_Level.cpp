@@ -345,6 +345,7 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 
 	// Set Game over condition when player hits the ground
 	PlayerController->StopRunning();
+	PlatformsContainerActor->StopRotation();
 
 	bool bIsLastLife = false;
 	PlayerController->LoseLife(bIsLastLife);
