@@ -299,6 +299,11 @@ void AEndlessCleanerPlayerController::StopRunning()
 void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
 {
 	CurrentLives = InitialLives;
+
+	if (InGameUIWidgetInstance)
+	{
+		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+	}
 }
 
 void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
