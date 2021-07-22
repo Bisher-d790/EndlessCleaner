@@ -20,6 +20,7 @@ public:
 		PickupStartPosition = FVector(300.f, 0.f, 0.f);
 		DistanceBetweenPickups = FVector(300.f, 0.f, 0.f);
 		PickupsNumberPerSpawn = 3;
+		LanePosition = FVector::ZeroVector;
 		LaneAngle = 0.0f;
 		LaneWidthAngle = 20.0f;
 		LaneWidth = 20.0f;
