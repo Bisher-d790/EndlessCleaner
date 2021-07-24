@@ -7,6 +7,7 @@
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "UI/InGameUIWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -45,6 +46,11 @@ void AEndlessCleanerGameMode_Level::BeginPlay()
 	GameState = EGameState::VE_PrepareGame;
 
 	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, 0.1f, false);
+
+#pragma region Debug
+	SetDebugLogState(bAllowDebugLogs);
+	SetDebugScreenLogState(bPrintLogsOnScreen);
+#pragma endregion
 }
 
 // Called every frame
@@ -371,3 +377,28 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 }
+
+#pragma region Debug
+void AEndlessCleanerGameMode_Level::PrintDebugLog(FString Log)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *Log);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, Log);
+}
+
+void AEndlessCleanerGameMode_Level::SetDebugLogState(bool State)
+{
+	FString Command = "Log LogTemp ";
+
+	if (State)
+		Command += "Log";
+	else
+		Command += "Off";
+
+	GEngine->Exec(nullptr, *Command);
+}
+
+void AEndlessCleanerGameMode_Level::SetDebugScreenLogState(bool State)
+{
+	GEngine->bEnableOnScreenDebugMessages = State;
+}
+#pragma endregion

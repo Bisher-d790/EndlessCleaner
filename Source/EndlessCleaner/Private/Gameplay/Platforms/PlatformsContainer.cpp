@@ -3,6 +3,8 @@
 
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "GameFramework/RotatingMovementComponent.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
+
 
 // Sets default values
 APlatformsContainer::APlatformsContainer()
@@ -50,7 +52,7 @@ float APlatformsContainer::GetCurrentMovementRotationInDegrees()
 	if (bIsRotating)
 	{
 		Rotation = FMath::Abs(RotationBeforeLastMovement.Roll - GetActorRotation().GetDenormalized().Roll);
-		//UE_LOG(LogTemp, Warning, TEXT("Rotaiton: %.2f"), Rotation);
+		AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Rotaiton: %.2f"), Rotation));
 	}
 
 	return Rotation;

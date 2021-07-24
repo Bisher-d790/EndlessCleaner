@@ -4,6 +4,8 @@
 #include "Gameplay/Platforms/PlatformModule.h" 
 #include "Gameplay/Pickup.h"
 #include "Gameplay/Obstacle.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
+
 
 // Sets default values
 APlatformModule::APlatformModule()
@@ -106,7 +108,7 @@ void APlatformModule::SpawnObstacles()
 // Called when the platform is destroyed
 void APlatformModule::DestroyPlatform()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Destroying platform"));
+	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Destroying platform"));
 
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	PreviousPlatform = nullptr;

@@ -126,8 +126,8 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			{
 				FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
-				//UE_LOG(LogTemp, Warning, TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle);
-				//UE_LOG(LogTemp, Warning, TEXT("CurrentLane: %d"), CurrentLane);
+				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle));
+				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d"), CurrentLane));
 
 				if (FMath::IsNearlyEqual(PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle, Lane.LaneWidthAngle))
 				{
@@ -155,7 +155,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 					{
 						CurrentLane = CurrentLane + 1 >= Lanes.Num() ? 0 : CurrentLane + 1;
 					}
-					//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %i"), CurrentLane);
+					AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Lane: %i"), CurrentLane));
 				}
 			}
 		}
@@ -168,13 +168,13 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 		if (!FMath::IsNearlyEqual(TargetLocation.Y, PlayerRef->GetActorLocation().Y, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y);
+			AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y));
 
 			PlayerRef->SetActorLocation(FMath::Lerp(PlayerRef->GetActorLocation(), TargetLocation, LocationCorrectionDuration));
 		}
 		else
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Stop Check Position"));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Stop Check Position"));
 
 			FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
@@ -250,12 +250,12 @@ void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIn
 	{
 		if (TouchBeginPosition.X > Position.X) // Swipe Left
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Swipe Left."));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Left."));
 			OnSwipeHorizental.Execute(-1.0f);
 		}
 		else // Swipe Right
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Swipe Right."));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Right."));
 			OnSwipeHorizental.Execute(1.0f);
 		}
 	}
@@ -263,12 +263,12 @@ void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIn
 	{
 		if (TouchBeginPosition.Y > Position.Y) // Swipe Up
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Swipe Up."));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Up."));
 			OnSwipeVertical.Execute(1.0f);
 		}
 		else // Swipe Down
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Swipe Down."));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Down."));
 			OnSwipeVertical.Execute(-1.0f);
 		}
 	}
@@ -336,8 +336,8 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 	bLockMovement = true;
 	CurrentLockMovementTime = 0.0f;
 
-	//UE_LOG(LogTemp, Warning, TEXT("LanesCount: %d"), LanesCount);
-	//UE_LOG(LogTemp, Warning, TEXT("Current Lane: %d"), CurrentLane);
+	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("LanesCount: %d"), LanesCount));
+	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Lane: %d"), CurrentLane));
 
 	// Move Left
 	if (Value < 0.0f)
@@ -364,14 +364,14 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		PlayerRef->MoveRight();
 	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("Next Lane: %d"), CurrentLane);
+	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Next Lane: %d"), CurrentLane));
 }
 
 void AEndlessCleanerPlayerController::Jump()
 {
 	if (!bCanMove || bIsJumping || !PlayerRef) return;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Jump."));
+	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Jump."));
 
 	bIsJumping = true;
 
@@ -408,7 +408,7 @@ void AEndlessCleanerPlayerController::Slide()
 {
 	if (!bCanMove || bIsSliding || !PlayerRef) return;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Slide."));
+	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Slide."));
 
 	bIsSliding = true;
 

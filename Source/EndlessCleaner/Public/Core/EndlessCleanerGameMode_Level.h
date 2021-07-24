@@ -119,4 +119,22 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Platforms")
 		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };
+
+#pragma region Debug
+public:
+	UFUNCTION(BlueprintCallable, Category = "Debug")
+		static void PrintDebugLog(FString Log);
+
+	UFUNCTION(BlueprintCallable, Category = "Debug")
+		static void SetDebugLogState(bool State);
+
+	UFUNCTION(BlueprintCallable, Category = "Debug")
+		static void SetDebugScreenLogState(bool State);
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Debug")
+		bool bAllowDebugLogs = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Debug")
+		bool bPrintLogsOnScreen = true;
+#pragma endregion
 };
