@@ -28,9 +28,9 @@ AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
 }
 
 // Called when the game starts or when spawned
-void AEndlessCleanerGameMode_Level::BeginPlay()
+void AEndlessCleanerGameMode_Level::StartPlay()
 {
-	Super::BeginPlay();
+	Super::StartPlay();
 
 	// Set Initial Game State
 	GameState = EGameState::VE_PreparePlatforms;

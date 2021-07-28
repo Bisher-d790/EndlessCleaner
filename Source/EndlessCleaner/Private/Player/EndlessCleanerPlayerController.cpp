@@ -55,13 +55,14 @@ void AEndlessCleanerPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 		InGameUIWidgetInstance->UpdateTime(CurrentTime);
 	}
-
-	PlatformsContainer = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
 }
 
 void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+
+	if (!PlatformsContainer)
+		PlatformsContainer = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
 
 	// Lock Input when moving 
 	if (bLockMovement)
