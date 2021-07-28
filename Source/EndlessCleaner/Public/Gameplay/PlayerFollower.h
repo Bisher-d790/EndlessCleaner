@@ -22,11 +22,20 @@ public:
 		bool bIsFollowingPlayer;
 
 protected:
+	class AEndlessCleanerCharacter* Player;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float DistanceThreshold;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		FVector LocationDisplacement;
 
-	class AEndlessCleanerCharacter* Player;
+	UPROPERTY(EditAnywhere, Category = "Settings")
+		bool bIsMovingOnXAxis;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+		bool bIsMovingOnYAxis;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+		bool bIsMovingOnZAxis;
 };

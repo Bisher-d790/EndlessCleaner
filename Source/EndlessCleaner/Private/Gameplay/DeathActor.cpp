@@ -17,33 +17,6 @@ ADeathActor::ADeathActor()
 	RootComponent = DeathCollision;
 
 	DeathCollision->OnComponentBeginOverlap.AddDynamic(this, &ADeathActor::OnBeginOverlap);
-
-	PlayerRef = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	DistanceThresholdToReposition = 500.f;
-	bMoveAlongTheXAxis = false;
-	bMoveAlongTheYAxis = false;
-	bMoveAlongTheZAxis = false;
-	bMoveWithPlayer = false;
-}
-
-void ADeathActor::Tick(float DeltaTime)
-{
-	if (!PlayerRef)
-		PlayerRef = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	// Move with character
-	if (bMoveWithPlayer &&
-		FVector::Dist(PlayerRef->GetActorLocation(), GetActorLocation()) >= DistanceThresholdToReposition)
-	{
-		FVector NewLocation = GetActorLocation();
-
-		if (bMoveAlongTheXAxis) NewLocation.X = PlayerRef->GetActorLocation().X;
-		if (bMoveAlongTheYAxis) NewLocation.Y = PlayerRef->GetActorLocation().Y;
-		if (bMoveAlongTheZAxis) NewLocation.Z = PlayerRef->GetActorLocation().Z;
-
-		SetActorLocation(NewLocation);
-	}
 }
 
 void ADeathActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent,

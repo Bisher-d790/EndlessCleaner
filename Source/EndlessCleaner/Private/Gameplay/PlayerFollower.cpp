@@ -14,6 +14,9 @@ APlayerFollower::APlayerFollower()
 	DistanceThreshold = 0.f;
 	LocationDisplacement = FVector::ZeroVector;
 	bIsFollowingPlayer = true;
+	bIsMovingOnXAxis = true;
+	bIsMovingOnYAxis = true;
+	bIsMovingOnZAxis = true;
 }
 
 // Called every frame
@@ -30,7 +33,12 @@ void APlayerFollower::Tick(float DeltaTime)
 	// Follow the player
 	if (bIsFollowingPlayer && FVector::Dist(GetActorLocation(), Player->GetActorLocation()) >= DistanceThreshold)
 	{
-		FVector NewLocation = Player->GetActorLocation() + LocationDisplacement;
+		FVector NewLocation = GetActorLocation();
+
+		if (bIsMovingOnXAxis) NewLocation.X = Player->GetActorLocation().X + LocationDisplacement.X;
+		if (bIsMovingOnYAxis) NewLocation.Y = Player->GetActorLocation().Y + LocationDisplacement.Y;
+		if (bIsMovingOnZAxis) NewLocation.Z = Player->GetActorLocation().Z + LocationDisplacement.Z;
+
 		SetActorLocation(NewLocation);
 	}
 }
