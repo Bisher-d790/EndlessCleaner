@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	APlatformsContainer();
 
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 protected:
 	bool bIsRotating = false;
 
@@ -23,12 +26,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 		float RotationSpeed;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+		FRotator InitialRotation;
+
 public:
 	void RotateLeft();
 
 	void RotateRight();
 
 	void StopRotation();
+
+	void ResetRotation();
 
 	float GetCurrentMovementRotationInDegrees();
 

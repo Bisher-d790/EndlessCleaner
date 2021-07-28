@@ -433,6 +433,11 @@ void AEndlessCleanerPlayerController::Respawn()
 	bIsMovingLeft = bIsMovingRight = false;
 	PlayerRef->Respawn();
 
+	// If it's after death
+	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (CurrentLives < GameMode->GetInitialPlayerLives())
+		bCheckPosition = true;
+
 	if (InGameUIWidgetInstance)
 	{
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);

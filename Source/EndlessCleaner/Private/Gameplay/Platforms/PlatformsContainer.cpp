@@ -13,9 +13,18 @@ APlatformsContainer::APlatformsContainer()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RotationSpeed = 20.f;
+	InitialRotation = FRotator::ZeroRotator;
 
 	RotatingMovementComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("Rotating Movement"));
 	AddInstanceComponent(RotatingMovementComponent);
+}
+
+// Called when the game starts or when spawned
+void APlatformsContainer::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ResetRotation();
 }
 
 void APlatformsContainer::RotateLeft()
@@ -43,6 +52,13 @@ void APlatformsContainer::StopRotation()
 	RotatingMovementComponent->RotationRate = FRotator::ZeroRotator;
 
 	bIsRotating = false;
+}
+
+void APlatformsContainer::ResetRotation()
+{
+	StopRotation();
+
+	SetActorRotation(InitialRotation);
 }
 
 float APlatformsContainer::GetCurrentMovementRotationInDegrees()

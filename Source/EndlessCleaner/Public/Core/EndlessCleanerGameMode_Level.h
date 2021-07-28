@@ -123,6 +123,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Platforms")
 		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };
 
+	UFUNCTION(BlueprintCallable, Category = "Settings")
+		FORCEINLINE int GetInitialPlayerLives() { return InitialPlayerLives; };
+
 #pragma region Debug
 public:
 	UFUNCTION(BlueprintCallable, Category = "Debug")

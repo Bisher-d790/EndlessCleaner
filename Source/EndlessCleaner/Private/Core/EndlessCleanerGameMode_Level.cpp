@@ -209,6 +209,9 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 	else if (GameState == EGameState::VE_RemovePlatforms)
 	{
+		// Reset container rotation
+		PlatformsContainerActor->ResetRotation();
+
 		// Remove platforms
 		APlatformModule* FirstIterate = FirstPlatform;
 
