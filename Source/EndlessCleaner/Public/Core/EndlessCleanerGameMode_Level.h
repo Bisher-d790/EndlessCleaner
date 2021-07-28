@@ -57,6 +57,9 @@ protected:
 		TArray<FPlatformOptions> PlatformTable;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		bool bInitializeFromPlayerStart;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		bool bUseNormalGroundBetweenBridges;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
