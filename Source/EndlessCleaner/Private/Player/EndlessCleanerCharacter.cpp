@@ -55,6 +55,7 @@ void AEndlessCleanerCharacter::BeginPlay()
 
 	// Set Max Speed
 	GetCharacterMovement()->MaxWalkSpeed = CharacterMaxSpeed;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = CharacterMaxSpeed;
 }
 
 // Called every frame
