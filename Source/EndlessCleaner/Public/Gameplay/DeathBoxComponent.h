@@ -3,23 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gameplay/PlayerFollower.h"
-#include "DeathActor.generated.h"
+#include "Components/BoxComponent.h"
+#include "DeathBoxComponent.generated.h"
 
-UCLASS()
-class ENDLESSCLEANER_API ADeathActor : public APlayerFollower
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class ENDLESSCLEANER_API UDeathBoxComponent : public UBoxComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	ADeathActor();
-
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-		class UBoxComponent* DeathCollision;
+	// Sets default values for this component's properties
+	UDeathBoxComponent();
 
 protected:
-
 	UFUNCTION()
 		void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 			AActor* OtherActor,
