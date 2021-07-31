@@ -428,22 +428,13 @@ void AEndlessCleanerPlayerController::Respawn()
 {
 	CurrentLane = 1; // Set to middle
 	bIsRunning = false;
-	CurrentDistance = 0.0f;
-	CurrentTime = 0.0f;
 	bIsMovingLeft = bIsMovingRight = false;
 	PlayerRef->Respawn();
 
-	// If it's after death
+	// If it's after death, correct player's position
 	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (CurrentLives < GameMode->GetInitialPlayerLives())
 		bCheckPosition = true;
-
-	if (InGameUIWidgetInstance)
-	{
-		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
-		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
-		InGameUIWidgetInstance->UpdateTime(CurrentTime);
-	}
 
 	bIsRunning = false;
 }
