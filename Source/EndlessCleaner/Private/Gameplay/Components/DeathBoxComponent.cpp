@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/DeathBoxComponent.h"
+#include "Gameplay/Components/DeathBoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core/EndlessCleanerGameMode_Level.h"
 
