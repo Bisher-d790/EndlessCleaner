@@ -43,11 +43,11 @@ void UWaveMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tick
 	RotationDirection.Normalize();
 
 	// Set the rotation rate
-	if (FMath::IsNearlyZero(RotationDirection.Yaw))
+	if (!FMath::IsNearlyZero(RotationDirection.Yaw))
 		RotationDirection.Yaw = RotationDirection.Yaw > 0.0f ? RotationRate : -RotationRate;
-	if (FMath::IsNearlyZero(RotationDirection.Pitch))
+	if (!FMath::IsNearlyZero(RotationDirection.Pitch))
 		RotationDirection.Pitch = RotationDirection.Pitch > 0.0f ? RotationRate : -RotationRate;
-	if (FMath::IsNearlyZero(RotationDirection.Roll))
+	if (!FMath::IsNearlyZero(RotationDirection.Roll))
 		RotationDirection.Roll = RotationDirection.Roll > 0.0f ? RotationRate : -RotationRate;
 
 	// Compute new rotation
