@@ -7,11 +7,8 @@
 
 UWaveMovementComponent::UWaveMovementComponent()
 {
-	WaveStartRotation.Yaw = -60.f;
-	WaveEndRotation.Yaw = 60.f;
-	RotationRate = 100;
-	RotationEdgeTolerance = 10.f;
-	bRotationInLocalSpace = true;
+	RotationDuration = 5;
+	RotationEdgeTolerance = 1.f;
 }
 
 void UWaveMovementComponent::BeginPlay()
@@ -19,55 +16,43 @@ void UWaveMovementComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// Reset the rotation to the start of the wave
-	MoveUpdatedComponent(FVector::ZeroVector, FQuat(WaveStartRotation), false);
-
-	bIsRotatingForward = true;
+	if (WaveRotations.Num() > 0)
+	{
+		FRotator WaveStartRotation = WaveRotations[0];
+		UpdatedComponent->SetRelativeRotation(WaveStartRotation);
+	}
 }
 
 void UWaveMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// Skip if the two rotation edges are equal
-	if (WaveEndRotation.Equals(WaveStartRotation)) return;
+	// Skip if there're no wave rotations, or there's only one rotation
+	if (WaveRotations.Num() <= 1) return;
 
 	// skip if we don't want component updated when not rendered or if updated component can't move
 	if (ShouldSkipUpdate(DeltaTime)) return;
 	if (!IsValid(UpdatedComponent))	return;
 
-	// Calculate the rotation direction
+	// Compute new Rotation
 	FRotator CurrentRotation = UpdatedComponent->GetComponentRotation();
-	FRotator TargetRotation = bIsRotatingForward ? WaveEndRotation : WaveStartRotation;
+	FRotator TargetRotation = WaveRotations[NextIndex];
 
-	FRotator RotationDirection = (TargetRotation - CurrentRotation);
-	RotationDirection.Normalize();
+	FRotator NewRotation = FMath::Lerp(CurrentRotation, TargetRotation, LerpTimeElapsed / RotationDuration);
 
-	// Set the rotation rate
-	if (!FMath::IsNearlyZero(RotationDirection.Yaw))
-		RotationDirection.Yaw = RotationDirection.Yaw > 0.0f ? RotationRate : -RotationRate;
-	if (!FMath::IsNearlyZero(RotationDirection.Pitch))
-		RotationDirection.Pitch = RotationDirection.Pitch > 0.0f ? RotationRate : -RotationRate;
-	if (!FMath::IsNearlyZero(RotationDirection.Roll))
-		RotationDirection.Roll = RotationDirection.Roll > 0.0f ? RotationRate : -RotationRate;
+	LerpTimeElapsed += DeltaTime;
 
-	// Compute new rotation
-	const FQuat OldRotation = UpdatedComponent->GetComponentQuat();
-	const FQuat DeltaRotation = (RotationDirection * DeltaTime).Quaternion();
-	const FQuat NewRotation = bRotationInLocalSpace ? (OldRotation * DeltaRotation) : (DeltaRotation * OldRotation);
+	UpdatedComponent->SetRelativeRotation(NewRotation);
 
-	// Compute new location
-	FVector DeltaLocation = FVector::ZeroVector;
-	if (!PivotTranslation.IsZero())
-	{
-		const FVector OldPivot = OldRotation.RotateVector(PivotTranslation);
-		const FVector NewPivot = NewRotation.RotateVector(PivotTranslation);
-		DeltaLocation = (OldPivot - NewPivot); // ConstrainDirectionToPlane() not necessary because it's done by MoveUpdatedComponent() below.
-	}
+	if (LerpTimeElapsed >= RotationDuration
+		|| CurrentRotation.Equals(TargetRotation, RotationEdgeTolerance))
+		NextWaveRotation();
+}
 
-	const bool bEnableCollision = false;
-	MoveUpdatedComponent(DeltaLocation, NewRotation, bEnableCollision);
+void UWaveMovementComponent::NextWaveRotation()
+{
+	NextIndex++;
+	if (NextIndex >= WaveRotations.Num()) NextIndex = 0;
 
-	// If has reached one edge of the wave, flip the rotation direction
-	if (CurrentRotation.Equals(TargetRotation, RotationEdgeTolerance))
-		bIsRotatingForward = !bIsRotatingForward;
+	LerpTimeElapsed = 0;
 }

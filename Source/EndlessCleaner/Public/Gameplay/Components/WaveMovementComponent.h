@@ -25,32 +25,19 @@ private:
 protected:
 	// The rotation of the wave start
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
-		FRotator WaveStartRotation;
+		TArray<FRotator> WaveRotations = TArray<FRotator>();
 
-	// The rotation of the wave end
+	// The duration of the rotation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
-		FRotator WaveEndRotation;
+		float RotationDuration;
 
-	// The speed of the rotation
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
-		float RotationRate;
-
-	// The tolerance of detecting a Start or Edge Rotation
+	// The duration of the rotation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
 		float RotationEdgeTolerance;
 
-	/**
-	 * Translation of pivot point around which we rotate, relative to current rotation.
-	 * For instance, with PivotTranslation set to (X=+100, Y=0, Z=0), rotation will occur
-	 * around the point +100 units along the local X axis from the center of the object,
-	 * rather than around the object's origin (the default).
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
-		FVector PivotTranslation;
+	void NextWaveRotation();
 
-	/** Whether rotation is applied in local or world space. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
-		uint32 bRotationInLocalSpace : 1;
+	int NextIndex = 0;
 
-	bool bIsRotatingForward;
+	float LerpTimeElapsed = 0;
 };
