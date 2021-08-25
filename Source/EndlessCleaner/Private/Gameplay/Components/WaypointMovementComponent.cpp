@@ -44,7 +44,7 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 
 	LerpTimeElapsed += DeltaTime;
 
-	UpdatedComponent->SetRelativeLocation(NewLocation);
+	UpdatedComponent->SetWorldLocation(NewLocation);
 
 	if (LerpTimeElapsed >= LerpDuration) NextWaypoint();
 }
