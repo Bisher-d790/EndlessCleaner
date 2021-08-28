@@ -18,4 +18,8 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup")
 		class UStaticMeshComponent* Mesh;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+		class UWaypointMovementComponent* WaypointMovementComponent;
 };

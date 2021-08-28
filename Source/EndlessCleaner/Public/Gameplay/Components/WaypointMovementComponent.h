@@ -27,17 +27,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		TArray<FVector> WaypointLocations = TArray<FVector>();
 
-	// The speed of the rotation
+	void NextWaypoint();
+
+	int NextIndex = 0;
+
+	float LerpTimeElapsed = 0;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
+		void AddWaypoint(FVector Waypoint);
+
+	// The speed of the movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		float MovementSpeed;
 
 	// Whether movement is applied in local or world space.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		uint32 bMovementInLocalSpace : 1;
-
-	void NextWaypoint();
-
-	int NextIndex = 0;
-
-	float LerpTimeElapsed = 0;
 };

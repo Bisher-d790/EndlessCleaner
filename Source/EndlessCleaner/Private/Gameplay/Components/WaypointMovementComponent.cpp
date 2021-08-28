@@ -56,3 +56,8 @@ void UWaypointMovementComponent::NextWaypoint()
 
 	LerpTimeElapsed = 0;
 }
+
+void UWaypointMovementComponent::AddWaypoint(FVector Waypoint)
+{
+	WaypointLocations.Add(Waypoint);
+}

@@ -18,8 +18,9 @@ public:
 	FLaneOptions()
 	{
 		PickupStartPosition = FVector(300.f, 0.f, 0.f);
-		DistanceBetweenPickups = FVector(300.f, 0.f, 0.f);
+		DistanceBetweenPickups = 300.f;
 		PickupsNumberPerSpawn = 3;
+		PickupsMovementSpeed = 10.0f;
 		LanePosition = FVector::ZeroVector;
 		LaneAngle = 0.0f;
 		LaneWidthAngle = 20.0f;
@@ -48,7 +49,13 @@ public:
 		FVector PickupStartPosition;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
-		FVector DistanceBetweenPickups;
+		TArray<FVector> PickupLocalWaypoints = TArray<FVector>();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		float DistanceBetweenPickups;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
+		float PickupsMovementSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
 		int PickupsNumberPerSpawn;

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Gameplay/Pickup.h"
+#include "Gameplay/Components/WaypointMovementComponent.h"
 
 // Sets default values
 APickup::APickup()
@@ -13,4 +13,7 @@ APickup::APickup()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	WaypointMovementComponent = CreateDefaultSubobject<UWaypointMovementComponent>(TEXT("Waypoint Movement"));
+	AddInstanceComponent(WaypointMovementComponent);
 }

@@ -4,6 +4,7 @@
 #include "Gameplay/Platforms/PlatformModule.h" 
 #include "Gameplay/Pickup.h"
 #include "Gameplay/Obstacle.h"
+#include "Gameplay/Components/WaypointMovementComponent.h"
 #include "Core/EndlessCleanerGameMode_Level.h"
 
 
@@ -72,16 +73,30 @@ void APlatformModule::SpawnPickups()
 		SpawnPosition += Lanes[LaneIndex].PickupStartPosition;
 
 		// Spawn pickups
-		for (int i = 0; i < Lanes[LaneIndex].PickupsNumberPerSpawn; i++)
+		for (int PickupIndex = 0; PickupIndex < Lanes[LaneIndex].PickupsNumberPerSpawn; PickupIndex++)
 		{
 			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(Lanes[LaneIndex].PickupClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedPickup->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
+			// Set the initial location
 			SpawnedPickup->SetActorLocation(SpawnPosition);
+
+			// The waypoint component will controll the movement locally(the spawn position is the pivot point) 
+			SpawnedPickup->WaypointMovementComponent->bMovementInLocalSpace = true;
+			SpawnedPickup->WaypointMovementComponent->MovementSpeed = Lanes[LaneIndex].PickupsMovementSpeed;
+			for (int WaypointIndex = 0; WaypointIndex < Lanes[LaneIndex].PickupLocalWaypoints.Num(); WaypointIndex++)
+			{
+				FVector WaypointLocation = FVector(
+					SpawnPosition.X + Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex].X,
+					SpawnPosition.Y + Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex].Y,
+					SpawnPosition.Z + Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex].Z);
+
+				SpawnedPickup->WaypointMovementComponent->AddWaypoint(WaypointLocation);
+			}
 
 			SpawnedPickups.Add(SpawnedPickup);
 
-			SpawnPosition -= Lanes[LaneIndex].DistanceBetweenPickups;
+			SpawnPosition.X -= Lanes[LaneIndex].DistanceBetweenPickups;
 		}
 	}
 }
