@@ -34,6 +34,8 @@ protected:
 
 	float LerpTimeElapsed = 0;
 
+	bool bIsMovingForward = true;
+
 	// When moving using a beacon system, this the position to follow
 	FVector BeaconPosition;
 
@@ -57,4 +59,11 @@ public:
 	// Whether waypoint locations are set in local or world space.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		uint32 bMovementInLocalSpace : 1;
+
+	/** Use Pingpong Waypoint Selection or Circular Waypoint Selection.
+	* Using PingPong Selection: When reaching the last waypoint, it'll start to move backward through waypoints.
+	* Using Circular Selection: When reaching the last waypoint, it'll go back to the first waypoint and start again.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		uint32 bUsePingPongWaypointSelection : 1;
 };

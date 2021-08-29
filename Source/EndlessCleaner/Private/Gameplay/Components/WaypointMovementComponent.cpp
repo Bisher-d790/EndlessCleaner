@@ -63,8 +63,38 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 
 void UWaypointMovementComponent::NextWaypoint()
 {
-	NextWaypointIndex++;
-	if (NextWaypointIndex >= WaypointLocations.Num()) NextWaypointIndex = 0;
+	if (bIsMovingForward)
+	{
+		NextWaypointIndex++;
+
+		// When has reached the end
+		if (NextWaypointIndex >= WaypointLocations.Num())
+		{
+			if (bUsePingPongWaypointSelection)
+			{
+				bIsMovingForward = false;
+				NextWaypointIndex = WaypointLocations.Num() > 1 ? WaypointLocations.Num() - 2 : 0;
+			}
+			else
+			{
+				NextWaypointIndex = 0;
+			}
+		}
+	}
+	else
+	{
+		NextWaypointIndex--;
+
+		// When has reached the end
+		if (NextWaypointIndex < 0)
+		{
+			bIsMovingForward = true;
+			NextWaypointIndex = WaypointLocations.Num() > 1 ? 1 : 0;
+		}
+	}
+
+	// Reset bIsMovingForward if bUsePingPongWaypointSelection was disabled during gameplay
+	if (!bUsePingPongWaypointSelection)	bIsMovingForward = true;
 
 	LerpTimeElapsed = 0;
 }
