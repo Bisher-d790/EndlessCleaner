@@ -5,7 +5,8 @@
 
 UWaypointMovementComponent::UWaypointMovementComponent()
 {
-	MovementSpeed = 10;
+	MovementSpeed = 2;
+	BeaconSpeed = 25;
 	bMovementInLocalSpace = true;
 }
 
@@ -13,6 +14,10 @@ void UWaypointMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Set beacon start position
+	BeaconPosition = UpdatedComponent->GetComponentLocation();
+
+	// Set Waypoints in local space
 	if (bMovementInLocalSpace)
 	{
 		FVector ActorLocation = UpdatedComponent->GetComponentLocation();
@@ -30,29 +35,36 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	// Skip if there're no Waypoints, or there's only one waypoint
 	if (WaypointLocations.Num() <= 1) return;
 
-	// skip if we don't want component updated when not rendered or if updated component can't move
+	// Skip if we don't want component updated when not rendered or if updated component can't move
 	if (ShouldSkipUpdate(DeltaTime)) return;
 	if (!IsValid(UpdatedComponent))	return;
 
 	// Compute new location
-	FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
-	FVector TargetLocation = WaypointLocations[NextIndex];
+	FVector TargetLocation = WaypointLocations[NextWaypointIndex];
 
+	//** Update Beacon Position
 	// Movement time duration = distance / speed
-	float LerpDuration = FVector::Dist(CurrentLocation, TargetLocation) / MovementSpeed;
-	FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, LerpTimeElapsed / LerpDuration);
+	float LerpDuration = FVector::Dist(BeaconPosition, TargetLocation) / BeaconSpeed;
+	BeaconPosition = FMath::Lerp(BeaconPosition, TargetLocation, LerpTimeElapsed / LerpDuration);
 
 	LerpTimeElapsed += DeltaTime;
 
+	//** Update Component Position
+	FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
+	float Distance = MovementSpeed * DeltaTime;
+	FVector NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
+
+	// Set the new location
 	UpdatedComponent->SetWorldLocation(NewLocation);
 
+	// If has reached the waypoint (finished lerping), iterate to next waypoint
 	if (LerpTimeElapsed >= LerpDuration) NextWaypoint();
 }
 
 void UWaypointMovementComponent::NextWaypoint()
 {
-	NextIndex++;
-	if (NextIndex >= WaypointLocations.Num()) NextIndex = 0;
+	NextWaypointIndex++;
+	if (NextWaypointIndex >= WaypointLocations.Num()) NextWaypointIndex = 0;
 
 	LerpTimeElapsed = 0;
 }

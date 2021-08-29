@@ -23,25 +23,38 @@ private:
 	virtual void BeginPlay() override;
 
 protected:
-	// The rotation of the wave start
+	// The locations of waypoints to move between
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		TArray<FVector> WaypointLocations = TArray<FVector>();
 
+	// Iterate to the next waypoint
 	void NextWaypoint();
 
-	int NextIndex = 0;
+	int NextWaypointIndex = 0;
 
 	float LerpTimeElapsed = 0;
 
+	// When moving using a beacon system, this the position to follow
+	FVector BeaconPosition;
+
+	// Get the beacon position (for debugging purposes)
+	UFUNCTION(BlueprintCallable, Category = Debug)
+		FVector GetBeaconPosition() { return BeaconPosition; };
+
 public:
+	// Add a new waypoint from code
 	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
 		void AddWaypoint(FVector Waypoint);
 
-	// The speed of the movement
+	// The movement speed of the object
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		float MovementSpeed;
 
-	// Whether movement is applied in local or world space.
+	// The movement speed of the beacon that the object follows
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		float BeaconSpeed;
+
+	// Whether waypoint locations are set in local or world space.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		uint32 bMovementInLocalSpace : 1;
 };
