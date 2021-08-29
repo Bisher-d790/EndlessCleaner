@@ -70,4 +70,11 @@ public:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		uint32 bUsePingPongWaypointSelection : 1;
+
+	/** Use Beacon Movement Mechanic or Lerp Movement Mechanic.
+	* Using Beacon Mechanic: Lerping a beacon between waypoints, and making the object follow the beacon, provides smoothness of motion.
+	* Using Lerp Mechanic: Lerping the object between waypoints, sticks a bit when reaching the waypoint.
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		uint32 bUseBeaconForMovement : 1;
 };

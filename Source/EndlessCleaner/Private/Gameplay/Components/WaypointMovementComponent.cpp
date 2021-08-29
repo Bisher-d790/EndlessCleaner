@@ -9,6 +9,8 @@ UWaypointMovementComponent::UWaypointMovementComponent()
 	BeaconSpeed = 25;
 	FollowBeaconSpeedMultiplier = 0.5;
 	bMovementInLocalSpace = true;
+	bUsePingPongWaypointSelection = true;
+	bUseBeaconForMovement = true;
 }
 
 void UWaypointMovementComponent::BeginPlay()
@@ -40,7 +42,6 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	if (ShouldSkipUpdate(DeltaTime)) return;
 	if (!IsValid(UpdatedComponent))	return;
 
-	// Compute new location
 	FVector TargetLocation = WaypointLocations[NextWaypointIndex];
 
 	//** Update Beacon Position
@@ -51,10 +52,22 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	LerpTimeElapsed += DeltaTime;
 
 	//** Update Component Position
-	FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
-	float Distance = MovementSpeed * DeltaTime;
-	Distance *= FollowBeaconSpeedMultiplier;
-	FVector NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
+	FVector NewLocation;
+
+	// Compute new location
+	if (bUseBeaconForMovement)
+	{
+		// If using Beacon movement, follow the beacon
+		FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
+		float Distance = MovementSpeed * DeltaTime;
+		Distance *= FollowBeaconSpeedMultiplier;
+		NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
+	}
+	else
+	{
+		// If using Lerping movement, just move with the beacon with out following it
+		NewLocation = BeaconPosition;
+	}
 
 	// Set the new location
 	UpdatedComponent->SetWorldLocation(NewLocation);
