@@ -52,6 +52,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		float MovementSpeed;
 
+	// The movement speed multiplier of the object when following the beacon
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		float FollowBeaconSpeedMultiplier;
+
 	// The movement speed of the beacon that the object follows
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		float BeaconSpeed;

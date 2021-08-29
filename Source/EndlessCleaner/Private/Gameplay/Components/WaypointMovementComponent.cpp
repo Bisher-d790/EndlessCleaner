@@ -7,6 +7,7 @@ UWaypointMovementComponent::UWaypointMovementComponent()
 {
 	MovementSpeed = 2;
 	BeaconSpeed = 25;
+	FollowBeaconSpeedMultiplier = 0.5;
 	bMovementInLocalSpace = true;
 }
 
@@ -52,6 +53,7 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	//** Update Component Position
 	FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
 	float Distance = MovementSpeed * DeltaTime;
+	Distance *= FollowBeaconSpeedMultiplier;
 	FVector NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
 
 	// Set the new location
