@@ -11,6 +11,7 @@ UWaypointMovementComponent::UWaypointMovementComponent()
 	bMovementInLocalSpace = true;
 	bUsePingPongWaypointSelection = true;
 	bUseBeaconForMovement = true;
+	StartDelay = 0.0f;
 }
 
 void UWaypointMovementComponent::BeginPlay()
@@ -34,6 +35,12 @@ void UWaypointMovementComponent::BeginPlay()
 void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (StartDelayTimeElapsed < StartDelay)
+	{
+		StartDelayTimeElapsed += DeltaTime;
+		return;
+	}
 
 	// Skip if there're no Waypoints, or there's only one waypoint
 	if (WaypointLocations.Num() <= 1) return;

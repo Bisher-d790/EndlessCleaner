@@ -36,6 +36,8 @@ protected:
 
 	bool bIsMovingForward = true;
 
+	float StartDelayTimeElapsed = 0;
+
 	// When moving using a beacon system, this the position to follow
 	FVector BeaconPosition;
 
@@ -77,4 +79,8 @@ public:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		uint32 bUseBeaconForMovement : 1;
+
+	// A delay before  starting to move
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		float StartDelay;
 };

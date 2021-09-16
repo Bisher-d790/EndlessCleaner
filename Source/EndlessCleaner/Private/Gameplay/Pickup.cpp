@@ -16,4 +16,14 @@ APickup::APickup()
 
 	WaypointMovementComponent = CreateDefaultSubobject<UWaypointMovementComponent>(TEXT("Waypoint Movement"));
 	AddInstanceComponent(WaypointMovementComponent);
+
+	MovementStartDelayRandomMin = 0.f;
+	MovementStartDelayRandomMax = 1.f;
+}
+
+void APickup::BeginPlay()
+{
+	Super::BeginPlay();
+
+	WaypointMovementComponent->StartDelay = FMath::RandRange(MovementStartDelayRandomMin, MovementStartDelayRandomMax);
 }

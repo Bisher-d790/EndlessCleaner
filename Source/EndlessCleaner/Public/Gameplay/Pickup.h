@@ -15,9 +15,20 @@ public:
 	// Sets default values for this actor's properties
 	APickup();
 
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup")
 		class UStaticMeshComponent* Mesh;
+
+	// The waypoint movement start delay minimum random value
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
+		float MovementStartDelayRandomMin;
+
+	// The waypoint movement start delay maximum random value
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
+		float MovementStartDelayRandomMax;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
