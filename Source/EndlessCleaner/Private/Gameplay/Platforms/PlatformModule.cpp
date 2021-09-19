@@ -91,7 +91,7 @@ void APlatformModule::SpawnPickups()
 					SpawnPosition.Y + Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex].Y,
 					SpawnPosition.Z + Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex].Z);
 
-				SpawnedPickup->WaypointMovementComponent->AddWaypoint(WaypointLocation);
+				SpawnedPickup->WaypointMovementComponent->WaypointLocations.Add(WaypointLocation);
 			}
 
 			SpawnedPickups.Add(LaneIndex, SpawnedPickup);

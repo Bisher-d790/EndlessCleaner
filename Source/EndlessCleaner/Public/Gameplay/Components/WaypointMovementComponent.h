@@ -23,10 +23,6 @@ private:
 	virtual void BeginPlay() override;
 
 protected:
-	// The locations of waypoints to move between
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
-		TArray<FVector> WaypointLocations = TArray<FVector>();
-
 	// Iterate to the next waypoint
 	void NextWaypoint();
 
@@ -46,13 +42,9 @@ protected:
 		FVector GetBeaconPosition() { return BeaconPosition; };
 
 public:
-	// Add a new waypoint from code
-	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
-		void AddWaypoint(FVector Waypoint);
-
-	// Add a new waypoint from code
-	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
-		void RemoveAllWaypoints();
+	// The locations of waypoints to move between
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		TArray<FVector> WaypointLocations = TArray<FVector>();
 
 	// The movement speed of the object
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
