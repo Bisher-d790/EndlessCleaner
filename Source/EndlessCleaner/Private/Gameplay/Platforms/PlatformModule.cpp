@@ -94,7 +94,7 @@ void APlatformModule::SpawnPickups()
 				SpawnedPickup->WaypointMovementComponent->AddWaypoint(WaypointLocation);
 			}
 
-			SpawnedPickups.Add(SpawnedPickup);
+			SpawnedPickups.Add(LaneIndex, SpawnedPickup);
 
 			SpawnPosition.X -= Lanes[LaneIndex].DistanceBetweenPickups;
 		}
@@ -103,19 +103,19 @@ void APlatformModule::SpawnPickups()
 
 void APlatformModule::SpawnObstacles()
 {
-	for (int i = 0; i < Lanes.Num(); i++)
+	for (int LaneIndex = 0; LaneIndex < Lanes.Num(); LaneIndex++)
 	{
-		if (FMath::FRand() * 100 < Lanes[i].ObstacleProbability && Lanes[i].ObstacleClass)
+		if (FMath::FRand() * 100 < Lanes[LaneIndex].ObstacleProbability && Lanes[LaneIndex].ObstacleClass)
 		{
-			FVector SpawnPosition = GetActorLocation() + Lanes[i].LanePosition;
-			SpawnPosition += Lanes[i].ObstaclePosition;
+			FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
+			SpawnPosition += Lanes[LaneIndex].ObstaclePosition;
 
-			AObstacle* SpawnedObstacle = GetWorld()->SpawnActor<AObstacle>(Lanes[i].ObstacleClass, SpawnPosition, FRotator::ZeroRotator);
+			AObstacle* SpawnedObstacle = GetWorld()->SpawnActor<AObstacle>(Lanes[LaneIndex].ObstacleClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedObstacle->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
 			SpawnedObstacle->SetActorLocation(SpawnPosition);
 
-			SpawnedObstacles.Add(SpawnedObstacle);
+			SpawnedObstacles.Add(LaneIndex, SpawnedObstacle);
 		}
 	}
 }
@@ -129,14 +129,14 @@ void APlatformModule::DestroyPlatform()
 	PreviousPlatform = nullptr;
 	NextPlatform = nullptr;
 
-	for (int i = 0; i < SpawnedPickups.Num(); i++)
+	for (auto& Pickup : SpawnedPickups)
 	{
-		SpawnedPickups[i]->Destroy();
+		Pickup.Value->Destroy();
 	}
 
-	for (int i = 0; i < SpawnedObstacles.Num(); i++)
+	for (auto& Obstacle : SpawnedObstacles)
 	{
-		SpawnedObstacles[i]->Destroy();
+		Obstacle.Value->Destroy();
 	}
 
 	Destroy();

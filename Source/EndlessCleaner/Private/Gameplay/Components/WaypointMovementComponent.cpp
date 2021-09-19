@@ -125,3 +125,8 @@ void UWaypointMovementComponent::AddWaypoint(FVector Waypoint)
 {
 	WaypointLocations.Add(Waypoint);
 }
+
+void UWaypointMovementComponent::RemoveAllWaypoints()
+{
+	WaypointLocations.Empty();
+}

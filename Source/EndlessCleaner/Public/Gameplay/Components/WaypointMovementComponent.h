@@ -50,6 +50,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
 		void AddWaypoint(FVector Waypoint);
 
+	// Add a new waypoint from code
+	UFUNCTION(BlueprintCallable, Category = WaypointComponent)
+		void RemoveAllWaypoints();
+
 	// The movement speed of the object
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
 		float MovementSpeed;

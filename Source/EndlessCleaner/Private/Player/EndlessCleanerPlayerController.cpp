@@ -127,8 +127,8 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			{
 				FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
-				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle));
-				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d"), CurrentLane));
+				//AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle));
+				//AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d"), CurrentLane));
 
 				if (FMath::IsNearlyEqual(PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle, Lane.LaneWidthAngle))
 				{

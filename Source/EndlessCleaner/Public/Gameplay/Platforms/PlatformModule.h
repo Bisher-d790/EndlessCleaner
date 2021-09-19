@@ -104,9 +104,11 @@ protected:
 
 	APlatformModule* NextPlatform = nullptr;
 
-	TArray<class APickup*> SpawnedPickups;
+	// Spawned Pickups Map. Key: Lane, Value: Pickup reference.
+	TMultiMap<int, class APickup*> SpawnedPickups;
 
-	TArray<class AObstacle*> SpawnedObstacles;
+	// Spawned Obstacles Map. Key: Lane, Value: Obstacle reference.
+	TMultiMap<int, class AObstacle*> SpawnedObstacles;
 
 	float PlatformLength;
 
