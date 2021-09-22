@@ -22,6 +22,7 @@ AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
 	RespawnTimer = 3.0f;
 	SpawnStartTimer = 2.0f;
 	InitialPlayerLives = 3;
+	PickupsRushPlatformsCount = 2;
 
 	CoinsMultiplier = 100;
 	SpeedMultiplier = 1000;
@@ -81,6 +82,16 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 			}
 
 			PlayerController->SetCurrentPlatform(PlatformToCheck);
+
+			// Pickup Rush Mechanic
+			APlatformModule* TempPlatform = FirstPlatform;
+			for (int PlatformIndex = 0; PlatformIndex < PickupsRushPlatformsCount; PlatformIndex++)
+			{
+				TempPlatform->StartPickupRush();
+
+				TempPlatform = FirstPlatform->GetNextPlatform();
+				if (TempPlatform == nullptr) break;
+			}
 
 			// Spawn new Platform
 			SpawnNewPlatform();

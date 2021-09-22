@@ -112,6 +112,8 @@ protected:
 
 	float PlatformLength;
 
+	bool bPickupRushStarted = false;
+
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
 
@@ -135,4 +137,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void OnRotatePlatform(bool bRotateLeft);
+
+	/** Pickup Rush is a mechanic where the pickups rush towards the player*/
+	void StartPickupRush();
 };

@@ -80,6 +80,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		TSubclassOf<class APlatformsContainer> PlatformsContainerClass;
 
+	// Number of platforms whose pickups rush to you when you come near them
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		int PickupsRushPlatformsCount;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float CoinsMultiplier;
 

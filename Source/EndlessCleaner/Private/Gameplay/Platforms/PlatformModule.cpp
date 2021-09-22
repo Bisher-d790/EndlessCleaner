@@ -173,3 +173,24 @@ void APlatformModule::OnRotatePlatform(bool bRotateLeft)
 		Pickup.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
 	}
 }
+
+void APlatformModule::StartPickupRush()
+{
+	if (bPickupRushStarted) return;
+	bPickupRushStarted = true;
+
+	// Rotate the pickups waypoints
+	for (auto& Pickup : SpawnedPickups)
+	{
+		int LaneIndex = Pickup.Key;
+
+		TArray<FVector> Waypoints = (Pickup.Value->WaypointMovementComponent->WaypointLocations);
+
+		for (int WaypointIndex = 0; WaypointIndex < Waypoints.Num(); WaypointIndex++)
+		{
+			Waypoints[WaypointIndex].X = 0;
+		}
+
+		Pickup.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
+	}
+}
