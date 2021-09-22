@@ -129,7 +129,7 @@ public:
 #pragma region Debug
 public:
 	UFUNCTION(BlueprintCallable, Category = "Debug")
-		static void PrintDebugLog(FString Log);
+		static void PrintDebugLog(FString Log, FColor Color = FColor::Red);
 
 	UFUNCTION(BlueprintCallable, Category = "Debug")
 		static void SetDebugLogState(bool State);

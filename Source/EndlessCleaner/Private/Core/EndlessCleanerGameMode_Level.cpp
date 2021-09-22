@@ -387,10 +387,11 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 }
 
 #pragma region Debug
-void AEndlessCleanerGameMode_Level::PrintDebugLog(FString Log)
+void AEndlessCleanerGameMode_Level::PrintDebugLog(FString Log, FColor Color)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *Log);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, Log);
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, Log);
 }
 
 void AEndlessCleanerGameMode_Level::SetDebugLogState(bool State)
