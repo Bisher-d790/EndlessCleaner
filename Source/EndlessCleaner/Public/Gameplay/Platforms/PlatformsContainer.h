@@ -29,6 +29,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 		FRotator InitialRotation;
 
+	TArray<class APlatformModule*> PlatformModules = TArray<class APlatformModule*>();
+
 public:
 	void RotateLeft();
 
@@ -44,4 +46,8 @@ public:
 		class URotatingMovementComponent* RotatingMovementComponent;
 
 	FORCEINLINE bool GetIsRotating() { return bIsRotating; };
+
+	FORCEINLINE void AddPlatformModule(APlatformModule* PlatformRef) { PlatformModules.Add(PlatformRef); };
+
+	FORCEINLINE void RemovePlatformModule(APlatformModule* PlatformRef) { PlatformModules.Remove(PlatformRef); };
 };

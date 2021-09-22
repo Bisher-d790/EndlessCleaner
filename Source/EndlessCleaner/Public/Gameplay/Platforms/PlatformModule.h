@@ -132,4 +132,7 @@ public:
 	void SpawnPickups();
 
 	void SpawnObstacles();
+
+	UFUNCTION(BlueprintCallable)
+		void OnRotatePlatform(bool bRotateLeft);
 };

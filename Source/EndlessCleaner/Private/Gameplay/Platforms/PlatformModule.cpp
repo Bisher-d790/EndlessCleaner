@@ -141,3 +141,35 @@ void APlatformModule::DestroyPlatform()
 
 	Destroy();
 }
+
+void APlatformModule::OnRotatePlatform(bool bRotateLeft)
+{
+	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("On rotate platforms"));
+
+	// Rotate the pickups waypoints
+	for (auto& Pickup : SpawnedPickups)
+	{
+		int LaneIndex = Pickup.Key;
+
+		if (bRotateLeft)
+			LaneIndex = LaneIndex - 1 < 0 ? Lanes.Num() - 1 : LaneIndex - 1;
+		else
+			LaneIndex = LaneIndex + 1 >= Lanes.Num() ? 0 : LaneIndex + 1;
+
+		Pickup.Key = LaneIndex;
+
+		TArray<FVector> Waypoints = (Pickup.Value->WaypointMovementComponent->WaypointLocations);
+
+		for (int WaypointIndex = 0; WaypointIndex < Waypoints.Num(); WaypointIndex++)
+		{
+			FVector NewWaypointPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
+			NewWaypointPosition += Lanes[LaneIndex].PickupLocalWaypoints[WaypointIndex];
+			// So we don't need to recalculate the distance between waypoints, just use the same X axis value
+			NewWaypointPosition.X = Waypoints[WaypointIndex].X;
+
+			Waypoints[WaypointIndex] = NewWaypointPosition;
+		}
+
+		Pickup.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
+	}
+}

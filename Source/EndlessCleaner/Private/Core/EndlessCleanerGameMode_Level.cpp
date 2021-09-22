@@ -74,6 +74,7 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 
 				// Destroy first platform and set the next first platform
 				APlatformModule* TempFirstPlatform = FirstPlatform->GetNextPlatform();
+				PlatformsContainerActor->RemovePlatformModule(FirstPlatform);
 				FirstPlatform->DestroyPlatform();
 
 				FirstPlatform = TempFirstPlatform;
@@ -150,6 +151,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		if (SpawnedPlatform)
 		{
 			SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
+			PlatformsContainerActor->AddPlatformModule(SpawnedPlatform);
 			SpawnedPlatform->SetActorLocation(SpawnPosition);
 			SpawnedPlatform->SetActorRotation(PlatformsContainerActor->GetActorRotation());
 			SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
@@ -218,12 +220,14 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 		while (FirstIterate->GetNextPlatform())
 		{
 			APlatformModule* Temp = FirstIterate->GetNextPlatform();
+			PlatformsContainerActor->RemovePlatformModule(FirstIterate);
 			FirstIterate->DestroyPlatform();
 			FirstIterate = Temp;
 		}
 
 		if (FirstIterate)
 		{
+			PlatformsContainerActor->RemovePlatformModule(FirstIterate);
 			FirstIterate->DestroyPlatform();
 		}
 
@@ -277,6 +281,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 		APlatformModule* SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 
 		SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
+		PlatformsContainerActor->AddPlatformModule(SpawnedPlatform);
 		SpawnedPlatform->SetActorLocation(SpawnPosition);
 		SpawnedPlatform->SetActorRotation(PlatformsContainerActor->GetActorRotation());
 		SpawnPosition.X += SpawnedPlatform->GetPlatformLength();

@@ -4,6 +4,7 @@
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "GameFramework/RotatingMovementComponent.h"
 #include "Core/EndlessCleanerGameMode_Level.h"
+#include "Gameplay/Platforms/PlatformModule.h" 
 
 
 // Sets default values
@@ -35,6 +36,9 @@ void APlatformsContainer::RotateLeft()
 	RotatingMovementComponent->RotationRate = FRotator(0, 0, RotationSpeed);
 
 	bIsRotating = true;
+
+	for (auto& Platform : PlatformModules)
+		if (Platform != nullptr) Platform->OnRotatePlatform(true);
 }
 
 void APlatformsContainer::RotateRight()
@@ -45,6 +49,9 @@ void APlatformsContainer::RotateRight()
 	RotatingMovementComponent->RotationRate = FRotator(0, 0, -RotationSpeed);
 
 	bIsRotating = true;
+
+	for (auto& Platform : PlatformModules)
+		if (Platform != nullptr) Platform->OnRotatePlatform(false);
 }
 
 void APlatformsContainer::StopRotation()
