@@ -42,12 +42,16 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 		return;
 	}
 
-	// Skip if there're no Waypoints, or there's only one waypoint
-	if (WaypointLocations.Num() <= 1) return;
+	// Skip if there're no Waypoints
+	if (WaypointLocations.Num() < 1) return;
 
 	// Skip if we don't want component updated when not rendered or if updated component can't move
 	if (ShouldSkipUpdate(DeltaTime)) return;
 	if (!IsValid(UpdatedComponent))	return;
+
+	// Check if the index is out of bounds to get over any changes made by an outsider object
+	if (NextWaypointIndex >= WaypointLocations.Num())
+		NextWaypointIndex = WaypointLocations.Num() - 1;
 
 	FVector TargetLocation = WaypointLocations[NextWaypointIndex];
 
