@@ -35,7 +35,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveComponent)
 		float RotationEdgeTolerance;
 
-	// The waypoint movement start delay maximum random value
+	// Start from a random index
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WaveComponent)
 		bool bRandomStartIndex = false;
 
