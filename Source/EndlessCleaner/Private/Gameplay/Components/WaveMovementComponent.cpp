@@ -20,6 +20,9 @@ void UWaveMovementComponent::BeginPlay()
 	{
 		FRotator WaveStartRotation = WaveRotations[0];
 		UpdatedComponent->SetRelativeRotation(WaveStartRotation);
+
+		// Randomly select the first index
+		if (bRandomStartIndex)	NextIndex = FMath::RandRange(0, WaveRotations.Num() - 1);
 	}
 }
 
