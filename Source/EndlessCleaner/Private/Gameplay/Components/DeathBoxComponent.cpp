@@ -22,7 +22,11 @@ void UDeathBoxComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	bool bFromSweep,
 	const FHitResult& SweepResult)
 {
+	if (bHasBeenTriggered) return;
+
 	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Death Overlap"));
 
 	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
+
+	bHasBeenTriggered = true;
 }
