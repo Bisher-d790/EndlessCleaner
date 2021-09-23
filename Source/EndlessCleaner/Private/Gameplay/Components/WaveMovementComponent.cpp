@@ -35,7 +35,7 @@ void UWaveMovementComponent::TickComponent(float DeltaTime, enum ELevelTick Tick
 	if (!IsValid(UpdatedComponent))	return;
 
 	// Compute new Rotation
-	FRotator CurrentRotation = UpdatedComponent->GetComponentRotation();
+	FRotator CurrentRotation = UpdatedComponent->GetRelativeRotation();
 	FRotator TargetRotation = WaveRotations[NextIndex];
 
 	FRotator NewRotation = FMath::Lerp(CurrentRotation, TargetRotation, LerpTimeElapsed / RotationDuration);
