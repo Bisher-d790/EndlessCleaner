@@ -114,6 +114,8 @@ protected:
 
 	bool bPickupRushStarted = false;
 
+	bool bObstacleRushStarted = false;
+
 public:
 	FORCEINLINE float GetPlatformLength() { return PlatformLength; };
 
@@ -140,4 +142,7 @@ public:
 
 	/** Pickup Rush is a mechanic where the pickups rush towards the player*/
 	void StartPickupRush();
+
+	/** Obstacle Rush is a mechanic where the obstacles rush towards the player*/
+	void StartObstacleRush();
 };

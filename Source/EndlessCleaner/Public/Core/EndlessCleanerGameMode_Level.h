@@ -84,6 +84,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		int PickupsRushPlatformsCount;
 
+	// Number of platforms whose Obstacles rush to you when you come near them
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		int ObstaclesRushPlatformsCount;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float CoinsMultiplier;
 

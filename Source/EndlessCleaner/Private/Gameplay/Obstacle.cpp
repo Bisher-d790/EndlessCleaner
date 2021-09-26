@@ -2,6 +2,7 @@
 
 
 #include "Gameplay/Obstacle.h"
+#include "Gameplay/Components/WaypointMovementComponent.h"
 
 // Sets default values
 AObstacle::AObstacle()
@@ -13,4 +14,7 @@ AObstacle::AObstacle()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	WaypointMovementComponent = CreateDefaultSubobject<UWaypointMovementComponent>(TEXT("Waypoint Movement"));
+	AddInstanceComponent(WaypointMovementComponent);
 }

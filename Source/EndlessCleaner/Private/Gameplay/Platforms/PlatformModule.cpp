@@ -194,3 +194,34 @@ void APlatformModule::StartPickupRush()
 		Pickup.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
 	}
 }
+
+void APlatformModule::StartObstacleRush()
+{
+	if (bObstacleRushStarted) return;
+	bObstacleRushStarted = true;
+
+	// Rotate the pickups waypoints
+	for (auto& Obstacle : SpawnedObstacles)
+	{
+		int LaneIndex = Obstacle.Key;
+
+		TArray<FVector> Waypoints = (Obstacle.Value->WaypointMovementComponent->WaypointLocations);
+
+		if (Waypoints.Num() > 0)
+		{
+			for (int WaypointIndex = 0; WaypointIndex < Waypoints.Num(); WaypointIndex++)
+			{
+				Waypoints[WaypointIndex].X = 0;
+			}
+		}
+		else
+		{
+			FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition + Lanes[LaneIndex].ObstaclePosition;
+			SpawnPosition.X = 0;
+
+			Waypoints.Add(SpawnPosition);
+		}
+
+		Obstacle.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
+	}
+}
