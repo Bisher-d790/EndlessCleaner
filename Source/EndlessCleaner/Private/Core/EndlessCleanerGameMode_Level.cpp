@@ -266,6 +266,8 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 	else if (GameState == EGameState::VE_Respawn)
 	{
+		AAudioManager::GetInstance()->PlayBackgroundMusic();
+
 		PlayerController->Respawn();
 		PlayerController->StartRunning();
 		GameState = EGameState::VE_Running;

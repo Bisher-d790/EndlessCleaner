@@ -4,7 +4,20 @@
 #include "Audio/AudioManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
+#include "Utils/SingletonManager.h"
 
+
+#pragma region Singleton
+AAudioManager* AAudioManager::GetInstance()
+{
+	return USingletonManager::GetInstance()->GetAudioManagerInstance();
+}
+
+void AAudioManager::SetInstance(AAudioManager* Instance)
+{
+	USingletonManager::GetInstance()->SetAudioManagerInstance(Instance);
+}
+#pragma endregion Singleton
 
 // Sets default values
 AAudioManager::AAudioManager()
@@ -18,6 +31,9 @@ AAudioManager::AAudioManager()
 void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Set Singleton
+	SetInstance(this);
 
 	BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic);
 	// Stop BG music by default

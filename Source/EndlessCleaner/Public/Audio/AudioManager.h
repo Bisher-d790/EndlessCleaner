@@ -15,6 +15,14 @@ public:
 	// Sets default values for this actor's properties
 	AAudioManager();
 
+#pragma region Singleton
+public:
+	static AAudioManager* GetInstance();
+
+private:
+	static void SetInstance(AAudioManager* Instance);
+#pragma endregion Singleton
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

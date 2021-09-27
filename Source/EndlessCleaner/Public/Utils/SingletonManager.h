@@ -24,4 +24,15 @@ private:
 	// The caller Functions should be local methods, which are called from their respective type classes when an object is initialized
 	template<typename T>
 	void SetGenericSingletonInstance(T* Instance, T* SingletonInstance);
+
+
+#pragma region Audio Manager
+private:
+	class AAudioManager* AudioManagerInstance = nullptr;
+
+public:
+	class AAudioManager* GetAudioManagerInstance();
+
+	void SetAudioManagerInstance(AAudioManager* Instance);
+#pragma endregion Audio Manager
 };
