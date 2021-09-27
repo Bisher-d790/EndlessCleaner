@@ -8,6 +8,7 @@
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "UI/InGameUIWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Audio/AudioManager.h"
 
 
 // Sets default values
