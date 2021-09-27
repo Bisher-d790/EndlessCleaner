@@ -12,3 +12,13 @@ USingletonManager* USingletonManager::GetInstance()
 	}
 	return nullptr;
 }
+
+template<typename T>
+void USingletonManager::SetGenericSingletonInstance(T* Instance, T* SingletonInstance)
+{
+	if (SingletonInstance == nullptr) SingletonInstance = Instance;
+	else if (SingletonInstance != Instance)
+	{
+		Instance->Destroy();
+	}
+}
