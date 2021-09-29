@@ -19,12 +19,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		static USingletonManager* GetInstance();
 
-private:
-	// A Generic Function to set the local Singleton Instances, that could be used for all Singleton Types
-	// The caller Functions should be local methods, which are called from their respective type classes when an object is initialized
-	template<typename T>
-	void SetGenericSingletonInstance(T* Instance, T* SingletonInstance);
-
 
 #pragma region Audio Manager
 private:

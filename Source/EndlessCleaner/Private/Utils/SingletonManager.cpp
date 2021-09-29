@@ -14,25 +14,17 @@ USingletonManager* USingletonManager::GetInstance()
 	return nullptr;
 }
 
-template<typename T>
-void USingletonManager::SetGenericSingletonInstance(T* Instance, T* SingletonInstance)
-{
-	if (SingletonInstance == nullptr) SingletonInstance = Instance;
-	else if (SingletonInstance != Instance)
-	{
-		Instance->Destroy();
-	}
-}
 
 #pragma region Audio Manager
 AAudioManager* USingletonManager::GetAudioManagerInstance()
 {
-	if (AudioManagerInstance == nullptr)
+	// Don't spawn instance if null
+	/*if (AudioManagerInstance == nullptr)
 	{
 		UWorld* World = GEngine->GameViewport->GetWorld();
 
 		AudioManagerInstance = World->SpawnActor<AAudioManager>();
-	}
+	}*/
 
 	return AudioManagerInstance;
 }

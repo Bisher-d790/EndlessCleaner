@@ -18,9 +18,6 @@ public:
 #pragma region Singleton
 public:
 	static AAudioManager* GetInstance();
-
-private:
-	static void SetInstance(AAudioManager* Instance);
 #pragma endregion Singleton
 
 protected:

@@ -12,11 +12,6 @@ AAudioManager* AAudioManager::GetInstance()
 {
 	return USingletonManager::GetInstance()->GetAudioManagerInstance();
 }
-
-void AAudioManager::SetInstance(AAudioManager* Instance)
-{
-	USingletonManager::GetInstance()->SetAudioManagerInstance(Instance);
-}
 #pragma endregion Singleton
 
 // Sets default values
@@ -32,8 +27,8 @@ void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Set Singleton
-	SetInstance(this);
+	// Set Singleton Instance
+	USingletonManager::GetInstance()->SetAudioManagerInstance(this);
 
 	BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic);
 	// Stop BG music by default
