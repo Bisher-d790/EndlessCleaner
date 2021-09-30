@@ -22,13 +22,18 @@ AAudioManager::AAudioManager()
 
 }
 
+void AAudioManager::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	// Set Singleton Instance
+	USingletonManager::GetInstance()->SetAudioManagerInstance(this);
+}
+
 // Called when the game starts or when spawned
 void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Set Singleton Instance
-	USingletonManager::GetInstance()->SetAudioManagerInstance(this);
 
 	BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic);
 	// Stop BG music by default
