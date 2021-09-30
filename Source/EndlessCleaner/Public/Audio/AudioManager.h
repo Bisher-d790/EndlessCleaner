@@ -17,7 +17,8 @@ public:
 
 #pragma region Singleton
 public:
-	static AAudioManager* GetInstance();
+	UFUNCTION(BlueprintCallable, Category = "Singleton")
+		static AAudioManager* GetInstance();
 #pragma endregion Singleton
 
 protected:
@@ -26,15 +27,29 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, Category = "Setting")
+		float BackgroundMusicVolume;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setting")
+		float FootstepSFXVolume;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Music")
 		class USoundBase* BackgroundMusic;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SFX")
+		class USoundBase* FootstepSFX;
 
 	class UAudioComponent* BackgroundMusicComponent;
 
+	class AEndlessCleanerCharacter* PlayerRef;
+
 public:
-	UFUNCTION(BlueprintCallable, Category = "Settings")
+	UFUNCTION(BlueprintCallable, Category = "Music")
 		void PlayBackgroundMusic();
 
-	UFUNCTION(BlueprintCallable, Category = "Settings")
+	UFUNCTION(BlueprintCallable, Category = "Music")
 		void StopBackgroundMusic();
+
+	UFUNCTION(BlueprintCallable, Category = "SFX")
+		void PlayFoostepSFX();
 };

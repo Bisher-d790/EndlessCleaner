@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 #include "Utils/SingletonManager.h"
-
+#include "Player/EndlessCleanerCharacter.h"
 
 #pragma region Singleton
 AAudioManager* AAudioManager::GetInstance()
@@ -20,6 +20,9 @@ AAudioManager::AAudioManager()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	// Set initial value
+	BackgroundMusicVolume = 1.0f;
+	FootstepSFXVolume = 1.0f;
 }
 
 void AAudioManager::PostInitializeComponents()
@@ -35,9 +38,12 @@ void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic);
+	if (BackgroundMusic)
+		BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic, BackgroundMusicVolume);
 	// Stop BG music by default
 	StopBackgroundMusic();
+
+	PlayerRef = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AAudioManager::PlayBackgroundMusic()
@@ -50,4 +56,10 @@ void AAudioManager::StopBackgroundMusic()
 {
 	if (BackgroundMusicComponent)
 		BackgroundMusicComponent->Stop();
+}
+
+void AAudioManager::PlayFoostepSFX()
+{
+	if (FootstepSFX)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FootstepSFX, PlayerRef->GetActorLocation(), FootstepSFXVolume);
 }
