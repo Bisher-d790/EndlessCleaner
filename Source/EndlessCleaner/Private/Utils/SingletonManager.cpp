@@ -31,11 +31,11 @@ AAudioManager* USingletonManager::GetAudioManagerInstance()
 
 void USingletonManager::SetAudioManagerInstance(AAudioManager* Instance)
 {
-	// TODO: Change the way SetGenericSingletonInstance works to storing objects in a Map
-	if (AudioManagerInstance == nullptr) AudioManagerInstance = Instance;
-	else if (AudioManagerInstance != Instance)
+	//if (AudioManagerInstance == nullptr) 
+	AudioManagerInstance = Instance;
+	/*else if (AudioManagerInstance != Instance)
 	{
 		Instance->Destroy();
-	}
+	}*/
 }
 #pragma endregion Audio Manager
