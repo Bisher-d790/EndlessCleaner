@@ -10,7 +10,7 @@
 #pragma region Singleton
 AAudioManager* AAudioManager::GetInstance()
 {
-	return USingletonManager::GetInstance()->GetAudioManagerInstance();
+	return USingletonManager::GetInstance()->GetSingletonInstance<AAudioManager>();
 }
 #pragma endregion Singleton
 
@@ -30,7 +30,7 @@ void AAudioManager::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	// Set Singleton Instance
-	USingletonManager::GetInstance()->SetAudioManagerInstance(this);
+	USingletonManager::GetInstance()->SetSingletonInstance<AAudioManager>(this);
 }
 
 // Called when the game starts or when spawned
