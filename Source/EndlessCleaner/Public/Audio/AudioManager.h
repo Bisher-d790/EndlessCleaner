@@ -19,13 +19,15 @@ public:
 public:
 	UFUNCTION(BlueprintCallable, Category = "Singleton")
 		static AAudioManager* GetInstance();
+
+	virtual void PostInitializeComponents() override;
+
+	virtual void BeginDestroy() override;
 #pragma endregion Singleton
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setting")
 		float BackgroundMusicVolume;

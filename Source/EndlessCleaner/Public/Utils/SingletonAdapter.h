@@ -10,14 +10,18 @@
 class ENDLESSCLEANER_API SingletonAdapter
 {
 public:
-	SingletonAdapter(class AActor* WrappedObject);
+	SingletonAdapter(class AActor* WrappedObject, FName ClassName);
 
 	~SingletonAdapter();
 
 	FORCEINLINE class AActor* GetWrappedObject() { return ReferencedObject; };
 
-	FORCEINLINE void SetWrappedObject(class AActor* WrappedObject) { ReferencedObject = WrappedObject; };
+	FORCEINLINE FName GetClassName() { return ClassName; };
+
+	inline bool GetIsValid() { return IsValid(ReferencedObject) && !ReferencedObject->GetFName().IsNone(); };
 
 private:
 	class AActor* ReferencedObject;
+
+	FName ClassName;
 };

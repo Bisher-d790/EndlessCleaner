@@ -10,7 +10,22 @@
 #pragma region Singleton
 AAudioManager* AAudioManager::GetInstance()
 {
-	return USingletonManager::GetInstance()->GetSingletonInstance<AAudioManager>();
+	return USingletonManager::GetInstance()->GetSingletonInstance<AAudioManager>(StaticClass()->GetFName());
+}
+
+void AAudioManager::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	// Set Singleton Instance
+	USingletonManager::GetInstance()->SetSingletonInstance<AAudioManager>(this, StaticClass()->GetFName());
+}
+
+void AAudioManager::BeginDestroy()
+{
+	USingletonManager::GetInstance()->DeleteInstance(StaticClass()->GetFName());
+
+	Super::BeginDestroy();
 }
 #pragma endregion Singleton
 
@@ -23,14 +38,6 @@ AAudioManager::AAudioManager()
 	// Set initial value
 	BackgroundMusicVolume = 1.0f;
 	FootstepSFXVolume = 1.0f;
-}
-
-void AAudioManager::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	// Set Singleton Instance
-	USingletonManager::GetInstance()->SetSingletonInstance<AAudioManager>(this);
 }
 
 // Called when the game starts or when spawned

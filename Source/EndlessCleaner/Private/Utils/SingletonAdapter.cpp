@@ -3,12 +3,14 @@
 
 #include "Utils/SingletonAdapter.h"
 
-SingletonAdapter::SingletonAdapter(AActor* WrappedObject)
+SingletonAdapter::SingletonAdapter(AActor* WrappedObject, FName ClassName)
 {
 	ReferencedObject = WrappedObject;
+	this->ClassName = ClassName;
 }
 
 SingletonAdapter::~SingletonAdapter()
 {
-	ReferencedObject->Destroy();
+	if (GetIsValid())
+		ReferencedObject->Destroy();
 }

@@ -32,16 +32,15 @@ public:
 private:
 	class TArray<TSharedPtr<class SingletonAdapter>> SingletonInstances;
 
-	template<typename T>
-	int8 GetIndexByInstanceType()
+	int8 GetIndexByClassName(FName ClassName)
 	{
+		CheckReferencesValidity();
+
 		int Index = -1;
 
 		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
 		{
-			if (SingletonInstances[InstanceIndex].IsValid()
-				&& IsValid(SingletonInstances[InstanceIndex]->GetWrappedObject())
-				&& Cast<T>(SingletonInstances[InstanceIndex]->GetWrappedObject()))
+			if (SingletonInstances[InstanceIndex]->GetClassName().IsEqual(ClassName))
 			{
 				Index = InstanceIndex;
 				break;
@@ -51,11 +50,24 @@ private:
 		return Index;
 	};
 
+	void CheckReferencesValidity()
+	{
+		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
+		{
+			if (!SingletonInstances[InstanceIndex].IsValid()
+				|| !SingletonInstances[InstanceIndex]->GetIsValid())
+			{
+				SingletonInstances[InstanceIndex].Reset();
+				SingletonInstances.RemoveAt(InstanceIndex);
+			}
+		}
+	}
+
 public:
 	template<typename T>
-	T* GetSingletonInstance(bool bSpawnIfNoInstanceFound = false)
+	T* GetSingletonInstance(FName ClassName, bool bSpawnIfNoInstanceFound = false)
 	{
-		int Index = GetIndexByInstanceType<T>();
+		int Index = GetIndexByClassName(ClassName);
 
 		T* Instance = nullptr;
 
@@ -69,7 +81,7 @@ public:
 				World = GetWorld();
 
 				Instance = World->SpawnActor<T>();
-				SetSingletonInstance<T>(Instance);
+				SetSingletonInstance<T>(Instance, ClassName);
 			}
 			else
 			{
@@ -86,16 +98,16 @@ public:
 	};
 
 	template<typename T>
-	int8 SetSingletonInstance(T* Instance)
+	int8 SetSingletonInstance(T* Instance, FName ClassName)
 	{
 		if (!IsValid(Instance)) return -1;
 
-		int Index = GetIndexByInstanceType<T>();
+		int Index = GetIndexByClassName(ClassName);
 
 		// If there's no valid instance
-		if (Index < 0 || !SingletonInstances[Index].IsValid())
+		if (Index < 0 || !SingletonInstances[Index].IsValid() || !SingletonInstances[Index]->GetIsValid())
 		{
-			TSharedPtr<SingletonAdapter> NewPointer = TSharedPtr<SingletonAdapter>(new SingletonAdapter(Instance));
+			TSharedPtr<SingletonAdapter> NewPointer = TSharedPtr<SingletonAdapter>(new SingletonAdapter(Instance, ClassName));
 
 			if (Index >= 0)
 				// Replace the current instance
@@ -114,4 +126,25 @@ public:
 
 		return Index;
 	};
+
+	void DeleteInstance(FName ClassName)
+	{
+		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
+		{
+			if (SingletonInstances[InstanceIndex]->GetClassName().IsEqual(ClassName))
+			{
+				SingletonInstances[InstanceIndex].Reset();
+				SingletonInstances.RemoveAt(InstanceIndex);
+			}
+		}
+	}
+
+	void DeleteAllInstances()
+	{
+		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
+		{
+			SingletonInstances[InstanceIndex].Reset();
+			SingletonInstances.RemoveAt(InstanceIndex);
+		}
+	}
 };
