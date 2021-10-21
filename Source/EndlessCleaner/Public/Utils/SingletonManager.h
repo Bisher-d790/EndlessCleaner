@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Kismet/GameplayStatics.h"
-#include "Utils/SingletonAdapter.h"
 #include "SingletonManager.generated.h"
 
 /**
@@ -30,121 +29,64 @@ public:
 	};
 
 private:
-	class TArray<TSharedPtr<class SingletonAdapter>> SingletonInstances;
+	TMap<FName, AActor*> SingletonInstances;
 
-	int8 GetIndexByClassName(FName ClassName)
-	{
-		CheckReferencesValidity();
-
-		int Index = -1;
-
-		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
-		{
-			if (SingletonInstances[InstanceIndex]->GetClassName().IsEqual(ClassName))
-			{
-				Index = InstanceIndex;
-				break;
-			}
-		}
-
-		return Index;
-	};
+	inline bool GetIsValid(AActor* Actor) { return IsValid(Actor) && !Actor->GetFName().IsNone(); };
 
 	void CheckReferencesValidity()
 	{
-		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
+		for (auto& Instance : SingletonInstances)
 		{
-			if (!SingletonInstances[InstanceIndex].IsValid()
-				|| !SingletonInstances[InstanceIndex]->GetIsValid())
+			if (!GetIsValid(Instance.Value))
 			{
-				SingletonInstances[InstanceIndex].Reset();
-				SingletonInstances.RemoveAt(InstanceIndex);
+				SingletonInstances.Remove(Instance.Key);
 			}
 		}
 	}
 
 public:
 	template<typename T>
-	T* GetSingletonInstance(FName ClassName, bool bSpawnIfNoInstanceFound = false)
+	void SetSingletonInstance(T* Instance, FName ClassName)
 	{
-		int Index = GetIndexByClassName(ClassName);
+		if (!IsValid(Instance)) return;
 
-		T* Instance = nullptr;
-
-		// No Instance was found
-		if (Index < 0)
-		{
-			if (bSpawnIfNoInstanceFound)
-			{
-				UWorld* World;
-				//World = GEngine->GameViewport->GetWorld();
-				World = GetWorld();
-
-				Instance = World->SpawnActor<T>();
-				SetSingletonInstance<T>(Instance, ClassName);
-			}
-			else
-			{
-				return nullptr;
-			}
-		}
-		// Instance found, Get the pointer to that object
-		else
-		{
-			Instance = Cast<T>(SingletonInstances[Index]->GetWrappedObject());
-		}
-
-		return Instance;
-	};
-
-	template<typename T>
-	int8 SetSingletonInstance(T* Instance, FName ClassName)
-	{
-		if (!IsValid(Instance)) return -1;
-
-		int Index = GetIndexByClassName(ClassName);
+		CheckReferencesValidity();
 
 		// If there's no valid instance
-		if (Index < 0 || !SingletonInstances[Index].IsValid() || !SingletonInstances[Index]->GetIsValid())
+		if (!SingletonInstances.Contains(ClassName))
 		{
-			TSharedPtr<SingletonAdapter> NewPointer = TSharedPtr<SingletonAdapter>(new SingletonAdapter(Instance, ClassName));
-
-			if (Index >= 0)
-				// Replace the current instance
-				SingletonInstances[Index] = NewPointer;
-			else
-			{
-				SingletonInstances.Add(NewPointer);
-				Index = SingletonInstances.Num() - 1;
-			}
+			SingletonInstances.Add(ClassName, Instance);
 		}
 		// If there's a valid instance
 		else
 		{
 			Instance->Destroy();
 		}
+	};
 
-		return Index;
+	template<typename T>
+	T* GetSingletonInstance(FName ClassName)
+	{
+		CheckReferencesValidity();
+
+		T* Instance = nullptr;
+
+		// No Instance was found
+		if (!SingletonInstances.Contains(ClassName))
+		{
+			return nullptr;
+		}
+		// Instance found, Get the pointer to that object
+		else
+		{
+			Instance = Cast<T>(*SingletonInstances.Find(ClassName));
+		}
+
+		return Instance;
 	};
 
 	void DeleteInstance(FName ClassName)
 	{
-		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
-		{
-			if (SingletonInstances[InstanceIndex]->GetClassName().IsEqual(ClassName))
-			{
-				SingletonInstances[InstanceIndex].Reset();
-				SingletonInstances.RemoveAt(InstanceIndex);
-			}
-		}
-	}
-
-	void DeleteAllInstances()
-	{
-		for (int InstanceIndex = 0; InstanceIndex < SingletonInstances.Num(); InstanceIndex++)
-		{
-			SingletonInstances[InstanceIndex].Reset();
-			SingletonInstances.RemoveAt(InstanceIndex);
-		}
+		SingletonInstances.Remove(ClassName);
 	}
 };
