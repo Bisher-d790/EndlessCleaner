@@ -1,7 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Gameplay/Pickup.h"
+#include "Components/SphereComponent.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
+#include "Player/EndlessCleanerCharacter.h"
+#include "Player/EndlessCleanerPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 APickup::APickup()
@@ -14,11 +19,17 @@ APickup::APickup()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
+	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	Collision->SetupAttachment(RootComponent);
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapped);
+
 	WaypointMovementComponent = CreateDefaultSubobject<UWaypointMovementComponent>(TEXT("Waypoint Movement"));
 	AddInstanceComponent(WaypointMovementComponent);
 
 	MovementStartDelayRandomMin = 0.f;
 	MovementStartDelayRandomMax = 1.f;
+
+	PickUpCollectedSFXVolume = 1.0f;
 }
 
 void APickup::BeginPlay()
@@ -26,4 +37,26 @@ void APickup::BeginPlay()
 	Super::BeginPlay();
 
 	WaypointMovementComponent->StartDelay = FMath::RandRange(MovementStartDelayRandomMin, MovementStartDelayRandomMax);
+}
+
+void APickup::PlayPickUpCollectedSFX()
+{
+	if (PickUpCollectedSFX)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickUpCollectedSFX, GetActorLocation(), PickUpCollectedSFXVolume);
+}
+
+void APickup::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// If had hit a player
+	if (OtherActor->IsA<AEndlessCleanerCharacter>())
+	{
+		// Collect coin logic
+		Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnCollectCoin();
+
+		// Disable collision
+		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		// Play Collect SFX
+		PlayPickUpCollectedSFX();
+	}
 }
