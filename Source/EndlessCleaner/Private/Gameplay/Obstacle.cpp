@@ -26,14 +26,14 @@ AObstacle::AObstacle()
 
 void AObstacle::PlayObstacleHitSFX()
 {
-	if (ObstacleHitSFX)
+	if (IsValid(ObstacleHitSFX))
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ObstacleHitSFX, GetActorLocation(), ObstacleHitSFXVolume);
 }
 
 void AObstacle::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// If had hit a player
-	if (OtherActor->IsA<AEndlessCleanerCharacter>())
+	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
 	{
 		// Play hit SFX
 		PlayObstacleHitSFX();

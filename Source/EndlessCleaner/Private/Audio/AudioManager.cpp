@@ -57,7 +57,7 @@ void AAudioManager::PlayBackgroundMusic()
 	}
 	else
 	{
-		if (BackgroundMusic)
+		if (IsValid(BackgroundMusic))
 		{
 			BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic, BackgroundMusicVolume);
 			PlayBackgroundMusic();
@@ -73,6 +73,6 @@ void AAudioManager::StopBackgroundMusic()
 
 void AAudioManager::PlayFoostepSFX()
 {
-	if (FootstepSFX)
+	if (IsValid(FootstepSFX))
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FootstepSFX, PlayerRef->GetActorLocation(), FootstepSFXVolume);
 }

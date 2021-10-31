@@ -24,7 +24,7 @@ void APlayerFollower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Player == nullptr)
+	if (!IsValid(Player))
 	{
 		Player = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		return;

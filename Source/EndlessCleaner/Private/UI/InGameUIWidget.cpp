@@ -10,14 +10,14 @@
 
 void UInGameUIWidget::UpdateCoins(int32 Coins)
 {
-	if (!CoinsCounter) return;
+	if (!IsValid(CoinsCounter)) return;
 
 	CoinsCounter->SetText(FText::FromString(FString::FromInt(Coins)));
 }
 
 void UInGameUIWidget::UpdateDistance(float Distance)
 {
-	if (!DistanceCounter) return;
+	if (!IsValid(DistanceCounter)) return;
 
 	float Rounded = roundf(Distance);
 
@@ -32,14 +32,14 @@ void UInGameUIWidget::UpdateDistance(float Distance)
 
 void UInGameUIWidget::UpdateLives(int32 Lives)
 {
-	if (!LivesCounter) return;
+	if (!IsValid(LivesCounter)) return;
 
 	LivesCounter->SetText(FText::FromString(FString::FromInt(Lives)));
 }
 
 void UInGameUIWidget::UpdateTime(float Time)
 {
-	if (!Timer) return;
+	if (!IsValid(Timer)) return;
 
 	float Rounded = roundf(Time);
 
@@ -55,7 +55,7 @@ void UInGameUIWidget::UpdateTime(float Time)
 
 void UInGameUIWidget::SetScore(float Score)
 {
-	if (!ScoreCount) return;
+	if (!IsValid(ScoreCount)) return;
 
 	float Rounded = roundf(Score);
 

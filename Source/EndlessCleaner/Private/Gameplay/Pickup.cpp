@@ -41,14 +41,14 @@ void APickup::BeginPlay()
 
 void APickup::PlayPickUpCollectedSFX()
 {
-	if (PickUpCollectedSFX)
+	if (IsValid(PickUpCollectedSFX))
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickUpCollectedSFX, GetActorLocation(), PickUpCollectedSFXVolume);
 }
 
 void APickup::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// If had hit a player
-	if (OtherActor->IsA<AEndlessCleanerCharacter>())
+	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
 	{
 		// Collect coin logic
 		Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnCollectCoin();

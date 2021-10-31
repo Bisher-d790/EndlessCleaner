@@ -67,7 +67,7 @@ void APlatformModule::SpawnPickups()
 		bSpawnPickup = false;
 	}
 
-	if (bSpawnPickup && Lanes[LaneIndex].PickupClass)
+	if (bSpawnPickup && IsValid(Lanes[LaneIndex].PickupClass))
 	{
 		FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
 		SpawnPosition += Lanes[LaneIndex].PickupStartPosition;
@@ -105,7 +105,7 @@ void APlatformModule::SpawnObstacles()
 {
 	for (int LaneIndex = 0; LaneIndex < Lanes.Num(); LaneIndex++)
 	{
-		if (FMath::FRand() * 100 < Lanes[LaneIndex].ObstacleProbability && Lanes[LaneIndex].ObstacleClass)
+		if (FMath::FRand() * 100 < Lanes[LaneIndex].ObstacleProbability && IsValid(Lanes[LaneIndex].ObstacleClass))
 		{
 			FVector SpawnPosition = GetActorLocation() + Lanes[LaneIndex].LanePosition;
 			SpawnPosition += Lanes[LaneIndex].ObstaclePosition;

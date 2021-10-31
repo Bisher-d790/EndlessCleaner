@@ -38,7 +38,7 @@ void APlatformsContainer::RotateLeft()
 	bIsRotating = true;
 
 	for (auto& Platform : PlatformModules)
-		if (Platform != nullptr) Platform->OnRotatePlatform(true);
+		if (IsValid(Platform)) Platform->OnRotatePlatform(true);
 }
 
 void APlatformsContainer::RotateRight()
@@ -51,7 +51,7 @@ void APlatformsContainer::RotateRight()
 	bIsRotating = true;
 
 	for (auto& Platform : PlatformModules)
-		if (Platform != nullptr) Platform->OnRotatePlatform(false);
+		if (IsValid(Platform)) Platform->OnRotatePlatform(false);
 }
 
 void APlatformsContainer::StopRotation()

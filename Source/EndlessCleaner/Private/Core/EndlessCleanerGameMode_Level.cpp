@@ -61,16 +61,16 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!Player || GameState != EGameState::VE_Running) return;
+	if (!IsValid(Player) || GameState != EGameState::VE_Running) return;
 
-	if (PlatformToCheck)
+	if (IsValid(PlatformToCheck))
 	{
 		if (Player->GetActorLocation().X > PlatformToCheck->GetActorLocation().X)
 		{
 			// Set the next platform
 			PlatformToCheck = PlatformToCheck->GetNextPlatform();
 
-			if (FirstPlatform)
+			if (IsValid(FirstPlatform))
 			{
 				// Add the platform's length to walked distance, in meters
 				PlayerController->AddToCurrentDistance(FirstPlatform->GetPlatformLength() / 1000);
@@ -92,7 +92,7 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 				TempPlatform->StartPickupRush();
 
 				TempPlatform = FirstPlatform->GetNextPlatform();
-				if (TempPlatform == nullptr) break;
+				if (!IsValid(TempPlatform)) break;
 			}
 
 			// Obstacles Rush Mechanic
@@ -102,7 +102,7 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 				TempPlatform->StartObstacleRush();
 
 				TempPlatform = FirstPlatform->GetNextPlatform();
-				if (TempPlatform == nullptr) break;
+				if (!IsValid(TempPlatform)) break;
 			}
 
 			// Spawn new Platform
@@ -118,7 +118,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 
 	PlatformCount = 0;
 
-	if (!PlatformsContainerActor)
+	if (!IsValid(PlatformsContainerActor))
 		PlatformsContainerActor = Cast<APlatformsContainer>(GetWorld()->SpawnActor(PlatformsContainerClass));
 
 	FVector SpawnPosition = bInitializeFromPlayerStart ? FindPlayerStart(PlayerController)->GetActorLocation() : FVector::ZeroVector;
@@ -141,7 +141,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		else
 		{
 			// Next platforms, spawn according to probability
-			if (PreviousPlatform)
+			if (IsValid(PreviousPlatform))
 			{
 				TSubclassOf<APlatformModule> PlatformToSpawn;
 
@@ -163,7 +163,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 					PlatformToSpawn = GetPlatformToSpawn(TypesFilter);
 				}
 
-				if (PlatformToSpawn)
+				if (IsValid(PlatformToSpawn))
 				{
 					SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 				}
@@ -171,7 +171,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 		}
 
 		// Spawn the selected Platform
-		if (SpawnedPlatform)
+		if (IsValid(SpawnedPlatform))
 		{
 			SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 			PlatformsContainerActor->AddPlatformModule(SpawnedPlatform);
@@ -180,7 +180,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 			SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 
 			// Set Previous and Next Platforms
-			if (PreviousPlatform)
+			if (IsValid(PreviousPlatform))
 			{
 				SpawnedPlatform->SetPreviousPlatform(PreviousPlatform);
 				PreviousPlatform->SetNextPlatform(SpawnedPlatform);
@@ -222,7 +222,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 	if (GameState == EGameState::VE_PrepareGame)
 	{
-		if (PlayerController->GetUI())
+		if (IsValid(PlayerController->GetUI()))
 		{
 			PlayerController->GetUI()->OnStartGame();
 
@@ -248,7 +248,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 			FirstIterate = Temp;
 		}
 
-		if (FirstIterate)
+		if (IsValid(FirstIterate))
 		{
 			PlatformsContainerActor->RemovePlatformModule(FirstIterate);
 			FirstIterate->DestroyPlatform();
@@ -276,7 +276,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 {
-	if (!PreviousPlatform) return;
+	if (!IsValid(PreviousPlatform)) return;
 
 	FVector SpawnPosition = PreviousPlatform->GetActorLocation();
 	SpawnPosition.X += PreviousPlatform->GetPlatformLength();
@@ -301,7 +301,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	}
 
 	// Spawn the selected Platform
-	if (PlatformToSpawn)
+	if (IsValid(PlatformToSpawn))
 	{
 		APlatformModule* SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 
@@ -312,7 +312,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 		SpawnPosition.X += SpawnedPlatform->GetPlatformLength();
 
 		// Set Previous and Next Platforms
-		if (PreviousPlatform)
+		if (IsValid(PreviousPlatform))
 		{
 			SpawnedPlatform->SetPreviousPlatform(PreviousPlatform);
 			PreviousPlatform->SetNextPlatform(SpawnedPlatform);
@@ -398,7 +398,7 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 		Score += PlayerController->GetCoinsCollected() * CoinsMultiplier;
 		Score += (PlayerController->GetCurrentDistance() / PlayerController->GetCurrentTime()) * SpeedMultiplier;
 
-		if (PlayerController->GetUI())
+		if (IsValid(PlayerController->GetUI()))
 		{
 			PlayerController->GetUI()->SetScore(Score);
 			PlayerController->GetUI()->OnGameOver();

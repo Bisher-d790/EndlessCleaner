@@ -41,12 +41,12 @@ void AEndlessCleanerPlayerController::BeginPlay()
 	// Set the Player reference
 	PlayerRef = Cast<AEndlessCleanerCharacter>(GetPawn());
 
-	if (InGameUIWidgetClass)
+	if (IsValid(InGameUIWidgetClass))
 	{
 		InGameUIWidgetInstance = CreateWidget<UInGameUIWidget>(this, InGameUIWidgetClass);
 	}
 
-	if (InGameUIWidgetInstance)
+	if (IsValid(InGameUIWidgetInstance))
 	{
 		InGameUIWidgetInstance->AddToViewport();
 
@@ -61,7 +61,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if (!PlatformsContainer)
+	if (!IsValid(PlatformsContainer))
 		PlatformsContainer = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
 
 	// Lock Input when moving 
@@ -83,7 +83,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 	{
 		CurrentTime += DeltaTime;
 
-		if (InGameUIWidgetInstance)
+		if (IsValid(InGameUIWidgetInstance))
 		{
 			InGameUIWidgetInstance->UpdateTime(CurrentTime);
 		}
@@ -98,7 +98,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		{
 			bIsJumping = false;
 
-			if (PlayerRef != nullptr)
+			if (IsValid(PlayerRef))
 			{
 				PlayerRef->StopJumping();
 			}
@@ -193,7 +193,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		{
 			bIsSliding = false;
 
-			if (PlayerRef != nullptr)
+			if (IsValid(PlayerRef))
 			{
 				PlayerRef->UnCrouch();
 			}
@@ -302,7 +302,7 @@ void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
 {
 	CurrentLives = InitialLives;
 
-	if (InGameUIWidgetInstance)
+	if (IsValid(InGameUIWidgetInstance))
 	{
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 	}
@@ -321,7 +321,7 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 		CurrentLives -= 1;
 	}
 
-	if (InGameUIWidgetInstance)
+	if (IsValid(InGameUIWidgetInstance))
 	{
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 	}
@@ -329,7 +329,7 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 
 void AEndlessCleanerPlayerController::MoveToSide(float Value)
 {
-	if (!bCanMove || bLockMovement || !PlayerRef || !PlatformsContainer || !CurrentPlatform) return;
+	if (!bCanMove || bLockMovement || !IsValid(PlayerRef) || !IsValid(PlatformsContainer) || !IsValid(CurrentPlatform)) return;
 
 	if (FMath::IsNearlyZero(Value)) return;
 
@@ -371,7 +371,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 
 void AEndlessCleanerPlayerController::Jump()
 {
-	if (!bCanMove || bIsJumping || !PlayerRef) return;
+	if (!bCanMove || bIsJumping || !IsValid(PlayerRef)) return;
 
 	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Jump."));
 
@@ -408,7 +408,7 @@ void AEndlessCleanerPlayerController::Jump()
 
 void AEndlessCleanerPlayerController::Slide()
 {
-	if (!bCanMove || bIsSliding || !PlayerRef) return;
+	if (!bCanMove || bIsSliding || !IsValid(PlayerRef)) return;
 
 	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Slide."));
 
@@ -444,7 +444,7 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 {
 	CoinsCollected += 1;
 
-	if (InGameUIWidgetInstance)
+	if (IsValid(InGameUIWidgetInstance))
 	{
 		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
 	}
@@ -456,7 +456,7 @@ void AEndlessCleanerPlayerController::AddToCurrentDistance(float Distance)
 	{
 		CurrentDistance += Distance;
 
-		if (InGameUIWidgetInstance)
+		if (IsValid(InGameUIWidgetInstance))
 		{
 			InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
 		}
