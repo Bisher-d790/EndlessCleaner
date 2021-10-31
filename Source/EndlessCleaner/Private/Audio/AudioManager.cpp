@@ -45,23 +45,29 @@ void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (BackgroundMusic)
-		BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic, BackgroundMusicVolume);
-	// Stop BG music by default
-	StopBackgroundMusic();
-
 	PlayerRef = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AAudioManager::PlayBackgroundMusic()
 {
-	if (BackgroundMusicComponent)
-		BackgroundMusicComponent->Play();
+	if (IsValid(BackgroundMusicComponent))
+	{
+		if (!BackgroundMusicComponent->IsPlaying())
+			BackgroundMusicComponent->Play();
+	}
+	else
+	{
+		if (BackgroundMusic)
+		{
+			BackgroundMusicComponent = UGameplayStatics::SpawnSound2D(GetWorld(), BackgroundMusic, BackgroundMusicVolume);
+			PlayBackgroundMusic();
+		}
+	}
 }
 
 void AAudioManager::StopBackgroundMusic()
 {
-	if (BackgroundMusicComponent)
+	if (IsValid(BackgroundMusicComponent) && BackgroundMusicComponent->IsPlaying())
 		BackgroundMusicComponent->Stop();
 }
 
