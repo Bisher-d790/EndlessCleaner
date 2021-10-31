@@ -161,7 +161,8 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			}
 		}
 	}
-	else if (bCheckPosition)
+
+	if (bCheckPosition)
 	{
 		FVector TargetLocation = PlayerRef->GetActorLocation();
 		FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
@@ -179,7 +180,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 			FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
-			bCheckPosition = false;
+			//bCheckPosition = false;
 		}
 	}
 
