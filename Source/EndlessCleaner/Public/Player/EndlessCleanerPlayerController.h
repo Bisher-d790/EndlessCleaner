@@ -137,6 +137,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void OnCollectCoin();
 
+	UFUNCTION(BlueprintCallable, Category = "Player Events")
+		void OnKillEnemy(class AEnemy* KilledEnemy);
+
 	FORCEINLINE UInGameUIWidget* GetUI() { return InGameUIWidgetInstance; }
 
 	FORCEINLINE int GetCoinsCollected() { return CoinsCollected; }

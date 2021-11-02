@@ -450,6 +450,12 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 	}
 }
 
+void AEndlessCleanerPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
+{
+	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
+	GameMode->OnEnemyKilled(KilledEnemy);
+}
+
 void AEndlessCleanerPlayerController::AddToCurrentDistance(float Distance)
 {
 	if (bIsRunning)

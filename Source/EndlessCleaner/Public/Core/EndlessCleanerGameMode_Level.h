@@ -88,6 +88,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		int ObstaclesRushPlatformsCount;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		TSubclassOf<class AEnemy> EnemyClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float CoinsMultiplier;
 
@@ -121,12 +124,19 @@ private:
 
 	FTimerHandle RespawnTimerHandle;
 
+	class EnemyFactory* EnemyFactoryRef;
+
+	void SpawnEnemy();
+
 public:
 
 	EGameState GameState = EGameState::VE_None;
 
 	UFUNCTION(BlueprintCallable, Category = "Death")
 		void OnTriggerDeathActor();
+
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+		void OnEnemyKilled(class AEnemy* KilledEnemy);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforms")
 		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };

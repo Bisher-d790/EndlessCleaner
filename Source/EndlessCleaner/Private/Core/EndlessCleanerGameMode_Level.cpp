@@ -6,6 +6,8 @@
 #include "Player/EndlessCleanerCharacter.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
+#include "Gameplay/EnemyFactory.h"
+#include "Gameplay/Enemy.h"
 #include "UI/InGameUIWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Audio/AudioManager.h"
@@ -214,6 +216,9 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 
 		PlatformCount++;
 	}
+
+	// Create Enemy Factory and spawn Enemy
+	SpawnEnemy();
 }
 
 void AEndlessCleanerGameMode_Level::OnRespawn()
@@ -281,6 +286,8 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	FVector SpawnPosition = PreviousPlatform->GetActorLocation();
 	SpawnPosition.X += PreviousPlatform->GetPlatformLength();
 
+	APlatformModule* SpawnedPlatform = nullptr;
+
 	// Next type to spawn: Depending on previous platform spawned
 	TSubclassOf<APlatformModule> PlatformToSpawn;
 	if (!bUseNormalGroundBetweenBridges ||
@@ -303,7 +310,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	// Spawn the selected Platform
 	if (IsValid(PlatformToSpawn))
 	{
-		APlatformModule* SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
+		SpawnedPlatform = GetWorld()->SpawnActor<APlatformModule>(PlatformToSpawn, SpawnPosition, FRotator::ZeroRotator);
 
 		SpawnedPlatform->AttachToActor(PlatformsContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 		PlatformsContainerActor->AddPlatformModule(SpawnedPlatform);
@@ -330,9 +337,20 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 
 		PlatformCount++;
 	}
+
+	// Add to enemies' waypoint
+	if (IsValid(SpawnedPlatform) && EnemyFactoryRef)
+	{
+		TArray<AEnemy*> EnemyList = EnemyFactoryRef->GetEnemyList();
+		for (auto& Enemy : EnemyList)
+		{
+			if (IsValid(Enemy))
+				Enemy->AddWaypoint(SpawnedPlatform->GetActorLocation());
+		}
+	}
 }
 
-TSubclassOf<class APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
+TSubclassOf<APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
 {
 	TArray<FPlatformOptions> ProbabilityTable;
 
@@ -375,6 +393,27 @@ TSubclassOf<class APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToS
 
 	// Return the selected platform
 	return	ProbabilityTable[PlatformIndex].PlatformClass;
+}
+
+void AEndlessCleanerGameMode_Level::SpawnEnemy()
+{
+	if (!EnemyFactoryRef)
+		EnemyFactoryRef = new EnemyFactory(GetWorld());
+
+	if (IsValid(EnemyClass) && IsValid(FirstPlatform))
+	{
+		AEnemy* SpawnedEnemy = EnemyFactoryRef->CreateEnemy(EnemyClass, FirstPlatform->GetActorLocation());
+
+		// Add all existing waypoints
+		for (APlatformModule* TempModule = FirstPlatform; IsValid(TempModule->GetNextPlatform()); TempModule = TempModule->GetNextPlatform())
+			SpawnedEnemy->AddWaypoint(TempModule->GetActorLocation());
+	}
+}
+
+void AEndlessCleanerGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
+{
+	if (EnemyFactoryRef) EnemyFactoryRef->DestroyEnemy(KilledEnemy);
+	SpawnEnemy();
 }
 
 void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
