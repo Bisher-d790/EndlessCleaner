@@ -5,8 +5,8 @@
 
 UWaypointMovementComponent::UWaypointMovementComponent()
 {
-	MovementSpeed = 2;
-	BeaconSpeed = 25;
+	BeaconSpeed = 2;
+	MovementSpeed = 25;
 	FollowBeaconSpeedMultiplier = 0.5;
 	bMovementInLocalSpace = true;
 	bUsePingPongWaypointSelection = true;
@@ -63,7 +63,7 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	if (BeaconPosition.X == nan("ind") || BeaconPosition.Y == nan("ind") || BeaconPosition.Z == nan("ind"))
 		BeaconPosition = WaypointLocations[0];
 
-	float LerpDuration = FVector::Dist(BeaconPosition, TargetLocation) / BeaconSpeed;
+	float LerpDuration = FVector::Dist(BeaconPosition, TargetLocation) / MovementSpeed;
 	BeaconPosition = FMath::Lerp(BeaconPosition, TargetLocation, LerpTimeElapsed / LerpDuration);
 
 	LerpTimeElapsed += DeltaTime;
@@ -76,7 +76,7 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	{
 		// If using Beacon movement, follow the beacon
 		FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
-		float Distance = MovementSpeed * DeltaTime;
+		float Distance = BeaconSpeed * DeltaTime;
 		Distance *= FollowBeaconSpeedMultiplier;
 		NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
 	}

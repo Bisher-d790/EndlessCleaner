@@ -83,7 +83,7 @@ void APlatformModule::SpawnPickups()
 
 			// The waypoint component will controll the movement locally(the spawn position is the pivot point) 
 			SpawnedPickup->WaypointMovementComponent->bMovementInLocalSpace = true;
-			SpawnedPickup->WaypointMovementComponent->MovementSpeed = Lanes[LaneIndex].PickupsMovementSpeed;
+			SpawnedPickup->WaypointMovementComponent->BeaconSpeed = Lanes[LaneIndex].PickupsMovementSpeed;
 			for (int WaypointIndex = 0; WaypointIndex < Lanes[LaneIndex].PickupLocalWaypoints.Num(); WaypointIndex++)
 			{
 				FVector WaypointLocation = FVector(
