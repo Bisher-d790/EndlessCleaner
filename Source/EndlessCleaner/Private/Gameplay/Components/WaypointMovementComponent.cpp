@@ -57,6 +57,11 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 
 	//** Update Beacon Position
 	// Movement time duration = distance / speed
+
+	// Check if the movement intitial location is undefined
+	if (BeaconPosition.X == nan("ind") || BeaconPosition.Y == nan("ind") || BeaconPosition.Z == nan("ind"))
+		BeaconPosition = WaypointLocations[0];
+
 	float LerpDuration = FVector::Dist(BeaconPosition, TargetLocation) / BeaconSpeed;
 	BeaconPosition = FMath::Lerp(BeaconPosition, TargetLocation, LerpTimeElapsed / LerpDuration);
 
