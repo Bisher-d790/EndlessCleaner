@@ -11,6 +11,7 @@ UWaypointMovementComponent::UWaypointMovementComponent()
 	bMovementInLocalSpace = true;
 	bUsePingPongWaypointSelection = true;
 	bUseBeaconForMovement = true;
+	bStopOnLastWaypoint = false;
 	StartDelay = 0.0f;
 }
 
@@ -101,6 +102,9 @@ void UWaypointMovementComponent::NextWaypoint()
 		// When has reached the end
 		if (NextWaypointIndex >= WaypointLocations.Num())
 		{
+			// Don't change to a next waypoint if this was enabled
+			if (bStopOnLastWaypoint) return;
+
 			if (bUsePingPongWaypointSelection)
 			{
 				bIsMovingForward = false;

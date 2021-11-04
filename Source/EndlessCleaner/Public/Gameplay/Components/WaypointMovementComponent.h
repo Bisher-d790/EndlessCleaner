@@ -60,21 +60,25 @@ public:
 
 	// Whether waypoint locations are set in local or world space.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
-		uint32 bMovementInLocalSpace : 1;
+		bool bMovementInLocalSpace;
 
 	/** Use Pingpong Waypoint Selection or Circular Waypoint Selection.
 	* Using PingPong Selection: When reaching the last waypoint, it'll start to move backward through waypoints.
 	* Using Circular Selection: When reaching the last waypoint, it'll go back to the first waypoint and start again.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
-		uint32 bUsePingPongWaypointSelection : 1;
+		bool bUsePingPongWaypointSelection;
 
 	/** Use Beacon Movement Mechanic or Lerp Movement Mechanic.
 	* Using Beacon Mechanic: Lerping a beacon between waypoints, and making the object follow the beacon, provides smoothness of motion.
 	* Using Lerp Mechanic: Lerping the object between waypoints, sticks a bit when reaching the waypoint.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
-		uint32 bUseBeaconForMovement : 1;
+		bool bUseBeaconForMovement;
+
+	// When you reach the last waypoint, don't move backward and stop there
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
+		bool bStopOnLastWaypoint;
 
 	// A delay before  starting to move
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaypointComponent)
