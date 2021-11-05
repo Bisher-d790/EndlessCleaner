@@ -46,6 +46,8 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	// Skip if there're no Waypoints
 	if (WaypointLocations.Num() < 1) return;
 
+	if (bStopOnLastWaypoint && NextWaypointIndex >= WaypointLocations.Num()) return;
+
 	// Skip if we don't want component updated when not rendered or if updated component can't move
 	if (ShouldSkipUpdate(DeltaTime)) return;
 	if (!IsValid(UpdatedComponent))	return;
@@ -58,13 +60,8 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 
 	//** Update Beacon Position
 	// Movement time duration = distance / speed
-
-	// Check if the movement intitial location is undefined
-	if (BeaconPosition.X == nan("ind") || BeaconPosition.Y == nan("ind") || BeaconPosition.Z == nan("ind"))
-		BeaconPosition = WaypointLocations[0];
-
 	float LerpDuration = FVector::Dist(BeaconPosition, TargetLocation) / MovementSpeed;
-	BeaconPosition = FMath::Lerp(BeaconPosition, TargetLocation, LerpTimeElapsed / LerpDuration);
+	BeaconPosition = LerpDuration > 0.0f ? FMath::Lerp(BeaconPosition, TargetLocation, LerpTimeElapsed / LerpDuration) : TargetLocation;
 
 	LerpTimeElapsed += DeltaTime;
 
@@ -90,21 +87,23 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	UpdatedComponent->SetWorldLocation(NewLocation);
 
 	// If has reached the waypoint (finished lerping), iterate to next waypoint
-	if (LerpTimeElapsed >= LerpDuration) NextWaypoint();
+	if (LerpTimeElapsed >= LerpDuration || (NewLocation - TargetLocation).IsNearlyZero()) NextWaypoint();
 }
 
 void UWaypointMovementComponent::NextWaypoint()
 {
-	if (bIsMovingForward)
+	if (bStopOnLastWaypoint)
+	{
+		// To stop on the last waypoint, just remove the last waypoint from the array
+		WaypointLocations.RemoveAt(NextWaypointIndex);
+	}
+	else if (bIsMovingForward)
 	{
 		NextWaypointIndex++;
 
 		// When has reached the end
 		if (NextWaypointIndex >= WaypointLocations.Num())
 		{
-			// Don't change to a next waypoint if this was enabled
-			if (bStopOnLastWaypoint) return;
-
 			if (bUsePingPongWaypointSelection)
 			{
 				bIsMovingForward = false;
