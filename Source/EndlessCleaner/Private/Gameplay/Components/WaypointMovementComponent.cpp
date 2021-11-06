@@ -13,6 +13,9 @@ UWaypointMovementComponent::UWaypointMovementComponent()
 	bUseBeaconForMovement = true;
 	bStopOnLastWaypoint = false;
 	StartDelay = 0.0f;
+	bMoveOnXAxis = true;
+	bMoveOnYAxis = true;
+	bMoveOnZAxis = true;
 }
 
 void UWaypointMovementComponent::BeginPlay()
@@ -57,6 +60,7 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 		NextWaypointIndex = WaypointLocations.Num() - 1;
 
 	FVector TargetLocation = WaypointLocations[NextWaypointIndex];
+	FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
 
 	//** Update Beacon Position
 	// Movement time duration = distance / speed
@@ -72,7 +76,6 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	if (bUseBeaconForMovement)
 	{
 		// If using Beacon movement, follow the beacon
-		FVector CurrentLocation = UpdatedComponent->GetComponentLocation();
 		float Distance = BeaconSpeed * DeltaTime;
 		Distance *= FollowBeaconSpeedMultiplier;
 		NewLocation = CurrentLocation + Distance * (BeaconPosition - CurrentLocation);
@@ -84,6 +87,10 @@ void UWaypointMovementComponent::TickComponent(float DeltaTime, enum ELevelTick 
 	}
 
 	// Set the new location
+	if (!bMoveOnXAxis)	NewLocation.X = TargetLocation.X = CurrentLocation.X;
+	if (!bMoveOnYAxis)	NewLocation.Y = TargetLocation.Y = CurrentLocation.Y;
+	if (!bMoveOnZAxis)	NewLocation.Z = TargetLocation.Z = CurrentLocation.Z;
+
 	UpdatedComponent->SetWorldLocation(NewLocation);
 
 	// If has reached the waypoint (finished lerping), iterate to next waypoint
