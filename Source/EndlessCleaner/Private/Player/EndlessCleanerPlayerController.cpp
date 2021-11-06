@@ -17,7 +17,6 @@ AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
 	MaxLockMovementTime = 0.2f;
 	JumpDuration = 0.85f;
 	SlideDuration = 1.f;
-	LocationCorrectionDuration = 0.05;
 }
 
 void AEndlessCleanerPlayerController::BeginPlay()
@@ -141,7 +140,6 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 						FRotator Rotation = (FRotator(0.f, 0.f, Lane.LaneAngle)).GetNormalized();
 						PlatformsContainer->SetActorRotation(Rotation);
 
-						bCheckPosition = true;
 						bIsMovingLeft = false;
 						bIsMovingRight = false;
 						break;
@@ -162,25 +160,24 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 		}
 	}
 
-	if (bCheckPosition)
+	if (IsValid(CurrentPlatform) && bCorrectPostition)
 	{
-		FVector TargetLocation = PlayerRef->GetActorLocation();
-		FVector LaneLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
-		TargetLocation.Y = 0;
+		// Constrain the player to the lane's Y position
+		FVector PlayerLocation = PlayerRef->GetActorLocation();
+		FVector TargetLocation = FVector::ZeroVector;
+		//FVector TargetLocation = CurrentPlatform->GetLanesArray()[CurrentLane].LanePosition;
 
-		if (!FMath::IsNearlyEqual(TargetLocation.Y, PlayerRef->GetActorLocation().Y, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
+		// Don't correct on X, Z axis
+		TargetLocation.X = PlayerLocation.X;
+		TargetLocation.Z = PlayerLocation.Z;
+
+		if (!PlayerLocation.Equals(TargetLocation, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), TargetLocation.Y, PlayerRef->GetActorLocation().Y));
+			AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), PlayerLocation.Y, PlayerRef->GetActorLocation().Y));
 
-			PlayerRef->SetActorLocation(FMath::Lerp(PlayerRef->GetActorLocation(), TargetLocation, LocationCorrectionDuration));
-		}
-		else
-		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Stop Check Position"));
+			FVector Newlocation = TargetLocation;
 
-			FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
-
-			//bCheckPosition = false;
+			PlayerRef->SetActorLocation(Newlocation);
 		}
 	}
 
@@ -431,11 +428,6 @@ void AEndlessCleanerPlayerController::Respawn()
 	bIsRunning = false;
 	bIsMovingLeft = bIsMovingRight = false;
 	PlayerRef->Respawn();
-
-	// If it's after death, correct player's position
-	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (CurrentLives < GameMode->GetInitialPlayerLives())
-		bCheckPosition = true;
 
 	bIsRunning = false;
 }

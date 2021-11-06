@@ -69,9 +69,6 @@ protected:
 	bool bCanMove = false;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-		float LocationCorrectionDuration;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
 		float JumpDuration;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
@@ -109,7 +106,7 @@ private:
 
 	bool bIsMovingRight = false;
 
-	bool bCheckPosition = false;
+	bool bCorrectPostition = true; // Mark it as true for perpetual check
 
 	class APlatformModule* CurrentPlatform;
 
