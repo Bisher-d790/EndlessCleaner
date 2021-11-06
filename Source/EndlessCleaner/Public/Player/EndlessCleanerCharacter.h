@@ -51,9 +51,6 @@ private:
 	bool bIsRotating = false;
 
 	UPROPERTY(EditAnywhere, Category = Character)
-		float CharacterMaxSpeed;
-
-	UPROPERTY(EditAnywhere, Category = Character)
 		float SideMoveRotation;
 
 	UPROPERTY(EditAnywhere, Category = Character)

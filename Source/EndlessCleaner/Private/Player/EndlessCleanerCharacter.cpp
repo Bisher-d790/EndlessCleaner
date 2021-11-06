@@ -13,7 +13,6 @@
 AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 {
 	// Setup Initial variable values
-	CharacterMaxSpeed = 600.f;
 	SideMoveRotation = 45.0f;
 	SideRotationDuration = 0.05f;
 
@@ -53,9 +52,6 @@ void AEndlessCleanerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Set Max Speed
-	GetCharacterMovement()->MaxWalkSpeed = CharacterMaxSpeed;
-	GetCharacterMovement()->MaxWalkSpeedCrouched = CharacterMaxSpeed;
 }
 
 // Called every frame
