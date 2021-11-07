@@ -98,6 +98,8 @@ private:
 
 	float RemainingSlideTime;
 
+	int EnemiesKilled;
+
 	int CoinsCollected;
 
 	int CurrentLives;

@@ -14,7 +14,7 @@ public:
 
 	~EnemyFactory();
 
-	virtual class AEnemy* CreateEnemy(TSubclassOf<class AEnemy> EnemyClass, FVector SpawnPosition);
+	virtual class AEnemy* CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed);
 
 	virtual void DestroyEnemy(int EnemyIndex);
 

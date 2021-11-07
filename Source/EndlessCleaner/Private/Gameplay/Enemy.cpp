@@ -46,9 +46,16 @@ void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 void AEnemy::OnEnableCollision()
 {
 	Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	WaypointMovementComponent->MovementSpeed = Speed;
 }
 
 void AEnemy::AddWaypoint(FVector WaypointLocation)
 {
 	WaypointMovementComponent->WaypointLocations.Add(WaypointLocation);
+}
+
+void AEnemy::SetInitialMovementSpeed(float InitialSpeed, float ActualSpeed)
+{
+	WaypointMovementComponent->MovementSpeed = InitialSpeed;
+	Speed = ActualSpeed;
 }

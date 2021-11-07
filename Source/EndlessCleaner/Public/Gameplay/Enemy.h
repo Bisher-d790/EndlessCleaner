@@ -32,6 +32,10 @@ protected:
 private:
 	void OnEnableCollision();
 
+	float Speed;
+
 public:
 	void AddWaypoint(FVector WaypointLocation);
+
+	void SetInitialMovementSpeed(float InitialSpeed, float ActualSpeed);
 };

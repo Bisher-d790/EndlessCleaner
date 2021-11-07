@@ -27,6 +27,10 @@ AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
 	InitialPlayerLives = 3;
 	PickupsRushPlatformsCount = 2;
 	ObstaclesRushPlatformsCount = 2;
+	EnemyStartSpeed = 500;
+	EnemySpeedFirstLevel = 100;
+	EnemySpeedLevelUp = 50;
+	EnemyKilledToLevelUp = 1;
 
 	CoinsMultiplier = 100;
 	SpeedMultiplier = 1000;
@@ -259,6 +263,8 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 			FirstIterate->DestroyPlatform();
 		}
 
+		EnemyFactoryRef->DestroyAllEnemies();
+
 		FirstPlatform = nullptr;
 
 		// Initialize game
@@ -402,7 +408,11 @@ void AEndlessCleanerGameMode_Level::SpawnEnemy()
 
 	if (IsValid(EnemyClass) && IsValid(FirstPlatform))
 	{
-		AEnemy* SpawnedEnemy = EnemyFactoryRef->CreateEnemy(EnemyClass, FirstPlatform->GetActorLocation());
+		AEnemy* SpawnedEnemy = EnemyFactoryRef->CreateEnemy(
+			EnemyClass,
+			FirstPlatform->GetActorLocation(),
+			EnemyStartSpeed,
+			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (CurrentLevel - 1)));
 
 		// Add all existing waypoints
 		for (APlatformModule* TempModule = FirstPlatform; IsValid(TempModule->GetNextPlatform()); TempModule = TempModule->GetNextPlatform())
@@ -414,6 +424,11 @@ void AEndlessCleanerGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
 {
 	if (EnemyFactoryRef) EnemyFactoryRef->DestroyEnemy(KilledEnemy);
 	SpawnEnemy();
+
+	EnemiesKilled++;
+
+	if (EnemiesKilled >= EnemyKilledToLevelUp * CurrentLevel)
+		UpgradeLevel();
 }
 
 void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
@@ -448,6 +463,11 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 		GameState = EGameState::VE_RemovePlatforms;
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
+}
+
+void AEndlessCleanerGameMode_Level::UpgradeLevel()
+{
+	CurrentLevel++;
 }
 
 #pragma region Debug

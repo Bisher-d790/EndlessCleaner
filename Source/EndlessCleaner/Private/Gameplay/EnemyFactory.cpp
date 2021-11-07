@@ -18,10 +18,11 @@ EnemyFactory::~EnemyFactory()
 	DestroyAllEnemies();
 }
 
-AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition)
+AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed)
 {
 	AEnemy* SpawnedEnemy = WorldContext->SpawnActor<AEnemy>(EnemyClass, SpawnPosition, FRotator::ZeroRotator);
 	SpawnedEnemy->AttachToActor(EnemiesContainerActor, FAttachmentTransformRules::KeepWorldTransform);
+	SpawnedEnemy->SetInitialMovementSpeed(EnemyStartSpeed, EnemyActualSpeed);
 	EnemiesList.Add(SpawnedEnemy);
 
 	return SpawnedEnemy;
@@ -29,7 +30,7 @@ AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnP
 
 void EnemyFactory::DestroyEnemy(int EnemyIndex)
 {
-	if (EnemyIndex > 0 && EnemyIndex < EnemiesList.Num() && IsValid(EnemiesList[EnemyIndex]))
+	if (EnemyIndex >= 0 && EnemyIndex < EnemiesList.Num() && IsValid(EnemiesList[EnemyIndex]))
 		EnemiesList[EnemyIndex]->Destroy();
 
 	EnemiesList.RemoveAt(EnemyIndex);

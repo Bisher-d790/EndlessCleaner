@@ -37,6 +37,13 @@ void UInGameUIWidget::UpdateLives(int32 Lives)
 	LivesCounter->SetText(FText::FromString(FString::FromInt(Lives)));
 }
 
+void UInGameUIWidget::UpdateLevel(int32 Level)
+{
+	if (!IsValid(LevelCounter)) return;
+
+	LevelCounter->SetText(FText::FromString(FString::FromInt(Level)));
+}
+
 void UInGameUIWidget::UpdateTime(float Time)
 {
 	if (!IsValid(Timer)) return;

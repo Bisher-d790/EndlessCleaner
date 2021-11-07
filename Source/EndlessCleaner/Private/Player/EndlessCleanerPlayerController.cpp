@@ -53,6 +53,8 @@ void AEndlessCleanerPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 		InGameUIWidgetInstance->UpdateTime(CurrentTime);
+		int Level = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetCurrentLevel();
+		InGameUIWidgetInstance->UpdateLevel(Level);
 	}
 }
 
@@ -444,8 +446,18 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 
 void AEndlessCleanerPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 {
+	AEndlessCleanerGameMode_Level::PrintDebugLog("Enemy Killed", FColor::Emerald);
+
 	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
+	EnemiesKilled += 1;
+
+	int Level = GameMode->GetCurrentLevel();
+
+	if (IsValid(InGameUIWidgetInstance))
+	{
+		InGameUIWidgetInstance->UpdateLevel(Level);
+	}
 }
 
 void AEndlessCleanerPlayerController::AddToCurrentDistance(float Distance)

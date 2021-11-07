@@ -91,6 +91,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		TSubclassOf<class AEnemy> EnemyClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float EnemyStartSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float EnemySpeedFirstLevel;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float EnemySpeedLevelUp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float EnemyKilledToLevelUp;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Scoring")
 		float CoinsMultiplier;
 
@@ -128,6 +140,12 @@ private:
 
 	void SpawnEnemy();
 
+	int CurrentLevel = 1;
+
+	int EnemiesKilled = 0;
+
+	void UpgradeLevel();
+
 public:
 
 	EGameState GameState = EGameState::VE_None;
@@ -143,6 +161,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Settings")
 		FORCEINLINE int GetInitialPlayerLives() { return InitialPlayerLives; };
+
+	UFUNCTION(BlueprintCallable, Category = "Level")
+		FORCEINLINE int GetCurrentLevel() { return CurrentLevel; };
 
 #pragma region Debug
 public:

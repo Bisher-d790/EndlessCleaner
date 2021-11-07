@@ -25,6 +25,9 @@ protected:
 		class UTextBlock* LivesCounter;
 
 	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* LevelCounter;
+
+	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* Timer;
 
 	UPROPERTY(meta = (BindWidget))
@@ -45,6 +48,8 @@ public:
 	void UpdateDistance(float Distance);
 
 	void UpdateLives(int32 Lives);
+
+	void UpdateLevel(int32 Level);
 
 	void UpdateTime(float Time);
 
