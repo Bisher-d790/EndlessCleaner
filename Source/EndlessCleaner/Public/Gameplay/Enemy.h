@@ -21,6 +21,9 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 
 	virtual void OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
@@ -29,10 +32,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
 		float CollisionEnableDelay;
 
+	// The speed of which to move by when there're no waypoints
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
+		FVector PerpetualMovementSpeed;
+
 private:
 	void OnEnableCollision();
 
 	float Speed;
+
+	void ApplyPerpetualMovement(float DeltaTime);
 
 public:
 	void AddWaypoint(FVector WaypointLocation);

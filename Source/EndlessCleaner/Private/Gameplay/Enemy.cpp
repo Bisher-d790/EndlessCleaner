@@ -16,6 +16,8 @@ AEnemy::AEnemy()
 
 	MovementStartDelayRandomMin = 0.f;
 	MovementStartDelayRandomMax = 0.f;
+
+	PerpetualMovementSpeed = FVector::ZeroVector;
 }
 
 void AEnemy::BeginPlay()
@@ -25,6 +27,17 @@ void AEnemy::BeginPlay()
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FTimerHandle CollisionEnableTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(CollisionEnableTimerHandle, this, &AEnemy::OnEnableCollision, CollisionEnableDelay, false);
+}
+
+// Called every frame
+void AEnemy::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (WaypointMovementComponent->WaypointLocations.Num() <= 0)
+	{
+		ApplyPerpetualMovement(DeltaTime);
+	}
 }
 
 void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -58,4 +71,14 @@ void AEnemy::SetInitialMovementSpeed(float InitialSpeed, float ActualSpeed)
 {
 	WaypointMovementComponent->MovementSpeed = InitialSpeed;
 	Speed = ActualSpeed;
+}
+
+void AEnemy::ApplyPerpetualMovement(float DeltaTime)
+{
+	// Distance = Speed * Time
+	FVector Distance = PerpetualMovementSpeed * DeltaTime;
+
+	FVector NewLocation = GetActorLocation() + Distance;
+
+	SetActorLocation(NewLocation);
 }
