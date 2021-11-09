@@ -9,7 +9,9 @@ EnemyFactory::EnemyFactory(UWorld* World)
 	WorldContext = World;
 
 	EnemiesContainerActor = WorldContext->SpawnActor<AActor>();
+#if WITH_EDITOR
 	EnemiesContainerActor->SetActorLabel(TEXT("EnemiesContainer"));
+#endif
 	EnemiesContainerActor->AddComponentByClass(USceneComponent::StaticClass(), false, FTransform(), false);
 }
 
