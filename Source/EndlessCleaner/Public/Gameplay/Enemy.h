@@ -36,12 +36,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
 		FVector PerpetualMovementSpeed;
 
+	// The delay to destroy the enemy
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
+		float DestructionDelay;
+
 private:
 	void OnEnableCollision();
 
 	float Speed;
 
 	void ApplyPerpetualMovement(float DeltaTime);
+
+	void KillEnemy();
 
 public:
 	void AddWaypoint(FVector WaypointLocation);

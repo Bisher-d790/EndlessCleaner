@@ -12,7 +12,8 @@
 // Sets default values
 AEnemy::AEnemy()
 {
-	CollisionEnableDelay = 5;
+	CollisionEnableDelay = 5.f;
+	DestructionDelay = 0.5f;
 
 	MovementStartDelayRandomMin = 0.f;
 	MovementStartDelayRandomMax = 0.f;
@@ -25,6 +26,7 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	FTimerHandle CollisionEnableTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(CollisionEnableTimerHandle, this, &AEnemy::OnEnableCollision, CollisionEnableDelay, false);
 }
@@ -45,15 +47,21 @@ void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 	// If had hit a player
 	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
 	{
-		// Kill enemy logic
-		Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnKillEnemy(this);
+		// Play Collect SFX
+		PlayPickUpCollectedSFX();
 
 		// Disable collision
 		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		// Play Collect SFX
-		PlayPickUpCollectedSFX();
+		FTimerHandle KillTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(KillTimerHandle, this, &AEnemy::KillEnemy, DestructionDelay, false);
 	}
+}
+
+void AEnemy::KillEnemy()
+{
+	// Kill enemy logic
+	Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnKillEnemy(this);
 }
 
 void AEnemy::OnEnableCollision()
