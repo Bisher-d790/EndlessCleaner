@@ -128,10 +128,16 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 			{
 				FLaneOptions Lane = CurrentPlatform->GetLanesArray()[CurrentLane];
 
-				//AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Rotation: %.2f, Angle: %.2f"), PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle));
-				//AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d"), CurrentLane));
+				float CurrentRotationAngle = PlatformsContainer->GetActorRotation().GetDenormalized().Roll;
+				float TargetRotationAngle = Lane.LaneAngle;
 
-				if (FMath::IsNearlyEqual(PlatformsContainer->GetActorRotation().GetDenormalized().Roll, Lane.LaneAngle, Lane.LaneWidthAngle))
+				if (TargetRotationAngle == 0.0f || TargetRotationAngle == 360.0f)
+					TargetRotationAngle = CurrentRotationAngle > 300 ? 360.0f : 0.0f;
+
+				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Angle: %.2f, Target Angle: %.2f"), CurrentRotationAngle, TargetRotationAngle));
+				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d, PreviousLane: %d"), CurrentLane, PreviousLane));
+
+				if (FMath::IsNearlyEqual(CurrentRotationAngle, TargetRotationAngle, Lane.LaneWidthAngle))
 				{
 					// If not jumping, don't stop moving to side
 					if (!bIsJumping)
@@ -331,6 +337,8 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 	if (!bCanMove || bLockMovement || !IsValid(PlayerRef) || !IsValid(PlatformsContainer) || !IsValid(CurrentPlatform)) return;
 
 	if (FMath::IsNearlyZero(Value)) return;
+
+	if ((Value < 0.0f && bIsMovingLeft) || (Value > 0.0f && bIsMovingRight)) return;
 
 	int LanesCount = CurrentPlatform->GetLanesArray().Num();
 
