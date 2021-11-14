@@ -349,6 +349,19 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 	PrintDebugLog(FString::Printf(TEXT("LanesCount: %d"), LanesCount));
 	PrintDebugLog(FString::Printf(TEXT("Current Lane: %d"), CurrentLane));
 
+	// Get Rotation Rate
+	float PlayerVelocity = PlayerRef->GetVelocity().X;
+	float PlatformRadius = CurrentPlatform->GetPlatformRadius() / 100; // Convert to meters
+
+	/** To get the rotation rate (radial velocity), which is equivilant to the linear velocity / radius
+	* However, to get the velocity, we need to extract the velocity on the Axis which the rotation happens on, which in this case is the Y axis
+	* And to get the linear velocity on the Y axis, we can use the Cosine of the velocity's lean angle
+	* the lean angle is the complementary angle of the player's rotation when moving to the side
+	* then we can extract the linear velocity on the Y axis as = Player Velocity * Cos(Velocity Lean angle)
+	* we divide all that by the platform radius, and we get the radial velocity at which the platforms should rotate
+	*/
+	float RotationRate = PlayerVelocity * FMath::Cos(90 - PlayerRef->GetSideMoveRotation()) / PlatformRadius;
+
 	// Move Left
 	if (Value < 0.0f)
 	{
@@ -358,7 +371,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			CurrentLane = LanesCount - 1;
 
 		bIsMovingLeft = true;
-		PlatformsContainer->RotateRight();
+		PlatformsContainer->RotateRight(RotationRate);
 		PlayerRef->MoveLeft();
 	}
 	// Move Right
@@ -370,7 +383,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 			CurrentLane = 0;
 
 		bIsMovingRight = true;
-		PlatformsContainer->RotateLeft();
+		PlatformsContainer->RotateLeft(RotationRate);
 		PlayerRef->MoveRight();
 	}
 

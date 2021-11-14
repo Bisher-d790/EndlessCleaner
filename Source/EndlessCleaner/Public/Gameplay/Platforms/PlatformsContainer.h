@@ -24,17 +24,14 @@ protected:
 	FRotator RotationBeforeLastMovement = FRotator();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-		float RotationSpeed;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 		FRotator InitialRotation;
 
 	TArray<class APlatformModule*> PlatformModules = TArray<class APlatformModule*>();
 
 public:
-	void RotateLeft();
+	void RotateLeft(float RotationRate);
 
-	void RotateRight();
+	void RotateRight(float RotationRate);
 
 	void StopRotation();
 

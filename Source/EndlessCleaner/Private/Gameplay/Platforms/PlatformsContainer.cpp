@@ -13,7 +13,6 @@ APlatformsContainer::APlatformsContainer()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RotationSpeed = 20.f;
 	InitialRotation = FRotator::ZeroRotator;
 
 	RotatingMovementComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("Rotating Movement"));
@@ -28,12 +27,12 @@ void APlatformsContainer::BeginPlay()
 	ResetRotation();
 }
 
-void APlatformsContainer::RotateLeft()
+void APlatformsContainer::RotateLeft(float RotationRate)
 {
 	if (!bIsRotating)
 		RotationBeforeLastMovement = GetActorRotation().GetDenormalized();
 
-	RotatingMovementComponent->RotationRate = FRotator(0, 0, RotationSpeed);
+	RotatingMovementComponent->RotationRate = FRotator(0, 0, RotationRate);
 
 	bIsRotating = true;
 
@@ -41,12 +40,12 @@ void APlatformsContainer::RotateLeft()
 		if (IsValid(Platform)) Platform->OnRotatePlatform(true);
 }
 
-void APlatformsContainer::RotateRight()
+void APlatformsContainer::RotateRight(float RotationRate)
 {
 	if (!bIsRotating)
 		RotationBeforeLastMovement = GetActorRotation().GetDenormalized();
 
-	RotatingMovementComponent->RotationRate = FRotator(0, 0, -RotationSpeed);
+	RotatingMovementComponent->RotationRate = FRotator(0, 0, -RotationRate);
 
 	bIsRotating = true;
 

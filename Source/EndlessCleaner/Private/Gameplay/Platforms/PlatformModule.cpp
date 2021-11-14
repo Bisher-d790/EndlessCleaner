@@ -225,3 +225,10 @@ void APlatformModule::StartObstacleRush()
 		Obstacle.Value->WaypointMovementComponent->WaypointLocations = Waypoints;
 	}
 }
+
+float APlatformModule::GetPlatformRadius()
+{
+	// The lane in the middle's Z axis position is the radius
+	int MiddleLane = Lanes.Num() / 2;
+	return FMath::Abs(Lanes[MiddleLane].LanePosition.Z);
+}

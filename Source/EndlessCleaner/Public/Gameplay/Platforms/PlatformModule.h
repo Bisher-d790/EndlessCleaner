@@ -131,6 +131,9 @@ public:
 
 	FORCEINLINE TArray<FLaneOptions> GetLanesArray() { return Lanes; };
 
+	// Returns the paltform's radius in cm
+	float GetPlatformRadius();
+
 	void DestroyPlatform();
 
 	void SpawnPickups();

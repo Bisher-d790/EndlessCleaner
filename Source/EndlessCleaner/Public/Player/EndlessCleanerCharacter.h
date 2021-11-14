@@ -45,6 +45,8 @@ public:
 
 	void Respawn();
 
+	FORCEINLINE float GetSideMoveRotation() { return SideMoveRotation; };
+
 private:
 	bool bIsMoving = false;
 
