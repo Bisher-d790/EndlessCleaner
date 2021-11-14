@@ -6,8 +6,8 @@
 
 
 #pragma region Debug Log
-static bool ConsoleLogState = true;
-static bool ScreenLogState = true;
+static bool ConsoleLogState = false;
+static bool ScreenLogState = false;
 
 static void SetDebugLogState(bool State)
 {
