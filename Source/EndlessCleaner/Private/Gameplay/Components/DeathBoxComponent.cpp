@@ -4,6 +4,8 @@
 #include "Gameplay/Components/DeathBoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core/EndlessCleanerGameMode_Level.h"
+#include "Utils/Utils.h"
+
 
 // Sets default values for this component's properties
 UDeathBoxComponent::UDeathBoxComponent()
@@ -24,7 +26,7 @@ void UDeathBoxComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 {
 	if (bHasBeenTriggered) return;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Death Overlap"));
+	PrintDebugLog(TEXT("Death Overlap"));
 
 	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
 

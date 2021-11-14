@@ -6,7 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Utils/Utils.h"
 
 
 // Sets default values
@@ -96,7 +96,7 @@ void AEndlessCleanerCharacter::MoveForward() {
 void AEndlessCleanerCharacter::MoveLeft() {
 	if (!bIsMoving)	return;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Move To Left."));
+	PrintDebugLog(TEXT("Move To Left."));
 	FromRotation = GetActorRotation();
 	TargetRotation = FRotator(0, -SideMoveRotation, 0);
 	bIsRotating = true;
@@ -105,14 +105,14 @@ void AEndlessCleanerCharacter::MoveLeft() {
 void AEndlessCleanerCharacter::MoveRight() {
 	if (!bIsMoving)	return;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Move To Right."));
+	PrintDebugLog(TEXT("Move To Right."));
 	FromRotation = GetActorRotation();
 	TargetRotation = FRotator(0, SideMoveRotation, 0);
 	bIsRotating = true;
 }
 
 void AEndlessCleanerCharacter::StopMoveToSide() {
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Stop Move To Side."));
+	PrintDebugLog(TEXT("Stop Move To Side."));
 
 	FromRotation = GetActorRotation();
 	TargetRotation = FRotator::ZeroRotator;

@@ -166,15 +166,6 @@ public:
 		FORCEINLINE int GetCurrentLevel() { return CurrentLevel; };
 
 #pragma region Debug
-public:
-	UFUNCTION(BlueprintCallable, Category = "Debug")
-		static void PrintDebugLog(FString Log, FColor Color = FColor::Red);
-
-	UFUNCTION(BlueprintCallable, Category = "Debug")
-		static void SetDebugLogState(bool State);
-
-	UFUNCTION(BlueprintCallable, Category = "Debug")
-		static void SetDebugScreenLogState(bool State);
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Debug")
 		bool bAllowDebugLogs = true;

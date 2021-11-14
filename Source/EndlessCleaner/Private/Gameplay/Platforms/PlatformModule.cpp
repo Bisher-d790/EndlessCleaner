@@ -5,7 +5,7 @@
 #include "Gameplay/Pickup.h"
 #include "Gameplay/Obstacle.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Utils/Utils.h"
 
 
 // Sets default values
@@ -123,7 +123,7 @@ void APlatformModule::SpawnObstacles()
 // Called when the platform is destroyed
 void APlatformModule::DestroyPlatform()
 {
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Destroying platform"));
+	PrintDebugLog(TEXT("Destroying platform"));
 
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	PreviousPlatform = nullptr;
@@ -144,7 +144,7 @@ void APlatformModule::DestroyPlatform()
 
 void APlatformModule::OnRotatePlatform(bool bRotateLeft)
 {
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("On rotate platforms"));
+	PrintDebugLog(TEXT("On rotate platforms"));
 
 	// Rotate the pickups waypoints
 	for (auto& Pickup : SpawnedPickups)

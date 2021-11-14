@@ -11,6 +11,7 @@
 #include "UI/InGameUIWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Audio/AudioManager.h"
+#include "Utils/Utils.h"
 
 
 // Sets default values
@@ -469,29 +470,3 @@ void AEndlessCleanerGameMode_Level::UpgradeLevel()
 {
 	CurrentLevel++;
 }
-
-#pragma region Debug
-void AEndlessCleanerGameMode_Level::PrintDebugLog(FString Log, FColor Color)
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Log);
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, Log);
-}
-
-void AEndlessCleanerGameMode_Level::SetDebugLogState(bool State)
-{
-	FString Command = "Log LogTemp ";
-
-	if (State)
-		Command += "Log";
-	else
-		Command += "Off";
-
-	GEngine->Exec(nullptr, *Command);
-}
-
-void AEndlessCleanerGameMode_Level::SetDebugScreenLogState(bool State)
-{
-	GEngine->bEnableOnScreenDebugMessages = State;
-}
-#pragma endregion

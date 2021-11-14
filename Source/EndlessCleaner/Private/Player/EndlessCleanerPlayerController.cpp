@@ -7,8 +7,9 @@
 #include "UI/InGameUIWidget.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
 #include "Kismet/GameplayStatics.h"
+#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Utils/Utils.h"
 
 
 AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
@@ -134,8 +135,8 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 				if (TargetRotationAngle == 0.0f || TargetRotationAngle == 360.0f)
 					TargetRotationAngle = CurrentRotationAngle > 300 ? 360.0f : 0.0f;
 
-				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Angle: %.2f, Target Angle: %.2f"), CurrentRotationAngle, TargetRotationAngle));
-				AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d, PreviousLane: %d"), CurrentLane, PreviousLane));
+				PrintDebugLog(FString::Printf(TEXT("Current Angle: %.2f, Target Angle: %.2f"), CurrentRotationAngle, TargetRotationAngle));
+				PrintDebugLog(FString::Printf(TEXT("CurrentLane: %d, PreviousLane: %d"), CurrentLane, PreviousLane));
 
 				if (FMath::IsNearlyEqual(CurrentRotationAngle, TargetRotationAngle, Lane.LaneWidthAngle))
 				{
@@ -162,7 +163,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 					{
 						CurrentLane = CurrentLane + 1 >= Lanes.Num() ? 0 : CurrentLane + 1;
 					}
-					AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Lane: %i"), CurrentLane));
+					PrintDebugLog(FString::Printf(TEXT("Current Lane: %i"), CurrentLane));
 				}
 			}
 		}
@@ -181,7 +182,7 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 		if (!PlayerLocation.Equals(TargetLocation, CurrentPlatform->GetLanesArray()[CurrentLane].LaneWidth))
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), PlayerLocation.Y, PlayerRef->GetActorLocation().Y));
+			PrintDebugLog(FString::Printf(TEXT("TargetLocation.Y: %.2f, PlayerRef.Y: %.2f"), PlayerLocation.Y, PlayerRef->GetActorLocation().Y));
 
 			FVector Newlocation = TargetLocation;
 
@@ -257,12 +258,12 @@ void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIn
 	{
 		if (TouchBeginPosition.X > Position.X) // Swipe Left
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Left."));
+			PrintDebugLog(TEXT("Swipe Left."));
 			OnSwipeHorizental.Execute(-1.0f);
 		}
 		else // Swipe Right
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Right."));
+			PrintDebugLog(TEXT("Swipe Right."));
 			OnSwipeHorizental.Execute(1.0f);
 		}
 	}
@@ -270,12 +271,12 @@ void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIn
 	{
 		if (TouchBeginPosition.Y > Position.Y) // Swipe Up
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Up."));
+			PrintDebugLog(TEXT("Swipe Up."));
 			OnSwipeVertical.Execute(1.0f);
 		}
 		else // Swipe Down
 		{
-			AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Swipe Down."));
+			PrintDebugLog(TEXT("Swipe Down."));
 			OnSwipeVertical.Execute(-1.0f);
 		}
 	}
@@ -345,8 +346,8 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 	bLockMovement = true;
 	CurrentLockMovementTime = 0.0f;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("LanesCount: %d"), LanesCount));
-	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Current Lane: %d"), CurrentLane));
+	PrintDebugLog(FString::Printf(TEXT("LanesCount: %d"), LanesCount));
+	PrintDebugLog(FString::Printf(TEXT("Current Lane: %d"), CurrentLane));
 
 	// Move Left
 	if (Value < 0.0f)
@@ -373,14 +374,14 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 		PlayerRef->MoveRight();
 	}
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(FString::Printf(TEXT("Next Lane: %d"), CurrentLane));
+	PrintDebugLog(FString::Printf(TEXT("Next Lane: %d"), CurrentLane));
 }
 
 void AEndlessCleanerPlayerController::Jump()
 {
 	if (!bCanMove || bIsJumping || !IsValid(PlayerRef)) return;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Jump."));
+	PrintDebugLog(TEXT("Jump."));
 
 	bIsJumping = true;
 
@@ -417,7 +418,7 @@ void AEndlessCleanerPlayerController::Slide()
 {
 	if (!bCanMove || bIsSliding || !IsValid(PlayerRef)) return;
 
-	AEndlessCleanerGameMode_Level::PrintDebugLog(TEXT("Slide."));
+	PrintDebugLog(TEXT("Slide."));
 
 	bIsSliding = true;
 
@@ -454,7 +455,7 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 
 void AEndlessCleanerPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 {
-	AEndlessCleanerGameMode_Level::PrintDebugLog("Enemy Killed", FColor::Emerald);
+	PrintDebugLog("Enemy Killed");
 
 	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
