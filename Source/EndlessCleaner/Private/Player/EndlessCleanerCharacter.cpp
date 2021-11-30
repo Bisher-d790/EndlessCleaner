@@ -36,7 +36,7 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 	// Create Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	CameraComponent->bUsePawnControlRotation = false;	// Seperate Camera and Boom rotation
+	CameraComponent->bUsePawnControlRotation = false;	// Separate Camera and Boom rotation
 	CameraComponent->SetRelativeRotation(FRotator(10.f, 0.f, 0.f));
 
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -51,7 +51,6 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 void AEndlessCleanerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
@@ -82,7 +81,8 @@ void AEndlessCleanerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void AEndlessCleanerCharacter::MoveForward() {
+void AEndlessCleanerCharacter::MoveForward()
+{
 	if (!bIsMoving)	return;
 
 	const FRotator Rotation = GetActorRotation();

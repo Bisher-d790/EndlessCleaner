@@ -26,9 +26,9 @@ void UDeathBoxComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 {
 	if (bHasBeenTriggered) return;
 
+	bHasBeenTriggered = true;
+
 	PrintDebugLog(TEXT("Death Overlap"));
 
 	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
-
-	bHasBeenTriggered = true;
 }
