@@ -12,7 +12,7 @@ class ENDLESSCLEANER_API EnemyFactory
 public:
 	EnemyFactory(class UWorld* World);
 
-	~EnemyFactory();
+	virtual ~EnemyFactory();
 
 	virtual class AEnemy* CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed);
 
