@@ -43,7 +43,7 @@ void AEndlessCleanerGameMode_Level::StartPlay()
 	Super::StartPlay();
 
 	// Set Initial Game State
-	GameState = EGameState::VE_PreparePlatforms;
+	GameState = EGameState::VE_PreparingPlatforms;
 
 	PlayerController = Cast<AEndlessCleanerPlayerController>(GetWorld()->GetFirstPlayerController());
 
@@ -53,7 +53,7 @@ void AEndlessCleanerGameMode_Level::StartPlay()
 
 	PlayerController->SetInitialLives(InitialPlayerLives);
 
-	GameState = EGameState::VE_PrepareGame;
+	GameState = EGameState::VE_PreparingGame;
 
 	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, 0.1f, false);
 
@@ -230,19 +230,19 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
-	if (GameState == EGameState::VE_PrepareGame)
+	if (GameState == EGameState::VE_PreparingGame)
 	{
 		if (IsValid(PlayerController->GetUI()))
 		{
 			PlayerController->GetUI()->OnStartGame();
 
-			GameState = EGameState::VE_Respawn;
+			GameState = EGameState::VE_Respawning;
 
 			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, SpawnStartTimer, false);
 		}
 	}
 
-	else if (GameState == EGameState::VE_RemovePlatforms)
+	else if (GameState == EGameState::VE_RemovingPlatforms)
 	{
 		// Reset container rotation
 		PlatformsContainerActor->ResetRotation();
@@ -271,12 +271,12 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 		// Initialize game
 		InitializeGame();
 
-		GameState = EGameState::VE_Respawn;
+		GameState = EGameState::VE_Respawning;
 
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 
-	else if (GameState == EGameState::VE_Respawn)
+	else if (GameState == EGameState::VE_Respawning)
 	{
 		AAudioManager::GetInstance()->PlayBackgroundMusic();
 
@@ -461,7 +461,7 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 	}
 	else
 	{
-		GameState = EGameState::VE_RemovePlatforms;
+		GameState = EGameState::VE_RemovingPlatforms;
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 }

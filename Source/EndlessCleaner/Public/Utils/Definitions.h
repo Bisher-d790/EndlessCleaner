@@ -19,10 +19,10 @@ UENUM(BlueprintType)
 enum class EGameState : uint8
 {
 	VE_None					UMETA(DisplayName = "None"),
-	VE_PreparePlatforms		UMETA(DisplayName = "PreparePlatforms"),
-	VE_PrepareGame			UMETA(DisplayName = "PrepareGame"),
+	VE_PreparingPlatforms	UMETA(DisplayName = "PreparingPlatforms"),
+	VE_PreparingGame		UMETA(DisplayName = "PreparingGame"),
 	VE_Running				UMETA(DisplayName = "Running"),
-	VE_RemovePlatforms		UMETA(DisplayName = "RemovePlatforms"),
-	VE_Respawn				UMETA(DisplayName = "Respawn"),
+	VE_RemovingPlatforms	UMETA(DisplayName = "RemovingPlatforms"),
+	VE_Respawning			UMETA(DisplayName = "Respawning"),
 	VE_GameOver				UMETA(DisplayName = "GameOver")
 };
