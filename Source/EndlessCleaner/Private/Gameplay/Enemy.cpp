@@ -4,8 +4,8 @@
 #include "Gameplay/Enemy.h"
 #include "Components/SphereComponent.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
-#include "Player/EndlessCleanerPlayerController.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECPlayerController.h"
+#include "Player/ECCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -45,7 +45,7 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// If had hit a player
-	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
+	if (IsValid(OtherActor) && OtherActor->IsA<AECCharacter>())
 	{
 		// Play Collect SFX
 		PlayPickUpCollectedSFX();
@@ -61,7 +61,7 @@ void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 void AEnemy::KillEnemy()
 {
 	// Kill enemy logic
-	Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnKillEnemy(this);
+	Cast<AECPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnKillEnemy(this);
 }
 
 void AEnemy::OnEnableCollision()

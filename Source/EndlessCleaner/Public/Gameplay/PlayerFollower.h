@@ -22,7 +22,7 @@ public:
 		bool bIsFollowingPlayer;
 
 protected:
-	class AEndlessCleanerCharacter* Player;
+	class AECCharacter* Player;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float DistanceThreshold;

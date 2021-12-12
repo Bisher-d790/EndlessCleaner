@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -10,7 +10,7 @@
 
 
 // Sets default values
-AEndlessCleanerCharacter::AEndlessCleanerCharacter()
+AECCharacter::AECCharacter()
 {
 	// Setup Initial variable values
 	SideMoveRotation = 45.0f;
@@ -48,13 +48,13 @@ AEndlessCleanerCharacter::AEndlessCleanerCharacter()
 }
 
 // Called when the game starts or when spawned
-void AEndlessCleanerCharacter::BeginPlay()
+void AECCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 // Called every frame
-void AEndlessCleanerCharacter::Tick(float DeltaTime)
+void AECCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -76,12 +76,12 @@ void AEndlessCleanerCharacter::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void AEndlessCleanerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AECCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void AEndlessCleanerCharacter::MoveForward()
+void AECCharacter::MoveForward()
 {
 	if (!bIsMoving)	return;
 
@@ -93,7 +93,7 @@ void AEndlessCleanerCharacter::MoveForward()
 	AddMovementInput(Direction, 1.0f);
 }
 
-void AEndlessCleanerCharacter::MoveLeft() {
+void AECCharacter::MoveLeft() {
 	if (!bIsMoving)	return;
 
 	PrintDebugLog(TEXT("Move To Left."));
@@ -102,7 +102,7 @@ void AEndlessCleanerCharacter::MoveLeft() {
 	bIsRotating = true;
 }
 
-void AEndlessCleanerCharacter::MoveRight() {
+void AECCharacter::MoveRight() {
 	if (!bIsMoving)	return;
 
 	PrintDebugLog(TEXT("Move To Right."));
@@ -111,7 +111,7 @@ void AEndlessCleanerCharacter::MoveRight() {
 	bIsRotating = true;
 }
 
-void AEndlessCleanerCharacter::StopMoveToSide() {
+void AECCharacter::StopMoveToSide() {
 	PrintDebugLog(TEXT("Stop Move To Side."));
 
 	FromRotation = GetActorRotation();
@@ -119,7 +119,7 @@ void AEndlessCleanerCharacter::StopMoveToSide() {
 	bIsRotating = true;
 }
 
-void AEndlessCleanerCharacter::Respawn() {
+void AECCharacter::Respawn() {
 	StopMoveToSide();
 
 	bIsMoving = false;

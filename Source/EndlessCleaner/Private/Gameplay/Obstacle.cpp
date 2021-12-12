@@ -2,7 +2,7 @@
 
 #include "Gameplay/Obstacle.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -33,7 +33,7 @@ void AObstacle::PlayObstacleHitSFX()
 void AObstacle::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// If had hit a player
-	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
+	if (IsValid(OtherActor) && OtherActor->IsA<AECCharacter>())
 	{
 		// Play hit SFX
 		PlayObstacleHitSFX();

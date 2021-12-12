@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "EndlessCleanerPlayerController.generated.h"
+#include "ECPlayerController.generated.h"
 
 // Declare any touch gesture as an event here
 #pragma region Touch Gestures Events
@@ -16,12 +16,12 @@ DECLARE_DELEGATE_OneParam(FOnSwipeVertical, float);
  *
  */
 UCLASS()
-class ENDLESSCLEANER_API AEndlessCleanerPlayerController : public APlayerController
+class ENDLESSCLEANER_API AECPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
-	AEndlessCleanerPlayerController();
+	AECPlayerController();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,7 +57,7 @@ protected:
 	FOnSwipeVertical OnSwipeVertical;
 
 	// Player Reference
-	class AEndlessCleanerCharacter* PlayerRef;
+	class AECCharacter* PlayerRef;
 
 	bool bLockMovement;
 

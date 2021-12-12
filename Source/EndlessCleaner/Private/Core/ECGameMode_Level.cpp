@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Core/EndlessCleanerGameMode_Level.h"
-#include "Player/EndlessCleanerPlayerController.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Core/ECGameMode_Level.h"
+#include "Player/ECPlayerController.h"
+#include "Player/ECCharacter.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "Gameplay/EnemyFactory.h"
@@ -15,7 +15,7 @@
 
 
 // Sets default values
-AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
+AECGameMode_Level::AECGameMode_Level()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,16 +38,16 @@ AEndlessCleanerGameMode_Level::AEndlessCleanerGameMode_Level()
 }
 
 // Called when the game starts or when spawned
-void AEndlessCleanerGameMode_Level::StartPlay()
+void AECGameMode_Level::StartPlay()
 {
 	Super::StartPlay();
 
 	// Set Initial Game State
 	GameState = EGameState::VE_PreparingPlatforms;
 
-	PlayerController = Cast<AEndlessCleanerPlayerController>(GetWorld()->GetFirstPlayerController());
+	PlayerController = Cast<AECPlayerController>(GetWorld()->GetFirstPlayerController());
 
-	Player = Cast<AEndlessCleanerCharacter>(PlayerController->GetCharacter());
+	Player = Cast<AECCharacter>(PlayerController->GetCharacter());
 
 	InitializeGame();
 
@@ -55,7 +55,7 @@ void AEndlessCleanerGameMode_Level::StartPlay()
 
 	GameState = EGameState::VE_PreparingGame;
 
-	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, 0.1f, false);
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, 0.1f, false);
 
 #pragma region Debug
 	SetDebugLogState(bAllowDebugLogs);
@@ -64,7 +64,7 @@ void AEndlessCleanerGameMode_Level::StartPlay()
 }
 
 // Called every frame
-void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
+void AECGameMode_Level::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -119,7 +119,7 @@ void AEndlessCleanerGameMode_Level::Tick(float DeltaTime)
 }
 
 // Initialize platforms and player
-void AEndlessCleanerGameMode_Level::InitializeGame()
+void AECGameMode_Level::InitializeGame()
 {
 	PreviousPlatform = nullptr;
 
@@ -226,7 +226,7 @@ void AEndlessCleanerGameMode_Level::InitializeGame()
 	SpawnEnemy();
 }
 
-void AEndlessCleanerGameMode_Level::OnRespawn()
+void AECGameMode_Level::OnRespawn()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
@@ -238,7 +238,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 			GameState = EGameState::VE_Respawning;
 
-			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, SpawnStartTimer, false);
+			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, SpawnStartTimer, false);
 		}
 	}
 
@@ -273,7 +273,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 
 		GameState = EGameState::VE_Respawning;
 
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 
 	else if (GameState == EGameState::VE_Respawning)
@@ -286,7 +286,7 @@ void AEndlessCleanerGameMode_Level::OnRespawn()
 	}
 }
 
-void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
+void AECGameMode_Level::SpawnNewPlatform()
 {
 	if (!IsValid(PreviousPlatform)) return;
 
@@ -357,7 +357,7 @@ void AEndlessCleanerGameMode_Level::SpawnNewPlatform()
 	}
 }
 
-TSubclassOf<APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
+TSubclassOf<APlatformModule> AECGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
 {
 	TArray<FPlatformOptions> ProbabilityTable;
 
@@ -402,7 +402,7 @@ TSubclassOf<APlatformModule> AEndlessCleanerGameMode_Level::GetPlatformToSpawn(T
 	return	ProbabilityTable[PlatformIndex].PlatformClass;
 }
 
-void AEndlessCleanerGameMode_Level::SpawnEnemy()
+void AECGameMode_Level::SpawnEnemy()
 {
 	if (!EnemyFactoryRef)
 		EnemyFactoryRef = new EnemyFactory(GetWorld());
@@ -421,7 +421,7 @@ void AEndlessCleanerGameMode_Level::SpawnEnemy()
 	}
 }
 
-void AEndlessCleanerGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
+void AECGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
 {
 	if (EnemyFactoryRef) EnemyFactoryRef->DestroyEnemy(KilledEnemy);
 	SpawnEnemy();
@@ -432,7 +432,7 @@ void AEndlessCleanerGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
 		UpgradeLevel();
 }
 
-void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
+void AECGameMode_Level::OnTriggerDeathActor()
 {
 	if (GameState == EGameState::VE_GameOver)
 		return;
@@ -462,11 +462,11 @@ void AEndlessCleanerGameMode_Level::OnTriggerDeathActor()
 	else
 	{
 		GameState = EGameState::VE_RemovingPlatforms;
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AEndlessCleanerGameMode_Level::OnRespawn, RespawnTimer, false);
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 }
 
-void AEndlessCleanerGameMode_Level::UpgradeLevel()
+void AECGameMode_Level::UpgradeLevel()
 {
 	CurrentLevel++;
 }

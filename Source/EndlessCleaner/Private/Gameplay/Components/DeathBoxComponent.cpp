@@ -3,7 +3,7 @@
 
 #include "Gameplay/Components/DeathBoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Core/ECGameMode_Level.h"
 #include "Utils/Utils.h"
 
 
@@ -30,5 +30,5 @@ void UDeathBoxComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 
 	PrintDebugLog(TEXT("Death Overlap"));
 
-	Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
+	Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->OnTriggerDeathActor();
 }

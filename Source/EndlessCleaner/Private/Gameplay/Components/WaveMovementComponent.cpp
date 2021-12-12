@@ -2,7 +2,7 @@
 
 
 #include "Gameplay/Components/WaveMovementComponent.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Core/ECGameMode_Level.h"
 
 
 UWaveMovementComponent::UWaveMovementComponent()

@@ -43,7 +43,7 @@ protected:
 
 	class UAudioComponent* BackgroundMusicComponent;
 
-	class AEndlessCleanerCharacter* PlayerRef;
+	class AECCharacter* PlayerRef;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Music")

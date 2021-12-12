@@ -2,7 +2,7 @@
 
 
 #include "Gameplay/PlayerFollower.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -26,7 +26,7 @@ void APlayerFollower::Tick(float DeltaTime)
 
 	if (!IsValid(Player))
 	{
-		Player = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		Player = Cast<AECCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		return;
 	}
 

@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/EndlessCleanerPlayerController.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECPlayerController.h"
+#include "Player/ECCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/InGameUIWidget.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "Kismet/GameplayStatics.h"
-#include "Core/EndlessCleanerGameMode_Level.h"
+#include "Core/ECGameMode_Level.h"
 #include "Utils/Utils.h"
 
 
-AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
+AECPlayerController::AECPlayerController()
 {
 	// Setup variable values
 	MaxLockMovementTime = 0.2f;
@@ -20,7 +20,7 @@ AEndlessCleanerPlayerController::AEndlessCleanerPlayerController()
 	SlideDuration = 1.f;
 }
 
-void AEndlessCleanerPlayerController::BeginPlay()
+void AECPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -39,7 +39,7 @@ void AEndlessCleanerPlayerController::BeginPlay()
 	CurrentLane = 1;
 
 	// Set the Player reference
-	PlayerRef = Cast<AEndlessCleanerCharacter>(GetPawn());
+	PlayerRef = Cast<AECCharacter>(GetPawn());
 
 	if (IsValid(InGameUIWidgetClass))
 	{
@@ -54,17 +54,17 @@ void AEndlessCleanerPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
 		InGameUIWidgetInstance->UpdateLives(CurrentLives);
 		InGameUIWidgetInstance->UpdateTime(CurrentTime);
-		int Level = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetCurrentLevel();
+		int Level = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetCurrentLevel();
 		InGameUIWidgetInstance->UpdateLevel(Level);
 	}
 }
 
-void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
+void AECPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
 	if (!IsValid(PlatformsContainer))
-		PlatformsContainer = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
+		PlatformsContainer = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
 
 	// Lock Input when moving 
 	if (bLockMovement)
@@ -209,22 +209,22 @@ void AEndlessCleanerPlayerController::PlayerTick(float DeltaTime)
 
 #pragma region Input Settings
 
-void AEndlessCleanerPlayerController::SetupInputComponent()
+void AECPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAxis("MoveToSide", this, &AEndlessCleanerPlayerController::MoveToSide);
+	InputComponent->BindAxis("MoveToSide", this, &AECPlayerController::MoveToSide);
 
-	InputComponent->BindAction("Jump", IE_Pressed, this, &AEndlessCleanerPlayerController::Jump);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AECPlayerController::Jump);
 
-	InputComponent->BindAction("Slide", IE_Pressed, this, &AEndlessCleanerPlayerController::Slide);
+	InputComponent->BindAction("Slide", IE_Pressed, this, &AECPlayerController::Slide);
 
 	// Touch Input Binding
-	InputComponent->BindTouch(IE_Pressed, this, &AEndlessCleanerPlayerController::OnTouchBegin);
+	InputComponent->BindTouch(IE_Pressed, this, &AECPlayerController::OnTouchBegin);
 
-	InputComponent->BindTouch(IE_Released, this, &AEndlessCleanerPlayerController::OnTouchEnd);
+	InputComponent->BindTouch(IE_Released, this, &AECPlayerController::OnTouchEnd);
 
-	OnSwipeHorizental.BindDynamic(this, &AEndlessCleanerPlayerController::MoveToSide);
+	OnSwipeHorizental.BindDynamic(this, &AECPlayerController::MoveToSide);
 
 	// Bind Vertical Swipe, UP with Jump and DOWN with Slide
 	OnSwipeVertical.BindLambda([this](float Value)
@@ -234,7 +234,7 @@ void AEndlessCleanerPlayerController::SetupInputComponent()
 		});
 }
 
-void AEndlessCleanerPlayerController::OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position)
+void AECPlayerController::OnTouchBegin(const ETouchIndex::Type TouchIndex, const FVector Position)
 {
 	// Disable multi-touch, no Touch Gestures requires multi-touching yet
 	if (TouchIndex != ETouchIndex::Touch1)	return;
@@ -242,7 +242,7 @@ void AEndlessCleanerPlayerController::OnTouchBegin(const ETouchIndex::Type Touch
 	TouchBeginPosition = Position;
 }
 
-void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIndex, const FVector Position)
+void AECPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIndex, const FVector Position)
 {
 	// Disable multi-touch, no Touch Gestures requires multi-touching yet
 	if (TouchIndex != ETouchIndex::Touch1)	return;
@@ -284,7 +284,7 @@ void AEndlessCleanerPlayerController::OnTouchEnd(const ETouchIndex::Type TouchIn
 
 #pragma endregion Input Settings
 
-void AEndlessCleanerPlayerController::StartRunning()
+void AECPlayerController::StartRunning()
 {
 	// Start movement
 	bCanMove = true;
@@ -294,7 +294,7 @@ void AEndlessCleanerPlayerController::StartRunning()
 	PlayerRef->SetIsMoving(true);
 }
 
-void AEndlessCleanerPlayerController::StopRunning()
+void AECPlayerController::StopRunning()
 {
 	// Stop movement
 	PlayerRef->SetIsMoving(false);
@@ -304,7 +304,7 @@ void AEndlessCleanerPlayerController::StopRunning()
 	bLockMovement = true;
 }
 
-void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
+void AECPlayerController::SetInitialLives(int32 InitialLives)
 {
 	CurrentLives = InitialLives;
 
@@ -314,7 +314,7 @@ void AEndlessCleanerPlayerController::SetInitialLives(int32 InitialLives)
 	}
 }
 
-void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
+void AECPlayerController::LoseLife(bool& bIsLastLife)
 {
 	bIsLastLife = false;
 	if ((CurrentLives - 1) <= 0)
@@ -333,7 +333,7 @@ void AEndlessCleanerPlayerController::LoseLife(bool& bIsLastLife)
 	}
 }
 
-void AEndlessCleanerPlayerController::MoveToSide(float Value)
+void AECPlayerController::MoveToSide(float Value)
 {
 	if (!bCanMove || bLockMovement || !IsValid(PlayerRef) || !IsValid(PlatformsContainer) || !IsValid(CurrentPlatform)) return;
 
@@ -390,7 +390,7 @@ void AEndlessCleanerPlayerController::MoveToSide(float Value)
 	PrintDebugLog(FString::Printf(TEXT("Next Lane: %d"), CurrentLane));
 }
 
-void AEndlessCleanerPlayerController::Jump()
+void AECPlayerController::Jump()
 {
 	if (!bCanMove || bIsJumping || !IsValid(PlayerRef)) return;
 
@@ -410,7 +410,7 @@ void AEndlessCleanerPlayerController::Jump()
 		// Jump in the next tick, to avoid stucking to the ground
 		// Run Jump() concurrently in the next tick
 		FTimerDelegate TimerCallback;
-		AEndlessCleanerCharacter* PlayerTemp = PlayerRef;
+		AECCharacter* PlayerTemp = PlayerRef;
 		FTimerHandle Handle;
 
 		TimerCallback.BindLambda([PlayerTemp]
@@ -427,7 +427,7 @@ void AEndlessCleanerPlayerController::Jump()
 	PlayerRef->Jump();
 }
 
-void AEndlessCleanerPlayerController::Slide()
+void AECPlayerController::Slide()
 {
 	if (!bCanMove || bIsSliding || !IsValid(PlayerRef)) return;
 
@@ -446,7 +446,7 @@ void AEndlessCleanerPlayerController::Slide()
 	PlayerRef->Crouch();
 }
 
-void AEndlessCleanerPlayerController::Respawn()
+void AECPlayerController::Respawn()
 {
 	CurrentLane = 1; // Set to middle
 	bIsRunning = false;
@@ -456,7 +456,7 @@ void AEndlessCleanerPlayerController::Respawn()
 	bIsRunning = false;
 }
 
-void AEndlessCleanerPlayerController::OnCollectCoin()
+void AECPlayerController::OnCollectCoin()
 {
 	CoinsCollected += 1;
 
@@ -466,11 +466,11 @@ void AEndlessCleanerPlayerController::OnCollectCoin()
 	}
 }
 
-void AEndlessCleanerPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
+void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 {
 	PrintDebugLog("Enemy Killed");
 
-	AEndlessCleanerGameMode_Level* GameMode = Cast<AEndlessCleanerGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
+	AECGameMode_Level* GameMode = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
 	EnemiesKilled += 1;
 
@@ -482,7 +482,7 @@ void AEndlessCleanerPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 	}
 }
 
-void AEndlessCleanerPlayerController::AddToCurrentDistance(float Distance)
+void AECPlayerController::AddToCurrentDistance(float Distance)
 {
 	if (bIsRunning)
 	{

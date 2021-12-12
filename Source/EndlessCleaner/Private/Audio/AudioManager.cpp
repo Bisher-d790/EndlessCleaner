@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 #include "Utils/SingletonManager.h"
-#include "Player/EndlessCleanerCharacter.h"
+#include "Player/ECCharacter.h"
 
 #pragma region Singleton
 AAudioManager* AAudioManager::GetInstance()
@@ -45,7 +45,7 @@ void AAudioManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerRef = Cast<AEndlessCleanerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerRef = Cast<AECCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AAudioManager::PlayBackgroundMusic()

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "Utils/Definitions.h"
-#include "EndlessCleanerGameMode_Level.generated.h"
+#include "ECGameMode_Level.generated.h"
 
 /**
  *
@@ -35,13 +35,13 @@ public:
 };
 
 UCLASS()
-class ENDLESSCLEANER_API AEndlessCleanerGameMode_Level : public AGameMode
+class ENDLESSCLEANER_API AECGameMode_Level : public AGameMode
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AEndlessCleanerGameMode_Level();
+	AECGameMode_Level();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -123,9 +123,9 @@ private:
 
 	class APlatformModule* PlatformToCheck;
 
-	class AEndlessCleanerPlayerController* PlayerController;
+	class AECPlayerController* PlayerController;
 
-	class AEndlessCleanerCharacter* Player;
+	class AECCharacter* Player;
 
 	void SpawnNewPlatform();
 

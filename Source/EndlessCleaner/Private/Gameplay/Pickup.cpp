@@ -3,8 +3,8 @@
 #include "Gameplay/Pickup.h"
 #include "Components/SphereComponent.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
-#include "Player/EndlessCleanerCharacter.h"
-#include "Player/EndlessCleanerPlayerController.h"
+#include "Player/ECCharacter.h"
+#include "Player/ECPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -48,10 +48,10 @@ void APickup::PlayPickUpCollectedSFX()
 void APickup::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// If had hit a player
-	if (IsValid(OtherActor) && OtherActor->IsA<AEndlessCleanerCharacter>())
+	if (IsValid(OtherActor) && OtherActor->IsA<AECCharacter>())
 	{
 		// Collect coin logic
-		Cast<AEndlessCleanerPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnCollectCoin();
+		Cast<AECPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->OnCollectCoin();
 
 		// Disable collision
 		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
