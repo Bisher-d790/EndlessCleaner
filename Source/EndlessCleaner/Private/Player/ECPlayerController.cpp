@@ -3,6 +3,7 @@
 
 #include "Player/ECPlayerController.h"
 #include "Player/ECCharacter.h"
+#include "Player/ECPlayerState.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/InGameUIWidget.h"
 #include "Gameplay/Platforms/PlatformModule.h"
@@ -25,9 +26,6 @@ void AECPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// Set variables values
-	CoinsCollected = 0;
-	CurrentDistance = 0;
-	CurrentTime = 0;
 	TouchSwipeMinLength = 100.f;
 
 	// Stop movement
@@ -40,6 +38,7 @@ void AECPlayerController::BeginPlay()
 
 	// Set the Player reference
 	PlayerRef = Cast<AECCharacter>(GetPawn());
+	PlayerStateRef = Cast<AECPlayerState>(PlayerState);
 
 	if (IsValid(InGameUIWidgetClass))
 	{
@@ -50,10 +49,10 @@ void AECPlayerController::BeginPlay()
 	{
 		InGameUIWidgetInstance->AddToViewport();
 
-		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
-		InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
-		InGameUIWidgetInstance->UpdateLives(CurrentLives);
-		InGameUIWidgetInstance->UpdateTime(CurrentTime);
+		InGameUIWidgetInstance->UpdateCoins(PlayerStateRef->GetCoinsCollected());
+		InGameUIWidgetInstance->UpdateDistance(PlayerStateRef->GetCurrentDistance());
+		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
+		InGameUIWidgetInstance->UpdateTime(PlayerStateRef->GetCurrentTime());
 		int Level = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetCurrentLevel();
 		InGameUIWidgetInstance->UpdateLevel(Level);
 	}
@@ -83,11 +82,9 @@ void AECPlayerController::PlayerTick(float DeltaTime)
 
 	if (bIsRunning)
 	{
-		CurrentTime += DeltaTime;
-
 		if (IsValid(InGameUIWidgetInstance))
 		{
-			InGameUIWidgetInstance->UpdateTime(CurrentTime);
+			InGameUIWidgetInstance->UpdateTime(PlayerStateRef->GetCurrentTime());
 		}
 	}
 
@@ -292,12 +289,16 @@ void AECPlayerController::StartRunning()
 	bLockMovement = false;
 
 	PlayerRef->SetIsMoving(true);
+
+	PlayerStateRef->StartTimer();
 }
 
 void AECPlayerController::StopRunning()
 {
 	// Stop movement
 	PlayerRef->SetIsMoving(false);
+
+	PlayerStateRef->StopTimer();
 
 	bCanMove = false;
 	bIsRunning = false;
@@ -306,30 +307,28 @@ void AECPlayerController::StopRunning()
 
 void AECPlayerController::SetInitialLives(int32 InitialLives)
 {
-	CurrentLives = InitialLives;
+	PlayerStateRef->SetCurrentLives(InitialLives);
 
 	if (IsValid(InGameUIWidgetInstance))
 	{
-		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
 	}
 }
 
 void AECPlayerController::LoseLife(bool& bIsLastLife)
 {
 	bIsLastLife = false;
-	if ((CurrentLives - 1) <= 0)
+
+	PlayerStateRef->DecreaseCurrentLives();
+
+	if (PlayerStateRef->GetCurrentLives() <= 0)
 	{
-		CurrentLives = 0;
 		bIsLastLife = true;
-	}
-	else
-	{
-		CurrentLives -= 1;
 	}
 
 	if (IsValid(InGameUIWidgetInstance))
 	{
-		InGameUIWidgetInstance->UpdateLives(CurrentLives);
+		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
 	}
 }
 
@@ -458,11 +457,11 @@ void AECPlayerController::Respawn()
 
 void AECPlayerController::OnCollectCoin()
 {
-	CoinsCollected += 1;
+	PlayerStateRef->IncreaseCoinsCollected();
 
 	if (IsValid(InGameUIWidgetInstance))
 	{
-		InGameUIWidgetInstance->UpdateCoins(CoinsCollected);
+		InGameUIWidgetInstance->UpdateCoins(PlayerStateRef->GetCoinsCollected());
 	}
 }
 
@@ -472,7 +471,8 @@ void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 
 	AECGameMode_Level* GameMode = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
-	EnemiesKilled += 1;
+
+	PlayerStateRef->IncreaseEnemiesKilled();
 
 	int Level = GameMode->GetCurrentLevel();
 
@@ -486,11 +486,11 @@ void AECPlayerController::AddToCurrentDistance(float Distance)
 {
 	if (bIsRunning)
 	{
-		CurrentDistance += Distance;
+		PlayerStateRef->AddDistance(Distance);
 
 		if (IsValid(InGameUIWidgetInstance))
 		{
-			InGameUIWidgetInstance->UpdateDistance(CurrentDistance);
+			InGameUIWidgetInstance->UpdateDistance(PlayerStateRef->GetCurrentDistance());
 		}
 	}
 }

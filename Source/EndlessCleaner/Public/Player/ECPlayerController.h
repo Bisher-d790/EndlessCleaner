@@ -59,6 +59,8 @@ protected:
 	// Player Reference
 	class AECCharacter* PlayerRef;
 
+	class AECPlayerState* PlayerStateRef;
+
 	bool bLockMovement;
 
 	float CurrentLockMovementTime;
@@ -86,10 +88,6 @@ private:
 
 	int CurrentLane;
 
-	float CurrentDistance;
-
-	float CurrentTime;
-
 	bool bIsJumping = false;
 
 	float RemainingJumpTime;
@@ -97,12 +95,6 @@ private:
 	bool bIsSliding = false;
 
 	float RemainingSlideTime;
-
-	int EnemiesKilled;
-
-	int CoinsCollected;
-
-	int CurrentLives;
 
 	bool bIsMovingLeft = false;
 
@@ -125,29 +117,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void Respawn();
 
-	void LoseLife(bool& isLastLive);
-
-	void SetInitialLives(int32 InitialLives);
-
-	void AddToCurrentDistance(float Distance);
-
 	FORCEINLINE void SetCurrentPlatform(APlatformModule* Platform) { CurrentPlatform = Platform; };
 
-	UFUNCTION(BlueprintCallable, Category = "Player Events")
-		void OnCollectCoin();
-
-	UFUNCTION(BlueprintCallable, Category = "Player Events")
-		void OnKillEnemy(class AEnemy* KilledEnemy);
-
 	FORCEINLINE UInGameUIWidget* GetUI() { return InGameUIWidgetInstance; }
-
-	FORCEINLINE int GetCoinsCollected() { return CoinsCollected; }
-
-	FORCEINLINE int GetCurrentLives() { return CurrentLives; }
-
-	FORCEINLINE float GetCurrentDistance() { return CurrentDistance; }
-
-	FORCEINLINE float GetCurrentTime() { return CurrentTime; }
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 		FORCEINLINE bool GetIsRunning() { return bIsRunning; }
@@ -157,4 +129,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Movement)
 		FORCEINLINE bool GetIsSliding() { return bIsSliding; }
+
+	void LoseLife(bool& isLastLive);
+
+	void SetInitialLives(int32 InitialLives);
+
+	void AddToCurrentDistance(float Distance);
+
+	UFUNCTION(BlueprintCallable, Category = "Player Events")
+		void OnCollectCoin();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Events")
+		void OnKillEnemy(class AEnemy* KilledEnemy);
+
 };

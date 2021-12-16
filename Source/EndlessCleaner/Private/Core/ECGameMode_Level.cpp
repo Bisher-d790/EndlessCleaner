@@ -3,6 +3,7 @@
 
 #include "Core/ECGameMode_Level.h"
 #include "Player/ECPlayerController.h"
+#include "Player/ECPlayerState.h"
 #include "Player/ECCharacter.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
@@ -448,10 +449,15 @@ void AECGameMode_Level::OnTriggerDeathActor()
 	{
 		GameState = EGameState::VE_GameOver;
 
+		AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerController->PlayerState);
+
 		// Score Calculate Score
 		float Score = 0;
-		Score += PlayerController->GetCoinsCollected() * CoinsMultiplier;
-		Score += (PlayerController->GetCurrentDistance() / PlayerController->GetCurrentTime()) * SpeedMultiplier;
+
+		Score += PlayerState->GetCoinsCollected() * CoinsMultiplier;
+		Score += (PlayerState->GetCurrentDistance() / PlayerState->GetCurrentTime()) * SpeedMultiplier;
+
+		PlayerState->SetScore(Score);
 
 		if (IsValid(PlayerController->GetUI()))
 		{
