@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Audio/AudioManager.h"
 #include "Utils/Utils.h"
+#include <EndlessCleaner/Public/Core/ECGameState.h>
 
 
 // Sets default values
@@ -49,6 +50,8 @@ void AECGameMode_Level::StartPlay()
 	PlayerController = Cast<AECPlayerController>(GetWorld()->GetFirstPlayerController());
 
 	Player = Cast<AECCharacter>(PlayerController->GetCharacter());
+
+	GameStateRef = GetGameState<AECGameState>();
 
 	InitializeGame();
 
@@ -414,7 +417,7 @@ void AECGameMode_Level::SpawnEnemy()
 			EnemyClass,
 			FirstPlatform->GetActorLocation(),
 			EnemyStartSpeed,
-			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (CurrentLevel - 1)));
+			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (GameStateRef->GetCurrentLevel() - 1)));
 
 		// Add all existing waypoints
 		for (APlatformModule* TempModule = FirstPlatform; IsValid(TempModule->GetNextPlatform()); TempModule = TempModule->GetNextPlatform())
@@ -425,12 +428,29 @@ void AECGameMode_Level::SpawnEnemy()
 void AECGameMode_Level::OnEnemyKilled(AEnemy* KilledEnemy)
 {
 	if (EnemyFactoryRef) EnemyFactoryRef->DestroyEnemy(KilledEnemy);
+
+	int TotalEnemiesKilled = GetTotalEnemiesKilled();
+
+	if (TotalEnemiesKilled >= EnemyKilledToLevelUp * GameStateRef->GetCurrentLevel())	UpgradeLevel();
+
 	SpawnEnemy();
+}
 
-	EnemiesKilled++;
+int AECGameMode_Level::GetTotalEnemiesKilled()
+{
+	int TotalEnemiesKilled = 0;
 
-	if (EnemiesKilled >= EnemyKilledToLevelUp * CurrentLevel)
-		UpgradeLevel();
+	for (FConstPlayerControllerIterator PlayerConytollerIterator = GetWorld()->GetPlayerControllerIterator(); PlayerConytollerIterator; ++PlayerConytollerIterator)
+	{
+		AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerConytollerIterator->Get()->PlayerState);
+
+		if (IsValid(PlayerState))
+		{
+			TotalEnemiesKilled += PlayerState->GetEnemiesKilled();
+		}
+	}
+
+	return TotalEnemiesKilled;
 }
 
 void AECGameMode_Level::OnTriggerDeathActor()
@@ -474,5 +494,5 @@ void AECGameMode_Level::OnTriggerDeathActor()
 
 void AECGameMode_Level::UpgradeLevel()
 {
-	CurrentLevel++;
+	GameStateRef->IncreaseCurrentLevel();
 }

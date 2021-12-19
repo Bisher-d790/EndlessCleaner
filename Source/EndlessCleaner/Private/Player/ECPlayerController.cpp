@@ -10,6 +10,7 @@
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core/ECGameMode_Level.h"
+#include "Core/ECGameState.h"
 #include "Utils/Utils.h"
 
 
@@ -53,7 +54,11 @@ void AECPlayerController::BeginPlay()
 		InGameUIWidgetInstance->UpdateDistance(PlayerStateRef->GetCurrentDistance());
 		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
 		InGameUIWidgetInstance->UpdateTime(PlayerStateRef->GetCurrentTime());
-		int Level = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetCurrentLevel();
+
+		int Level = 1;
+		AECGameState* GameState = GetWorld()->GetGameState<AECGameState>();
+		if (GameState)	Level = GameState->GetCurrentLevel();
+
 		InGameUIWidgetInstance->UpdateLevel(Level);
 	}
 }
@@ -469,12 +474,14 @@ void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 {
 	PrintDebugLog("Enemy Killed");
 
+	PlayerStateRef->IncreaseEnemiesKilled();
+
 	AECGameMode_Level* GameMode = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
 
-	PlayerStateRef->IncreaseEnemiesKilled();
-
-	int Level = GameMode->GetCurrentLevel();
+	int Level = 1;
+	AECGameState* GameState = GetWorld()->GetGameState<AECGameState>();
+	if (GameState)	Level = GameState->GetCurrentLevel();
 
 	if (IsValid(InGameUIWidgetInstance))
 	{

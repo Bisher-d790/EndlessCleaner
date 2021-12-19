@@ -127,6 +127,8 @@ private:
 
 	class AECCharacter* Player;
 
+	class AECGameState* GameStateRef;
+
 	void SpawnNewPlatform();
 
 	TSubclassOf<class APlatformModule> GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters = {});
@@ -140,10 +142,6 @@ private:
 
 	void SpawnEnemy();
 
-	int CurrentLevel = 1;
-
-	int EnemiesKilled = 0;
-
 	void UpgradeLevel();
 
 public:
@@ -156,14 +154,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Enemy")
 		void OnEnemyKilled(class AEnemy* KilledEnemy);
 
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+		int GetTotalEnemiesKilled();
+
 	UFUNCTION(BlueprintCallable, Category = "Platforms")
 		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };
 
 	UFUNCTION(BlueprintCallable, Category = "Settings")
 		FORCEINLINE int GetInitialPlayerLives() { return InitialPlayerLives; };
-
-	UFUNCTION(BlueprintCallable, Category = "Level")
-		FORCEINLINE int GetCurrentLevel() { return CurrentLevel; };
 
 #pragma region Debug
 private:
