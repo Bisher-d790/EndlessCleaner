@@ -167,6 +167,16 @@ void AECPlayerController::PlayerTick(float DeltaTime)
 					}
 					PrintDebugLog(FString::Printf(TEXT("Current Lane: %i"), CurrentLane));
 				}
+				// If not nearly equal, update the rotation rate (Accelerate)
+				else
+				{
+					float RotationRate = GetCurrentRotationRate();
+
+					if (bIsMovingLeft)
+						PlatformsContainer->RotateRight(RotationRate);
+					else
+						PlatformsContainer->RotateLeft(RotationRate);
+				}
 			}
 		}
 	}
@@ -354,17 +364,7 @@ void AECPlayerController::MoveToSide(float Value)
 	PrintDebugLog(FString::Printf(TEXT("Current Lane: %d"), CurrentLane));
 
 	// Get Rotation Rate
-	float PlayerVelocity = PlayerRef->GetVelocity().X;
-	float PlatformRadius = CurrentPlatform->GetPlatformRadius() / 100; // Convert to meters
-
-	/** To get the rotation rate (radial velocity), which is equivilant to the linear velocity / radius
-	* However, to get the velocity, we need to extract the velocity on the Axis which the rotation happens on, which in this case is the Y axis
-	* And to get the linear velocity on the Y axis, we can use the Cosine of the velocity's lean angle
-	* the lean angle is the complementary angle of the player's rotation when moving to the side
-	* then we can extract the linear velocity on the Y axis as = Player Velocity * Cos(Velocity Lean angle)
-	* we divide all that by the platform radius, and we get the radial velocity at which the platforms should rotate
-	*/
-	float RotationRate = PlayerVelocity * FMath::Cos(90 - PlayerRef->GetSideMoveRotation()) / PlatformRadius;
+	float RotationRate = GetCurrentRotationRate();
 
 	// Move Left
 	if (Value < 0.0f)
@@ -392,6 +392,30 @@ void AECPlayerController::MoveToSide(float Value)
 	}
 
 	PrintDebugLog(FString::Printf(TEXT("Next Lane: %d"), CurrentLane));
+}
+
+float AECPlayerController::GetCurrentRotationRate()
+{
+	float RotationRate = 0;
+
+	if (!IsValid(PlayerRef) || !IsValid(CurrentPlatform) || !(bIsMovingLeft || bIsMovingRight))
+	{
+		return RotationRate;
+	}
+
+	float PlayerVelocity = PlayerRef->GetVelocity().X;
+	float PlatformRadius = CurrentPlatform->GetPlatformRadius() / 100; // Convert to meters
+
+	/** To get the rotation rate (radial velocity), which is equivilant to the linear velocity / radius
+	* However, to get the velocity, we need to extract the velocity on the Axis which the rotation happens on, which in this case is the Y axis
+	* And to get the linear velocity on the Y axis, we can use the Cosine of the velocity's lean angle
+	* the lean angle is the complementary angle of the player's rotation when moving to the side
+	* then we can extract the linear velocity on the Y axis as = Player Velocity * Cos(Velocity Lean angle)
+	* we divide all that by the platform radius, and we get the radial velocity at which the platforms should rotate
+	*/
+	RotationRate = PlayerVelocity * FMath::Cos(90 - PlayerRef->GetSideMoveRotation()) / PlatformRadius;
+
+	return RotationRate;
 }
 
 void AECPlayerController::Jump()

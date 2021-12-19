@@ -106,6 +106,8 @@ private:
 
 	class APlatformsContainer* PlatformsContainer;
 
+	float GetCurrentRotationRate();
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
