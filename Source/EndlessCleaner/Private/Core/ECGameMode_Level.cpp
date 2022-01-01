@@ -348,17 +348,6 @@ void AECGameMode_Level::SpawnNewPlatform()
 
 		PlatformCount++;
 	}
-
-	// Add to enemies' waypoint
-	if (IsValid(SpawnedPlatform) && EnemyFactoryRef)
-	{
-		TArray<AEnemy*> EnemyList = EnemyFactoryRef->GetEnemyList();
-		for (auto& Enemy : EnemyList)
-		{
-			if (IsValid(Enemy))
-				Enemy->AddWaypoint(SpawnedPlatform->GetActorLocation());
-		}
-	}
 }
 
 TSubclassOf<APlatformModule> AECGameMode_Level::GetPlatformToSpawn(TArray<EPlatformType> PlatformTypeFilters)
@@ -418,10 +407,6 @@ void AECGameMode_Level::SpawnEnemy()
 			FirstPlatform->GetActorLocation(),
 			EnemyStartSpeed,
 			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (GameStateRef->GetCurrentLevel() - 1)));
-
-		// Add all existing waypoints
-		for (APlatformModule* TempModule = FirstPlatform; IsValid(TempModule->GetNextPlatform()); TempModule = TempModule->GetNextPlatform())
-			SpawnedEnemy->AddWaypoint(TempModule->GetActorLocation());
 	}
 }
 

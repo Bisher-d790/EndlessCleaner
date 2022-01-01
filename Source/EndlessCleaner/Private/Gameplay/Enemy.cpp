@@ -3,7 +3,7 @@
 
 #include "Gameplay/Enemy.h"
 #include "Components/SphereComponent.h"
-#include "Gameplay/Components/WaypointMovementComponent.h"
+#include "Gameplay/Components/PerpetualMovementComponent.h"
 #include "Player/ECPlayerController.h"
 #include "Player/ECCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,10 +15,10 @@ AEnemy::AEnemy()
 	CollisionEnableDelay = 5.f;
 	DestructionDelay = 0.5f;
 
-	MovementStartDelayRandomMin = 0.f;
-	MovementStartDelayRandomMax = 0.f;
+	MovementComponent = CreateDefaultSubobject<UPerpetualMovementComponent>(TEXT("Perpetual Movement"));
+	AddInstanceComponent(MovementComponent);
 
-	PerpetualMovementSpeed = FVector::ZeroVector;
+	PerpetualMovementComponent = Cast<UPerpetualMovementComponent>(MovementComponent);
 }
 
 void AEnemy::BeginPlay()
@@ -35,11 +35,6 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (WaypointMovementComponent->WaypointLocations.Num() <= 0)
-	{
-		ApplyPerpetualMovement(DeltaTime);
-	}
 }
 
 void AEnemy::OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -67,26 +62,4 @@ void AEnemy::KillEnemy()
 void AEnemy::OnEnableCollision()
 {
 	Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	WaypointMovementComponent->MovementSpeed = Speed;
-}
-
-void AEnemy::AddWaypoint(FVector WaypointLocation)
-{
-	WaypointMovementComponent->WaypointLocations.Add(WaypointLocation);
-}
-
-void AEnemy::SetInitialMovementSpeed(float InitialSpeed, float ActualSpeed)
-{
-	WaypointMovementComponent->MovementSpeed = InitialSpeed;
-	Speed = ActualSpeed;
-}
-
-void AEnemy::ApplyPerpetualMovement(float DeltaTime)
-{
-	// Distance = Speed * Time
-	FVector Distance = PerpetualMovementSpeed * DeltaTime;
-
-	FVector NewLocation = GetActorLocation() + Distance;
-
-	SetActorLocation(NewLocation);
 }

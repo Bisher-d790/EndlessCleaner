@@ -2,7 +2,7 @@
 
 
 #include "Gameplay/Platforms/PlatformModule.h" 
-#include "Gameplay/Pickup.h"
+#include "Gameplay/Germ.h"
 #include "Gameplay/Obstacle.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
 #include "Utils/Utils.h"
@@ -75,7 +75,7 @@ void APlatformModule::SpawnPickups()
 		// Spawn pickups
 		for (int PickupIndex = 0; PickupIndex < Lanes[LaneIndex].PickupsNumberPerSpawn; PickupIndex++)
 		{
-			APickup* SpawnedPickup = GetWorld()->SpawnActor<APickup>(Lanes[LaneIndex].PickupClass, SpawnPosition, FRotator::ZeroRotator);
+			AGerm* SpawnedPickup = GetWorld()->SpawnActor<AGerm>(Lanes[LaneIndex].PickupClass, SpawnPosition, FRotator::ZeroRotator);
 			SpawnedPickup->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
 			// Set the initial location

@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(HideCategories = (Delay))
 class ENDLESSCLEANER_API AEnemy : public APickup
 {
 	GENERATED_BODY()
@@ -32,10 +32,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
 		float CollisionEnableDelay;
 
-	// The speed of which to move by when there're no waypoints
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
-		FVector PerpetualMovementSpeed;
-
 	// The delay to destroy the enemy
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Enemy")
 		float DestructionDelay;
@@ -43,14 +39,8 @@ protected:
 private:
 	void OnEnableCollision();
 
-	float Speed;
-
-	void ApplyPerpetualMovement(float DeltaTime);
-
 	void KillEnemy();
 
 public:
-	void AddWaypoint(FVector WaypointLocation);
-
-	void SetInitialMovementSpeed(float InitialSpeed, float ActualSpeed);
+	class UPerpetualMovementComponent* PerpetualMovementComponent;
 };

@@ -24,7 +24,6 @@ AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnP
 {
 	AEnemy* SpawnedEnemy = WorldContext->SpawnActor<AEnemy>(EnemyClass, SpawnPosition, FRotator::ZeroRotator);
 	SpawnedEnemy->AttachToActor(EnemiesContainerActor, FAttachmentTransformRules::KeepWorldTransform);
-	SpawnedEnemy->SetInitialMovementSpeed(EnemyStartSpeed, EnemyActualSpeed);
 	EnemiesList.Add(SpawnedEnemy);
 
 	return SpawnedEnemy;

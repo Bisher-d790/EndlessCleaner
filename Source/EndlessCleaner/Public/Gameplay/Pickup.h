@@ -15,23 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	APickup();
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup")
 		class UStaticMeshComponent* Mesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup")
 		class USphereComponent* Collision;
-
-	// The waypoint movement start delay minimum random value
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
-		float MovementStartDelayRandomMin;
-
-	// The waypoint movement start delay maximum random value
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
-		float MovementStartDelayRandomMax;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SFX")
 		float PickUpCollectedSFXVolume;
@@ -42,10 +31,10 @@ protected:
 	UFUNCTION()
 		virtual void OnOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
-		class UWaypointMovementComponent* WaypointMovementComponent;
+		class UMovementComponent* MovementComponent;
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "SFX")
 		void PlayPickUpCollectedSFX();
 };

@@ -2,7 +2,6 @@
 
 #include "Gameplay/Pickup.h"
 #include "Components/SphereComponent.h"
-#include "Gameplay/Components/WaypointMovementComponent.h"
 #include "Player/ECCharacter.h"
 #include "Player/ECPlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,20 +22,7 @@ APickup::APickup()
 	Collision->SetupAttachment(RootComponent);
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapped);
 
-	WaypointMovementComponent = CreateDefaultSubobject<UWaypointMovementComponent>(TEXT("Waypoint Movement"));
-	AddInstanceComponent(WaypointMovementComponent);
-
-	MovementStartDelayRandomMin = 0.f;
-	MovementStartDelayRandomMax = 1.f;
-
 	PickUpCollectedSFXVolume = 1.0f;
-}
-
-void APickup::BeginPlay()
-{
-	Super::BeginPlay();
-
-	WaypointMovementComponent->StartDelay = FMath::RandRange(MovementStartDelayRandomMin, MovementStartDelayRandomMax);
 }
 
 void APickup::PlayPickUpCollectedSFX()

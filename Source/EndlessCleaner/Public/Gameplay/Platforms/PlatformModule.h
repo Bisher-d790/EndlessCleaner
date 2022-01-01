@@ -61,7 +61,7 @@ public:
 		int PickupsNumberPerSpawn;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pickup")
-		TSubclassOf<class APickup> PickupClass = nullptr;
+		TSubclassOf<class AGerm> PickupClass = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obstacle")
 		float ObstacleProbability;
@@ -105,7 +105,7 @@ protected:
 	APlatformModule* NextPlatform = nullptr;
 
 	// Spawned Pickups Map. Key: Lane, Value: Pickup reference.
-	TMultiMap<int, class APickup*> SpawnedPickups;
+	TMultiMap<int, class AGerm*> SpawnedPickups;
 
 	// Spawned Obstacles Map. Key: Lane, Value: Obstacle reference.
 	TMultiMap<int, class AObstacle*> SpawnedObstacles;
