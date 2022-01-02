@@ -374,6 +374,7 @@ void AECPlayerController::MoveToSide(float Value)
 		else
 			CurrentLane = LanesCount - 1;
 
+		bIsMovingRight = false;
 		bIsMovingLeft = true;
 		PlatformsContainer->RotateRight(RotationRate);
 		PlayerRef->MoveLeft();
@@ -386,6 +387,7 @@ void AECPlayerController::MoveToSide(float Value)
 		else
 			CurrentLane = 0;
 
+		bIsMovingLeft = false;
 		bIsMovingRight = true;
 		PlatformsContainer->RotateLeft(RotationRate);
 		PlayerRef->MoveRight();
