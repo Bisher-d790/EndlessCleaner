@@ -19,6 +19,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obstacle")
 		class UStaticMeshComponent* Mesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obstacle")
+		class UBoxComponent* Blocker;
+
+	UFUNCTION()
+		void BlockPlayer(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void UnblockPlayer(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	UPROPERTY(EditDefaultsOnly, Category = "SFX")
 		float ObstacleHitSFXVolume;
 

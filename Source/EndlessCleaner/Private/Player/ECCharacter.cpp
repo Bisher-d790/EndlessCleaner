@@ -83,7 +83,7 @@ void AECCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AECCharacter::MoveForward()
 {
-	if (!bIsMoving)	return;
+	if (!bIsMoving || bIsMovingForwardBlocked)	return;
 
 	const FRotator Rotation = GetActorRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);

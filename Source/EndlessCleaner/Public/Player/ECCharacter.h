@@ -42,12 +42,17 @@ public:
 
 	FORCEINLINE void SetIsMoving(bool Value) { this->bIsMoving = Value; };
 
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		void BlockForwardMovement(bool Value) { this->bIsMovingForwardBlocked = Value; };
+
 	void Respawn();
 
 	FORCEINLINE float GetSideMoveRotation() { return SideMoveRotation; };
 
 private:
 	bool bIsMoving = false;
+
+	bool bIsMovingForwardBlocked = false;
 
 	bool bIsRotating = false;
 
