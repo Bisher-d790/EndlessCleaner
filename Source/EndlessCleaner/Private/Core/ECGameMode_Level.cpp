@@ -30,7 +30,7 @@ AECGameMode_Level::AECGameMode_Level()
 	InitialPlayerLives = 3;
 	PickupsRushPlatformsCount = 2;
 	ObstaclesRushPlatformsCount = 2;
-	EnemyStartSpeed = 500;
+	EnemyRetractionSpeed = 500;
 	EnemySpeedFirstLevel = 100;
 	EnemySpeedLevelUp = 50;
 	EnemyKilledToLevelUp = 1;
@@ -405,7 +405,7 @@ void AECGameMode_Level::SpawnEnemy()
 		AEnemy* SpawnedEnemy = EnemyFactoryRef->CreateEnemy(
 			EnemyClass,
 			FirstPlatform->GetActorLocation(),
-			EnemyStartSpeed,
+			EnemyRetractionSpeed,
 			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (GameStateRef->GetCurrentLevel() - 1)));
 	}
 }

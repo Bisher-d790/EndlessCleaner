@@ -2,6 +2,7 @@
 
 #include "Gameplay/EnemyFactory.h"
 #include "Gameplay/Enemy.h"
+#include "Gameplay/Components/PerpetualMovementComponent.h"
 
 
 EnemyFactory::EnemyFactory(UWorld* World)
@@ -20,10 +21,13 @@ EnemyFactory::~EnemyFactory()
 	DestroyAllEnemies();
 }
 
-AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed)
+AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyRetractionSpeed, float EnemyActualSpeed)
 {
 	AEnemy* SpawnedEnemy = WorldContext->SpawnActor<AEnemy>(EnemyClass, SpawnPosition, FRotator::ZeroRotator);
 	SpawnedEnemy->AttachToActor(EnemiesContainerActor, FAttachmentTransformRules::KeepWorldTransform);
+	SpawnedEnemy->PerpetualMovementComponent->SetVelocity(FVector(EnemyActualSpeed, 0.f, 0.f));
+	SpawnedEnemy->PerpetualMovementComponent->SetRetractionVelocity(FVector(EnemyRetractionSpeed, 0.f, 0.f));
+
 	EnemiesList.Add(SpawnedEnemy);
 
 	return SpawnedEnemy;

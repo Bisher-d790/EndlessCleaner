@@ -92,7 +92,7 @@ protected:
 		TSubclassOf<class AEnemy> EnemyClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-		float EnemyStartSpeed;
+		float EnemyRetractionSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float EnemySpeedFirstLevel;

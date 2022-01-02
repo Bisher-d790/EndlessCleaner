@@ -47,11 +47,15 @@ protected:
 
 	bool bIsRetractingVelocity = false;
 
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	void RetractVelocity();
 
 	void EndVelocityRetraction();
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	FORCEINLINE void SetRetractionVelocity(FVector Value) { this->RetractionVelocity = Value; }
+
+	FORCEINLINE void SetVelocity(FVector Value) { Velocity = Value; }
 };
