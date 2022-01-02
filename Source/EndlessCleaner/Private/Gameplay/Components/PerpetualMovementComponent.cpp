@@ -3,7 +3,7 @@
 #include "Gameplay/Components/PerpetualMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/ECCharacter.h"
-#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 
 // Sets default values for this component's properties

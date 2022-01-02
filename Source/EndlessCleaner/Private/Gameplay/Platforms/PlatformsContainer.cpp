@@ -4,7 +4,7 @@
 #include "Gameplay/Platforms/PlatformsContainer.h"
 #include "GameFramework/RotatingMovementComponent.h"
 #include "Gameplay/Platforms/PlatformModule.h" 
-#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 
 // Sets default values

@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 
 
-#pragma region Debug Log
-static bool ConsoleLogState = false;
-static bool ScreenLogState = false;
+#pragma region Logging
+static bool ConsoleLogState = true;
+static bool ScreenLogState = true;
 
 static void SetDebugLogState(bool State)
 {

@@ -5,7 +5,7 @@
 #include "Gameplay/Germ.h"
 #include "Gameplay/Obstacle.h"
 #include "Gameplay/Components/WaypointMovementComponent.h"
-#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 
 // Sets default values

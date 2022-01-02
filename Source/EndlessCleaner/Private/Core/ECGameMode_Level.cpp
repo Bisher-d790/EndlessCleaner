@@ -12,7 +12,7 @@
 #include "UI/InGameUIWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Audio/AudioManager.h"
-#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 #include <EndlessCleaner/Public/Core/ECGameState.h>
 
 

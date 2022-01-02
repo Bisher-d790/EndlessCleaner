@@ -4,7 +4,7 @@
 #include "Gameplay/Components/DeathBoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core/ECGameMode_Level.h"
-#include "Utils/Utils.h"
+#include "Utils/Debug.h"
 
 
 // Sets default values for this component's properties
