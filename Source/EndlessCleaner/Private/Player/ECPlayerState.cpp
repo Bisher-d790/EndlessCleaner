@@ -54,6 +54,11 @@ void AECPlayerState::SetCurrentLives(int Lives)
 	CurrentLives = Lives;
 }
 
+void AECPlayerState::SetIsDead(bool Value)
+{
+	bIsDead = Value;
+}
+
 void AECPlayerState::IncreaseEnemiesKilled()
 {
 	EnemiesKilled++;

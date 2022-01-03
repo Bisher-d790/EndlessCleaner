@@ -34,6 +34,8 @@ protected:
 
 	bool bIsTimerRunning = false;
 
+	bool bIsDead = false;
+
 public:
 
 	FORCEINLINE int GetCoinsCollected() { return CoinsCollected; }
@@ -45,6 +47,8 @@ public:
 	FORCEINLINE float GetCurrentTime() { return CurrentTime; }
 
 	FORCEINLINE float GetEnemiesKilled() { return EnemiesKilled; }
+
+	FORCEINLINE bool IsDead() { return bIsDead; }
 
 	void IncreaseCoinsCollected();
 
@@ -59,6 +63,8 @@ public:
 	void ResetEnemiesKilled();
 
 	void AddDistance(float Distance);
+
+	void SetIsDead(bool Value);
 
 	void ResetDistance();
 

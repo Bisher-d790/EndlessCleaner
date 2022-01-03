@@ -286,6 +286,14 @@ void AECGameMode_Level::OnRespawn()
 
 		PlayerController->Respawn();
 		PlayerController->StartRunning();
+
+		AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerController->PlayerState);
+
+		if (IsValid(PlayerState))
+		{
+			PlayerState->SetIsDead(false);
+		}
+
 		GameState = EGameState::VE_Running;
 	}
 }
@@ -443,9 +451,14 @@ void AECGameMode_Level::OnTriggerDeathActor()
 	if (GameState == EGameState::VE_GameOver)
 		return;
 
+	AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerController->PlayerState);
+
+	if (!IsValid(PlayerState) || PlayerState->IsDead()) return;
+
 	// Set Game over condition when player hits the ground
 	PlayerController->StopRunning();
 	PlatformsContainerActor->StopRotation();
+	PlayerState->SetIsDead(true);
 
 	bool bIsLastLife = false;
 	PlayerController->LoseLife(bIsLastLife);
@@ -453,9 +466,6 @@ void AECGameMode_Level::OnTriggerDeathActor()
 	if (bIsLastLife)
 	{
 		GameState = EGameState::VE_GameOver;
-
-		AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerController->PlayerState);
-
 		// Score Calculate Score
 		float Score = 0;
 
