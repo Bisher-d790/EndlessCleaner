@@ -16,7 +16,7 @@ enum class EPlatformType : uint8
 
 // An Enumerate for game states
 UENUM(BlueprintType)
-enum class EGameState : uint8
+enum class EGameplayState : uint8
 {
 	VE_None					UMETA(DisplayName = "None"),
 	VE_PreparingPlatforms	UMETA(DisplayName = "PreparingPlatforms"),

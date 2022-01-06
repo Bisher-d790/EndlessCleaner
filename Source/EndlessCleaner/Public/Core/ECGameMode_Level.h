@@ -146,7 +146,7 @@ private:
 
 public:
 
-	EGameState GameState = EGameState::VE_None;
+	EGameplayState GameState = EGameplayState::VE_None;
 
 	UFUNCTION(BlueprintCallable, Category = "Death")
 		void OnTriggerDeathActor();

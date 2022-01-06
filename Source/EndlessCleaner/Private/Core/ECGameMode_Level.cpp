@@ -45,7 +45,7 @@ void AECGameMode_Level::StartPlay()
 	Super::StartPlay();
 
 	// Set Initial Game State
-	GameState = EGameState::VE_PreparingPlatforms;
+	GameState = EGameplayState::VE_PreparingPlatforms;
 
 	PlayerController = Cast<AECPlayerController>(GetWorld()->GetFirstPlayerController());
 
@@ -57,7 +57,7 @@ void AECGameMode_Level::StartPlay()
 
 	PlayerController->SetInitialLives(InitialPlayerLives);
 
-	GameState = EGameState::VE_PreparingGame;
+	GameState = EGameplayState::VE_PreparingGame;
 
 	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, 0.1f, false);
 
@@ -72,7 +72,7 @@ void AECGameMode_Level::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!IsValid(Player) || GameState != EGameState::VE_Running) return;
+	if (!IsValid(Player) || GameState != EGameplayState::VE_Running) return;
 
 	if (IsValid(PlatformToCheck))
 	{
@@ -234,19 +234,19 @@ void AECGameMode_Level::OnRespawn()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimerHandle);
 
-	if (GameState == EGameState::VE_PreparingGame)
+	if (GameState == EGameplayState::VE_PreparingGame)
 	{
 		if (IsValid(PlayerController->GetUI()))
 		{
 			PlayerController->GetUI()->OnStartGame();
 
-			GameState = EGameState::VE_Respawning;
+			GameState = EGameplayState::VE_Respawning;
 
 			GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, SpawnStartTimer, false);
 		}
 	}
 
-	else if (GameState == EGameState::VE_RemovingPlatforms)
+	else if (GameState == EGameplayState::VE_RemovingPlatforms)
 	{
 		// Reset container rotation
 		PlatformsContainerActor->ResetRotation();
@@ -275,12 +275,12 @@ void AECGameMode_Level::OnRespawn()
 		// Initialize game
 		InitializeGame();
 
-		GameState = EGameState::VE_Respawning;
+		GameState = EGameplayState::VE_Respawning;
 
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 
-	else if (GameState == EGameState::VE_Respawning)
+	else if (GameState == EGameplayState::VE_Respawning)
 	{
 		AAudioManager::GetInstance()->PlayBackgroundMusic();
 
@@ -294,7 +294,7 @@ void AECGameMode_Level::OnRespawn()
 			PlayerState->SetIsDead(false);
 		}
 
-		GameState = EGameState::VE_Running;
+		GameState = EGameplayState::VE_Running;
 	}
 }
 
@@ -448,7 +448,7 @@ int AECGameMode_Level::GetTotalEnemiesKilled()
 
 void AECGameMode_Level::OnTriggerDeathActor()
 {
-	if (GameState == EGameState::VE_GameOver)
+	if (GameState == EGameplayState::VE_GameOver)
 		return;
 
 	AECPlayerState* PlayerState = Cast<AECPlayerState>(PlayerController->PlayerState);
@@ -465,7 +465,7 @@ void AECGameMode_Level::OnTriggerDeathActor()
 
 	if (bIsLastLife)
 	{
-		GameState = EGameState::VE_GameOver;
+		GameState = EGameplayState::VE_GameOver;
 		// Score Calculate Score
 		float Score = 0;
 
@@ -482,7 +482,7 @@ void AECGameMode_Level::OnTriggerDeathActor()
 	}
 	else
 	{
-		GameState = EGameState::VE_RemovingPlatforms;
+		GameState = EGameplayState::VE_RemovingPlatforms;
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &AECGameMode_Level::OnRespawn, RespawnTimer, false);
 	}
 }
