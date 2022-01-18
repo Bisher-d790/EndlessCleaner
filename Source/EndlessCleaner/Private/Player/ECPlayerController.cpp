@@ -527,3 +527,26 @@ void AECPlayerController::AddToCurrentDistance(float Distance)
 		}
 	}
 }
+
+void AECPlayerController::PauseGame()
+{
+	SetPause(true);
+
+	if (!IsValid(PauseMenuWidgetInstance))
+		PauseMenuWidgetInstance = CreateWidget(this, PauseMenuWidgetClass, TEXT("Pause Menu"));
+
+	if (IsValid(PauseMenuWidgetInstance))
+	{
+		PauseMenuWidgetInstance->AddToViewport();
+	}
+}
+
+void AECPlayerController::UnPauseGame()
+{
+	SetPause(false);
+
+	if (IsValid(PauseMenuWidgetInstance))
+	{
+		PauseMenuWidgetInstance->RemoveFromViewport();
+	}
+}

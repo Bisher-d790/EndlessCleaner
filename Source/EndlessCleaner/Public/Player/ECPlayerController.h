@@ -82,6 +82,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<class UUserWidget> InGameUIWidgetClass;
 
+	UPROPERTY(BlueprintReadWrite, Category = "UI")
+		class UUserWidget* PauseMenuWidgetInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<class UUserWidget> PauseMenuWidgetClass;
+
 private:
 
 	bool bIsRunning = false;
@@ -144,4 +150,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player Events")
 		void OnKillEnemy(class AEnemy* KilledEnemy);
 
+	UFUNCTION(BlueprintCallable, Category = "Player Controller")
+		void UnPauseGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Player Controller")
+		void PauseGame();
 };
