@@ -476,7 +476,6 @@ void AECGameMode_Level::OnTriggerDeathActor()
 
 		if (IsValid(PlayerController->GetUI()))
 		{
-			PlayerController->GetUI()->SetScore(Score);
 			PlayerController->GetUI()->OnGameOver();
 		}
 	}

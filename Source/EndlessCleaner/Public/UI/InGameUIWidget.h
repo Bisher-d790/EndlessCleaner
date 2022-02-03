@@ -16,51 +16,35 @@ class ENDLESSCLEANER_API UInGameUIWidget : public UUserWidget
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* CoinsCounter;
-
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* DistanceCounter;
-
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* LivesCounter;
-
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* LevelCounter;
-
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* Timer;
-
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* ScoreCount;
-
-	UPROPERTY(meta = (BindWidget))
 		class UButton* RestartGameButton;
 
 	UPROPERTY(meta = (BindWidget))
-		int32 DistanceMinimumFractionalDigits = 0;
+		class UHorizontalBox* HeartsContainer;
 
-	UPROPERTY(meta = (BindWidget))
-		int32 DistanceMaximumIntegralDigits = 10;
+	UPROPERTY(EditDefaultsOnly, Category = "Lives")
+		class UTexture2D* HeartTexture;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Lives")
+		FVector2D HeartSize;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Lives")
+		FLinearColor HeartTint;
+
+	void IncreaseHearts();
 
 public:
-	void UpdateCoins(int32 Coins);
-
-	void UpdateDistance(float Distance);
-
-	void UpdateLives(int32 Lives);
-
-	void UpdateLevel(int32 Level);
-
-	void UpdateTime(float Time);
-
-	void SetScore(float Score);
-
 	UFUNCTION(BlueprintCallable, Category = "Buttons Functions")
 		void OnClickRestartGame();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Game Event")
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI Event")
 		void OnStartGame();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Game Event")
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI Event")
 		void OnGameOver();
+
+	UFUNCTION(BlueprintCallable, Category = "UI Event")
+		void OnLivesChanged(int Lives);
+
+	UFUNCTION(BlueprintCallable, Category = "Lives")
+		FORCEINLINE class UHorizontalBox* GetHeartsContainer() { return HeartsContainer; };
 };

@@ -48,18 +48,9 @@ void AECPlayerController::BeginPlay()
 
 	if (IsValid(InGameUIWidgetInstance))
 	{
+		PlayerStateRef->OnLivesChange.BindDynamic(InGameUIWidgetInstance, &UInGameUIWidget::OnLivesChanged);
+		
 		InGameUIWidgetInstance->AddToViewport();
-
-		InGameUIWidgetInstance->UpdateCoins(PlayerStateRef->GetCoinsCollected());
-		InGameUIWidgetInstance->UpdateDistance(PlayerStateRef->GetCurrentDistance());
-		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
-		InGameUIWidgetInstance->UpdateTime(PlayerStateRef->GetCurrentTime());
-
-		int Level = 1;
-		AECGameState* GameState = GetWorld()->GetGameState<AECGameState>();
-		if (GameState)	Level = GameState->GetCurrentLevel();
-
-		InGameUIWidgetInstance->UpdateLevel(Level);
 	}
 }
 
@@ -84,14 +75,6 @@ void AECPlayerController::PlayerTick(float DeltaTime)
 
 	// If cannot move, return
 	if (!bCanMove) return;
-
-	if (bIsRunning)
-	{
-		if (IsValid(InGameUIWidgetInstance))
-		{
-			InGameUIWidgetInstance->UpdateTime(PlayerStateRef->GetCurrentTime());
-		}
-	}
 
 	// Stop Jump animation after jump time finishes
 	if (bIsJumping)
@@ -323,11 +306,6 @@ void AECPlayerController::StopRunning()
 void AECPlayerController::SetInitialLives(int32 InitialLives)
 {
 	PlayerStateRef->SetCurrentLives(InitialLives);
-
-	if (IsValid(InGameUIWidgetInstance))
-	{
-		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
-	}
 }
 
 void AECPlayerController::LoseLife(bool& bIsLastLife)
@@ -339,11 +317,6 @@ void AECPlayerController::LoseLife(bool& bIsLastLife)
 	if (PlayerStateRef->GetCurrentLives() <= 0)
 	{
 		bIsLastLife = true;
-	}
-
-	if (IsValid(InGameUIWidgetInstance))
-	{
-		InGameUIWidgetInstance->UpdateLives(PlayerStateRef->GetCurrentLives());
 	}
 }
 
@@ -489,11 +462,6 @@ void AECPlayerController::Respawn()
 void AECPlayerController::OnCollectCoin()
 {
 	PlayerStateRef->IncreaseCoinsCollected();
-
-	if (IsValid(InGameUIWidgetInstance))
-	{
-		InGameUIWidgetInstance->UpdateCoins(PlayerStateRef->GetCoinsCollected());
-	}
 }
 
 void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
@@ -508,11 +476,6 @@ void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 	int Level = 1;
 	AECGameState* GameState = GetWorld()->GetGameState<AECGameState>();
 	if (GameState)	Level = GameState->GetCurrentLevel();
-
-	if (IsValid(InGameUIWidgetInstance))
-	{
-		InGameUIWidgetInstance->UpdateLevel(Level);
-	}
 }
 
 void AECPlayerController::AddToCurrentDistance(float Distance)
@@ -520,11 +483,6 @@ void AECPlayerController::AddToCurrentDistance(float Distance)
 	if (bIsRunning)
 	{
 		PlayerStateRef->AddDistance(Distance);
-
-		if (IsValid(InGameUIWidgetInstance))
-		{
-			InGameUIWidgetInstance->UpdateDistance(PlayerStateRef->GetCurrentDistance());
-		}
 	}
 }
 

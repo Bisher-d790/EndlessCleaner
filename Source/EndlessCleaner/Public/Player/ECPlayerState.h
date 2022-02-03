@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerState.h"
 #include "ECPlayerState.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnLivesChange, int, Lives);
+
 /**
  *
  */
@@ -73,4 +75,7 @@ public:
 	void StopTimer();
 
 	void StartTimer();
+
+	UPROPERTY()
+		FOnLivesChange OnLivesChange;
 };

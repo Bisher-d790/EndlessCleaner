@@ -45,6 +45,8 @@ void AECPlayerState::ResetCoinsCollected()
 void AECPlayerState::DecreaseCurrentLives()
 {
 	CurrentLives = FMath::Clamp(CurrentLives - 1, 0, CurrentLives);
+
+	OnLivesChange.Execute(CurrentLives);
 }
 
 void AECPlayerState::SetCurrentLives(int Lives)
@@ -52,6 +54,8 @@ void AECPlayerState::SetCurrentLives(int Lives)
 	if (Lives < 0) return;
 
 	CurrentLives = Lives;
+
+	OnLivesChange.Execute(CurrentLives);
 }
 
 void AECPlayerState::SetIsDead(bool Value)
