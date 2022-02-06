@@ -5,6 +5,19 @@
 #include "Gameplay/Components/PerpetualMovementComponent.h"
 
 
+EnemyFactory* EnemyFactory::Instance = nullptr;
+
+EnemyFactory* EnemyFactory::GetInstance(UWorld* World)
+{
+	if (Instance == nullptr)
+	{
+		EnemyFactory* NewInstance = new EnemyFactory(World);
+		Instance = NewInstance;
+	}
+
+	return Instance;
+}
+
 EnemyFactory::EnemyFactory(UWorld* World)
 {
 	WorldContext = World;
@@ -19,6 +32,7 @@ EnemyFactory::EnemyFactory(UWorld* World)
 EnemyFactory::~EnemyFactory()
 {
 	DestroyAllEnemies();
+	Instance = nullptr;
 }
 
 AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyRetractionSpeed, float EnemyActualSpeed)

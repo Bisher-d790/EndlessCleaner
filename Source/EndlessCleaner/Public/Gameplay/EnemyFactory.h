@@ -10,9 +10,7 @@
 class ENDLESSCLEANER_API EnemyFactory
 {
 public:
-	EnemyFactory(class UWorld* World);
-
-	virtual ~EnemyFactory();
+	static EnemyFactory* GetInstance(UWorld* World);
 
 	virtual class AEnemy* CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed);
 
@@ -26,10 +24,16 @@ public:
 
 	inline class TArray<class AEnemy*> GetEnemyList() { return EnemiesList; }
 
-private:
+protected:
+	EnemyFactory(class UWorld* World);
+
+	virtual ~EnemyFactory();
+
 	TArray <class AEnemy*> EnemiesList;
 
 	class AActor* EnemiesContainerActor;
 
 	class UWorld* WorldContext;
+
+	static EnemyFactory* Instance;
 };

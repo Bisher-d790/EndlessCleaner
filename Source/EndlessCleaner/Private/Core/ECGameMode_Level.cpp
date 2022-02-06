@@ -406,7 +406,7 @@ TSubclassOf<APlatformModule> AECGameMode_Level::GetPlatformToSpawn(TArray<EPlatf
 void AECGameMode_Level::SpawnEnemy()
 {
 	if (!EnemyFactoryRef)
-		EnemyFactoryRef = new EnemyFactory(GetWorld());
+		EnemyFactoryRef = EnemyFactory::GetInstance(GetWorld());
 
 	if (IsValid(EnemyClass) && IsValid(FirstPlatform))
 	{
