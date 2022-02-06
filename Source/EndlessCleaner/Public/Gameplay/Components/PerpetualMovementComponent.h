@@ -58,4 +58,6 @@ public:
 	FORCEINLINE void SetRetractionVelocity(FVector Value) { this->RetractionVelocity = Value; }
 
 	FORCEINLINE void SetVelocity(FVector Value) { Velocity = Value; }
+
+	FORCEINLINE void SetDistanceToRetract(float Value) { this->DistanceToRetractVelocity = Value; }
 };

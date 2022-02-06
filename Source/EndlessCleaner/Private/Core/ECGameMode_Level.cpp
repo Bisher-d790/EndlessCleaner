@@ -34,6 +34,7 @@ AECGameMode_Level::AECGameMode_Level()
 	EnemySpeedFirstLevel = 100;
 	EnemySpeedLevelUp = 50;
 	EnemyKilledToLevelUp = 1;
+	EnemiesDistanceToRetract = 10000.f;
 
 	CoinsMultiplier = 100;
 	SpeedMultiplier = 1000;
@@ -414,7 +415,8 @@ void AECGameMode_Level::SpawnEnemy()
 			EnemyClass,
 			FirstPlatform->GetActorLocation(),
 			EnemyRetractionSpeed,
-			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (GameStateRef->GetCurrentLevel() - 1)));
+			(EnemySpeedFirstLevel + EnemySpeedLevelUp * (GameStateRef->GetCurrentLevel() - 1)),
+			EnemiesDistanceToRetract);
 	}
 }
 

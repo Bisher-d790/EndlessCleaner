@@ -12,7 +12,7 @@ class ENDLESSCLEANER_API EnemyFactory
 public:
 	static EnemyFactory* GetInstance(UWorld* World);
 
-	virtual class AEnemy* CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed);
+	virtual class AEnemy* CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyStartSpeed, float EnemyActualSpeed, float EnemyDistanceToRetract);
 
 	virtual void DestroyEnemy(int EnemyIndex);
 

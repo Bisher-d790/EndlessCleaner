@@ -35,12 +35,13 @@ EnemyFactory::~EnemyFactory()
 	Instance = nullptr;
 }
 
-AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyRetractionSpeed, float EnemyActualSpeed)
+AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyRetractionSpeed, float EnemyActualSpeed, float EnemyDistanceToRetract)
 {
 	AEnemy* SpawnedEnemy = WorldContext->SpawnActor<AEnemy>(EnemyClass, SpawnPosition, FRotator::ZeroRotator);
 	SpawnedEnemy->AttachToActor(EnemiesContainerActor, FAttachmentTransformRules::KeepWorldTransform);
 	SpawnedEnemy->PerpetualMovementComponent->SetVelocity(FVector(EnemyActualSpeed, 0.f, 0.f));
 	SpawnedEnemy->PerpetualMovementComponent->SetRetractionVelocity(FVector(EnemyRetractionSpeed, 0.f, 0.f));
+	SpawnedEnemy->PerpetualMovementComponent->SetDistanceToRetract(EnemyDistanceToRetract);
 
 	EnemiesList.Add(SpawnedEnemy);
 

@@ -94,6 +94,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float EnemyRetractionSpeed;
 
+	/** Enemy distance from the player to start retracting*/
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+		float EnemiesDistanceToRetract;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 		float EnemySpeedFirstLevel;
 
@@ -162,6 +166,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Settings")
 		FORCEINLINE int GetInitialPlayerLives() { return InitialPlayerLives; };
+
+	UFUNCTION(BlueprintCallable, Category = "Settings")
+		FORCEINLINE float GetEnemiesDistanceToRetract() { return EnemiesDistanceToRetract; };
 
 #pragma region Debug
 private:
