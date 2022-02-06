@@ -70,11 +70,15 @@ void AECPlayerState::SetIsDead(bool Value)
 void AECPlayerState::IncreaseEnemiesKilled()
 {
 	EnemiesKilled++;
+
+	OnEnemyKilled.Execute(EnemiesKilled);
 }
 
 void AECPlayerState::ResetEnemiesKilled()
 {
 	EnemiesKilled = 0;
+
+	OnEnemyKilled.Execute(EnemiesKilled);
 }
 
 void AECPlayerState::AddDistance(float Distance)

@@ -45,8 +45,16 @@ void UInGameUIWidget::IncreaseHearts()
 
 void UInGameUIWidget::OnUpdateGerms(int Germs)
 {
-	if (!IsValid(GermsCounter))
+	if (Germs < 0 || !IsValid(GermsCounter))
 		return;
 
 	GermsCounter->SetText(FText::FromString(FString::FromInt(Germs)));
+}
+
+void UInGameUIWidget::OnUpdateViruses(int Viruses)
+{
+	if (Viruses < 0 || !IsValid(VirusCounter))
+		return;
+
+	VirusCounter->SetText(FText::FromString(FString::FromInt(Viruses)));
 }

@@ -469,7 +469,7 @@ void AECGameMode_Level::OnTriggerDeathActor()
 		// Score Calculate Score
 		float Score = 0;
 
-		Score += PlayerState->GetCoinsCollected() * CoinsMultiplier;
+		Score += PlayerState->GetGermsCollected() * CoinsMultiplier;
 		Score += (PlayerState->GetCurrentDistance() / PlayerState->GetCurrentTime()) * SpeedMultiplier;
 
 		PlayerState->SetScore(Score);

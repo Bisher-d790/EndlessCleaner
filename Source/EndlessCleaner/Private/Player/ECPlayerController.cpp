@@ -50,6 +50,7 @@ void AECPlayerController::BeginPlay()
 	{
 		PlayerStateRef->OnLivesChange.BindDynamic(this, &AECPlayerController::OnLivesChanged);
 		PlayerStateRef->OnGermCollected.BindDynamic(this, &AECPlayerController::OnGermsCollected);
+		PlayerStateRef->OnEnemyKilled.BindDynamic(this, &AECPlayerController::OnEnemyKilled);
 
 		InGameUIWidgetInstance->AddToViewport();
 	}
@@ -524,4 +525,12 @@ void AECPlayerController::OnGermsCollected(int GermsTotal)
 		return;
 
 	InGameUIWidgetInstance->OnUpdateGerms(GermsTotal);
+}
+
+void AECPlayerController::OnEnemyKilled(int EnemiesKilled)
+{
+	if (EnemiesKilled < 0 || !IsValid(InGameUIWidgetInstance))
+		return;
+
+	InGameUIWidgetInstance->OnUpdateViruses(EnemiesKilled);
 }

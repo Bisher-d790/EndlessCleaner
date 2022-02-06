@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* GermsCounter;
 
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* VirusCounter;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Buttons Functions")
 		void OnClickRestartGame();
@@ -53,4 +56,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Event")
 		void OnUpdateGerms(int Germs);
+
+	UFUNCTION(BlueprintCallable, Category = "UI Event")
+		void OnUpdateViruses(int Viruses);
 };

@@ -40,7 +40,7 @@ protected:
 
 public:
 
-	FORCEINLINE int GetCoinsCollected() { return GermsCollected; }
+	FORCEINLINE int GetGermsCollected() { return GermsCollected; }
 
 	FORCEINLINE int GetCurrentLives() { return CurrentLives; }
 
@@ -81,4 +81,7 @@ public:
 
 	UPROPERTY()
 		FOneParamChange OnGermCollected;
+
+	UPROPERTY()
+		FOneParamChange OnEnemyKilled;
 };

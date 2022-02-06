@@ -94,6 +94,9 @@ protected:
 	UFUNCTION()
 		void OnGermsCollected(int GermsTotal);
 
+	UFUNCTION()
+		void OnEnemyKilled(int EnemiesKilled);
+
 private:
 
 	bool bIsRunning = false;
