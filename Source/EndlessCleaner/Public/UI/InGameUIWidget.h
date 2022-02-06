@@ -59,4 +59,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Event")
 		void OnUpdateViruses(int Viruses);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI Event")
+		void OnUpdateDistanceToVirus(float DistanceNormalized);
 };

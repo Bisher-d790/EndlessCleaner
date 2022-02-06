@@ -123,6 +123,14 @@ private:
 
 	float GetCurrentRotationRate();
 
+	void UpdateDistanceUI();
+
+	float GetPlayerDistanceToEnemyNormalized();
+
+	class EnemyFactory* EnemyFactoryRef;
+
+	class AECGameMode_Level* GameMode;
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player Events")

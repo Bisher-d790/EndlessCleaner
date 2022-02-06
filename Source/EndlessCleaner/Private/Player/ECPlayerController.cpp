@@ -8,6 +8,8 @@
 #include "UI/InGameUIWidget.h"
 #include "Gameplay/Platforms/PlatformModule.h"
 #include "Gameplay/Platforms/PlatformsContainer.h"
+#include "Gameplay/EnemyFactory.h"
+#include "Gameplay/Enemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "Core/ECGameMode_Level.h"
 #include "Core/ECGameState.h"
@@ -40,6 +42,7 @@ void AECPlayerController::BeginPlay()
 	// Set the Player reference
 	PlayerRef = Cast<AECCharacter>(GetPawn());
 	PlayerStateRef = Cast<AECPlayerState>(PlayerState);
+	GameMode = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 
 	if (IsValid(InGameUIWidgetClass))
 	{
@@ -61,7 +64,7 @@ void AECPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	if (!IsValid(PlatformsContainer))
-		PlatformsContainer = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()))->GetPlatformsContainerActor();
+		PlatformsContainer = GameMode->GetPlatformsContainerActor();
 
 	// Lock Input when moving 
 	if (bLockMovement)
@@ -74,6 +77,8 @@ void AECPlayerController::PlayerTick(float DeltaTime)
 			bLockMovement = false;
 		}
 	}
+
+	UpdateDistanceUI();
 
 	// If cannot move, return
 	if (!bCanMove) return;
@@ -472,7 +477,6 @@ void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
 
 	PlayerStateRef->IncreaseEnemiesKilled();
 
-	AECGameMode_Level* GameMode = Cast<AECGameMode_Level>(UGameplayStatics::GetGameMode(GetWorld()));
 	GameMode->OnEnemyKilled(KilledEnemy);
 
 	int Level = 1;
@@ -533,4 +537,44 @@ void AECPlayerController::OnEnemyKilled(int EnemiesKilled)
 		return;
 
 	InGameUIWidgetInstance->OnUpdateViruses(EnemiesKilled);
+}
+
+void AECPlayerController::UpdateDistanceUI()
+{
+	if (!IsValid(InGameUIWidgetInstance))
+		return;
+
+	float DistanceToEnemy = GetPlayerDistanceToEnemyNormalized();
+
+	InGameUIWidgetInstance->OnUpdateDistanceToVirus(DistanceToEnemy);
+}
+
+float AECPlayerController::GetPlayerDistanceToEnemyNormalized()
+{
+	float DistanceNormalized = 1.0f;
+
+	FVector PlayerLocation = PlayerRef->GetActorLocation();
+
+	// Get the closest enemy to the player
+	if (!EnemyFactoryRef)
+		EnemyFactoryRef = EnemyFactory::GetInstance(GetWorld());
+
+	float DistanceToEnemy = MAX_FLT;
+	TArray<AEnemy*> EnemiesList = EnemyFactoryRef->GetEnemyList();
+	for (auto& Enemy : EnemiesList)
+	{
+		FVector EnemyLocation = Enemy->GetActorLocation();
+
+		float Distance = FVector::Dist(PlayerLocation, EnemyLocation);
+		if (Distance < DistanceToEnemy)
+		{
+			DistanceToEnemy = Distance;
+		}
+	}
+
+	// Normalize the distance value
+	float MaxDistance = GameMode->GetEnemiesDistanceToRetract();
+	DistanceNormalized = FMath::Clamp(DistanceToEnemy / MaxDistance, 0.0f, 1.0f);
+
+	return DistanceNormalized;
 }
