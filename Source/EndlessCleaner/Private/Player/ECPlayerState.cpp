@@ -16,7 +16,7 @@ void AECPlayerState::BeginPlay()
 	Super::BeginPlay();
 
 	// Reset variables values
-	CoinsCollected = 0;
+	GermsCollected = 0;
 	CurrentDistance = 0;
 	CurrentTime = 0;
 	EnemiesKilled = 0;
@@ -32,14 +32,18 @@ void AECPlayerState::Tick(float DeltaTime)
 	}
 }
 
-void AECPlayerState::IncreaseCoinsCollected()
+void AECPlayerState::IncreaseGermsCollected()
 {
-	CoinsCollected++;
+	GermsCollected++;
+
+	OnGermCollected.Execute(GermsCollected);
 }
 
-void AECPlayerState::ResetCoinsCollected()
+void AECPlayerState::ResetGermsCollected()
 {
-	CoinsCollected = 0;
+	GermsCollected = 0;
+
+	OnGermCollected.Execute(GermsCollected);
 }
 
 void AECPlayerState::DecreaseCurrentLives()

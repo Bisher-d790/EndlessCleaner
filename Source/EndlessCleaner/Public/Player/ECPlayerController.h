@@ -88,6 +88,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<class UUserWidget> PauseMenuWidgetClass;
 
+	UFUNCTION()
+		void OnLivesChanged(int Lives);
+
+	UFUNCTION()
+		void OnGermsCollected(int GermsTotal);
+
 private:
 
 	bool bIsRunning = false;

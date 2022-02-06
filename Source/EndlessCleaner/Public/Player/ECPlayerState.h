@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "ECPlayerState.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnLivesChange, int, Lives);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOneParamChange, int, Param);
 
 /**
  *
@@ -26,7 +26,7 @@ protected:
 
 	int EnemiesKilled;
 
-	int CoinsCollected;
+	int GermsCollected;
 
 	int CurrentLives;
 
@@ -40,7 +40,7 @@ protected:
 
 public:
 
-	FORCEINLINE int GetCoinsCollected() { return CoinsCollected; }
+	FORCEINLINE int GetCoinsCollected() { return GermsCollected; }
 
 	FORCEINLINE int GetCurrentLives() { return CurrentLives; }
 
@@ -52,9 +52,9 @@ public:
 
 	FORCEINLINE bool IsDead() { return bIsDead; }
 
-	void IncreaseCoinsCollected();
+	void IncreaseGermsCollected();
 
-	void ResetCoinsCollected();
+	void ResetGermsCollected();
 
 	void DecreaseCurrentLives();
 
@@ -77,5 +77,8 @@ public:
 	void StartTimer();
 
 	UPROPERTY()
-		FOnLivesChange OnLivesChange;
+		FOneParamChange OnLivesChange;
+
+	UPROPERTY()
+		FOneParamChange OnGermCollected;
 };

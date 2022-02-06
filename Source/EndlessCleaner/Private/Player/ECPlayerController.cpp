@@ -48,8 +48,9 @@ void AECPlayerController::BeginPlay()
 
 	if (IsValid(InGameUIWidgetInstance))
 	{
-		PlayerStateRef->OnLivesChange.BindDynamic(InGameUIWidgetInstance, &UInGameUIWidget::OnLivesChanged);
-		
+		PlayerStateRef->OnLivesChange.BindDynamic(this, &AECPlayerController::OnLivesChanged);
+		PlayerStateRef->OnGermCollected.BindDynamic(this, &AECPlayerController::OnGermsCollected);
+
 		InGameUIWidgetInstance->AddToViewport();
 	}
 }
@@ -461,7 +462,7 @@ void AECPlayerController::Respawn()
 
 void AECPlayerController::OnCollectCoin()
 {
-	PlayerStateRef->IncreaseCoinsCollected();
+	PlayerStateRef->IncreaseGermsCollected();
 }
 
 void AECPlayerController::OnKillEnemy(AEnemy* KilledEnemy)
@@ -507,4 +508,20 @@ void AECPlayerController::UnPauseGame()
 	{
 		PauseMenuWidgetInstance->RemoveFromViewport();
 	}
+}
+
+void AECPlayerController::OnLivesChanged(int Lives)
+{
+	if (Lives < 0 || !IsValid(InGameUIWidgetInstance))
+		return;
+
+	InGameUIWidgetInstance->OnLivesChanged(Lives);
+}
+
+void AECPlayerController::OnGermsCollected(int GermsTotal)
+{
+	if (GermsTotal < 0 || !IsValid(InGameUIWidgetInstance))
+		return;
+
+	InGameUIWidgetInstance->OnUpdateGerms(GermsTotal);
 }

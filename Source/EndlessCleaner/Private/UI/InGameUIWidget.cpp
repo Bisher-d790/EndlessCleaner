@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "Core/ECGameMode_Level.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -40,4 +41,12 @@ void UInGameUIWidget::IncreaseHearts()
 	Heart->SetColorAndOpacity(HeartTint);
 
 	HeartsContainer->AddChild(Heart);
+}
+
+void UInGameUIWidget::OnUpdateGerms(int Germs)
+{
+	if (!IsValid(GermsCounter))
+		return;
+
+	GermsCounter->SetText(FText::FromString(FString::FromInt(Germs)));
 }

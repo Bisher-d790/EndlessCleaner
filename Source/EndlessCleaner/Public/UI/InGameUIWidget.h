@@ -32,6 +32,9 @@ protected:
 
 	void IncreaseHearts();
 
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* GermsCounter;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Buttons Functions")
 		void OnClickRestartGame();
@@ -47,4 +50,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Lives")
 		FORCEINLINE class UHorizontalBox* GetHeartsContainer() { return HeartsContainer; };
+
+	UFUNCTION(BlueprintCallable, Category = "UI Event")
+		void OnUpdateGerms(int Germs);
 };
