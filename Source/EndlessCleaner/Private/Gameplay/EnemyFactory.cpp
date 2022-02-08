@@ -5,17 +5,19 @@
 #include "Gameplay/Components/PerpetualMovementComponent.h"
 
 
-EnemyFactory* EnemyFactory::Instance = nullptr;
+TSharedPtr<EnemyFactory> EnemyFactory::Instance = nullptr;
 
 EnemyFactory* EnemyFactory::GetInstance(UWorld* World)
 {
-	if (Instance == nullptr)
+	if (!Instance.IsValid() || Instance->WorldContext != World)
 	{
+		Instance.Reset();
+
 		EnemyFactory* NewInstance = new EnemyFactory(World);
-		Instance = NewInstance;
+		Instance = MakeShareable(NewInstance);
 	}
 
-	return Instance;
+	return Instance.Get();
 }
 
 EnemyFactory::EnemyFactory(UWorld* World)
@@ -27,12 +29,6 @@ EnemyFactory::EnemyFactory(UWorld* World)
 	EnemiesContainerActor->SetActorLabel(TEXT("EnemiesContainer"));
 #endif
 	EnemiesContainerActor->AddComponentByClass(USceneComponent::StaticClass(), false, FTransform(), false);
-}
-
-EnemyFactory::~EnemyFactory()
-{
-	DestroyAllEnemies();
-	Instance = nullptr;
 }
 
 AEnemy* EnemyFactory::CreateEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnPosition, float EnemyRetractionSpeed, float EnemyActualSpeed, float EnemyDistanceToRetract)

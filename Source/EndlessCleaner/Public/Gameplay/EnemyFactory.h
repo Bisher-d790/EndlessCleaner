@@ -27,13 +27,11 @@ public:
 protected:
 	EnemyFactory(class UWorld* World);
 
-	virtual ~EnemyFactory();
-
 	TArray <class AEnemy*> EnemiesList;
 
 	class AActor* EnemiesContainerActor;
 
 	class UWorld* WorldContext;
 
-	static EnemyFactory* Instance;
+	static TSharedPtr<EnemyFactory> Instance;
 };
