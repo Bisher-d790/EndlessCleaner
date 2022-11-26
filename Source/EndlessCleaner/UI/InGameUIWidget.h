@@ -51,7 +51,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI Event")
 		void OnLivesChanged(int Lives);
 
-	UFUNCTION(BlueprintCallable, Category = "Lives")
+	UFUNCTION(BlueprintPure, Category = "Lives")
 		FORCEINLINE class UHorizontalBox* GetHeartsContainer() { return HeartsContainer; };
 
 	UFUNCTION(BlueprintCallable, Category = "UI Event")

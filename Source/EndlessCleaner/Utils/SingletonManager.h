@@ -17,7 +17,7 @@ class ENDLESSCLEANER_API USingletonManager : public UObject
 
 public:
 	// Function to get reference to the Singleton Manager
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 		static USingletonManager* GetInstance()
 	{
 		if (GEngine)

@@ -17,7 +17,7 @@ public:
 
 #pragma region Singleton
 public:
-	UFUNCTION(BlueprintCallable, Category = "Singleton")
+	UFUNCTION(BlueprintPure, Category = "Singleton")
 		static AAudioManager* GetInstance();
 
 	virtual void PostInitializeComponents() override;

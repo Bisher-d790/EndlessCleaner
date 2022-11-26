@@ -38,7 +38,7 @@ protected:
 	FVector BeaconPosition;
 
 	// Get the beacon position (for debugging purposes)
-	UFUNCTION(BlueprintCallable, Category = Debug)
+	UFUNCTION(BlueprintPure, Category = Debug)
 		FVector GetBeaconPosition() { return BeaconPosition; };
 
 public:

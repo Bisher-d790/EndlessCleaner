@@ -158,16 +158,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Enemy")
 		void OnEnemyKilled(class AEnemy* KilledEnemy);
 
-	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	UFUNCTION(BlueprintPure, Category = "Enemy")
 		int GetTotalEnemiesKilled();
 
-	UFUNCTION(BlueprintCallable, Category = "Platforms")
+	UFUNCTION(BlueprintPure, Category = "Platforms")
 		FORCEINLINE APlatformsContainer* GetPlatformsContainerActor() { return PlatformsContainerActor; };
 
-	UFUNCTION(BlueprintCallable, Category = "Settings")
+	UFUNCTION(BlueprintPure, Category = "Settings")
 		FORCEINLINE int GetInitialPlayerLives() { return InitialPlayerLives; };
 
-	UFUNCTION(BlueprintCallable, Category = "Settings")
+	UFUNCTION(BlueprintPure, Category = "Settings")
 		FORCEINLINE float GetEnemiesDistanceToRetract() { return EnemiesDistanceToRetract; };
 
 #pragma region Debug

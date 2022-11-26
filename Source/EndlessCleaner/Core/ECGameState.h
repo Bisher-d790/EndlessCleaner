@@ -20,7 +20,7 @@ private:
 	int CurrentLevel;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Level")
+	UFUNCTION(BlueprintPure, Category = "Level")
 		FORCEINLINE int GetCurrentLevel() { return CurrentLevel; }
 
 	UFUNCTION(BlueprintCallable, Category = "Level")
